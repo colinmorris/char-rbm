@@ -1,8 +1,13 @@
-from common import *
-from sklearn.utils import check_random_state
+"""These are pretty hacky, but they get the job done.
+"""
 
-def receptive_fields(model):
-  f = open('recep.html', 'w')
+import sys
+import pickle
+
+import common
+
+def receptive_fields(model, out="recep.html"):
+  f = open(out, 'w')
   res = '''<html><head><style>
     span {
       padding-right: 10px;
@@ -30,18 +35,18 @@ def receptive_fields(model):
       return "opacity: {:.2f}".format(w/UPPER_THRESH)
     return "font-size: {:.2f}em".format(w/UPPER_THRESH)
   opacity = lambda w: min(w, 1.0) / 1.0
-  #MAXLEN, NCHARS = model.softmax_shape
+  maxlen, nchars = model.codec.maxlen, model.codec.nchars
   for component_index, h in enumerate(model.components_):
     res += '<div><h2>' + str(component_index) + '</h2>'
-    for cindex in range(MAXLEN):
-      weights = zip(range(NCHARS), h[cindex*NCHARS:(cindex+1)*NCHARS])
+    for cindex in range(maxlen):
+      weights = zip(range(nchars), h[cindex*nchars:(cindex+1)*nchars])
       weights.sort(key = lambda w: w[1], reverse=True)
       # Highly positive weights
       res += '<span class="pos"><span class="chars">'
       for i, w in weights:
         if w < THRESH:
           break
-        char = I2CHAR[i]
+        char = model.codec.alphabet[i]
         if char == ' ':
           char = '_'
         res += '<span style="{}">'.format(style(w)) + char + '</span>'
@@ -57,7 +62,7 @@ def receptive_fields(model):
         w = -1 * w
         if w < THRESH:
           break
-        char = I2CHAR[i]
+        char = model.codec.alphabet[i]
         if char == ' ':
           char = '_'
         res += '<span style="{}">'.format(style(w)) + char + '</span>'
@@ -71,9 +76,10 @@ def receptive_fields(model):
     res += '</div>'
   res += '</body></html>'
   f.write(res)
+  print "Wrote visualization to " + out
   f.close()
       
-def visualize_hidden_activations(model, example_fname):
+def visualize_hidden_activations(model, example_fname, out="activations.html"):
   s = '''<html><head><style>
     body {
       font-family: monospace;
@@ -87,7 +93,7 @@ def visualize_hidden_activations(model, example_fname):
       color: blue;
       }
   </style></head><body><pre>'''
-  vecs = vectors_from_txtfile(example_fname)
+  vecs = common.vectors_from_txtfile(example_fname, model.codec)
   hiddens = model._sample_hiddens(vecs)
   PADDING = 3 + 1
   s += ' '*5 + '0'
@@ -106,5 +112,21 @@ def visualize_hidden_activations(model, example_fname):
   s += ' ' * 5 + ''.join([str(sum(active)).ljust(PADDING, ' ') 
     for active in hiddens.T])
   s += '</pre></body></html>'
-  fout = open('hidden_activations.html', 'w')
+  fout = open(out, 'w')
   fout.write(s)
+  print "Wrote visualization to " + out
+  
+if __name__ == '__main__':
+    if len(sys.argv) < 3:
+        print "USAGE: visualize.py model.pickle sample.txt"
+        print (" (The sample file is used for visualizing the" 
+            + " activation rate of hidden units on typical inputs. It should be " +
+            + "no more than a few hundred lines")
+    model_fname = sys.argv[1]
+    f = open(model_fname)
+    model = pickle.load(f)
+    
+    tag = model_fname[:model_fname.rfind(".")]
+    receptive_fields(model, tag + '_receptive_fields.html')
+    
+    visualize_hidden_activations(model, sys.argv[2], tag + '_activations.html')

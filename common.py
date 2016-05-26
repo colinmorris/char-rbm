@@ -1,17 +1,8 @@
 import numpy as np
 import time
+from short_text_codec import NonEncodableTextException
 
 from sklearn.preprocessing import OneHotEncoder
-from sklearn.utils import issparse
-
-# TODO: Do a before-and-after comparison. If the non-softmax version is unambiguously worse,
-# then just remove this and a lot of associated cruft. If it isn't, weep over all the numpy
-# arcana you learned for nothing.
-SOFTMAX = 0
-
-# Keep it kind of small for now
-NCHARS = 27
-MAXLEN = 20
 
 DEBUG_TIMING = False
 def timeit(f):
@@ -30,49 +21,20 @@ def timeit(f):
 
     return timed
 
-_CHAR2I = {' ': 26}
-for (i, o) in enumerate(range(ord('a'), ord('z')+1)):
-  _CHAR2I[chr(o)] = i
-for (i, o) in enumerate(range(ord('A'), ord('Z')+1)):
-  _CHAR2I[chr(o)] = i
-  
-# This happens to work out such that we get the lowercase letters as values, which is nice.
-I2CHAR = {v:k for (k, v) in _CHAR2I.iteritems()}
-
-def decode_onehot(vec):
-  """Given a one-hot vector with a bunch of floats that we interpret as softmax,
-  return a corresponding string repr"""
-  # Let's start by just doing max instead of sampling randomly. Easier.
-  chars = []
-  if issparse(vec):
-    vec = vec.toarray().reshape(-1)
-  for position_index in range(MAXLEN):
-      char_index = np.argmax(vec[position_index*NCHARS:(position_index+1)*NCHARS])
-      chars.append(I2CHAR[char_index])
-  return ''.join(chars)
-  
-def vectorize_str(s):
-  # Pad to fixed length with spaces
-  return [_CHAR2I[c] for c in s] + [_CHAR2I[' '] for _ in range(MAXLEN - len(s))]
-  
-def vectors_from_txtfile(fname):
+def vectors_from_txtfile(fname, codec):
   f = open(fname)
   skipped = 0
   vecs = []
   for line in f:
     line = line.strip()
-    if len(line) > MAXLEN:
-      skipped += 1
-      continue
     try:
-      vecs.append(vectorize_str(line))
-    except KeyError:
-      # Some non-ascii chars slipped in
+      vecs.append(codec.encode(line))
+    except NonEncodableTextException:
+      # Too long, or illegal characters
       skipped += 1
 
   print "Gathered {} vectors. Skipped {}".format(len(vecs), skipped)
   # TODO: Why default to dtype=float? Seems wasteful? Maybe it doesn't really matter. Actually, docs here seem inconsistent? Constructor docs say default float. transform docs say int. 
   # TODO: should probably try using a sparse matrix here
   vecs = np.asarray(vecs)
-  print vecs.shape
-  return OneHotEncoder(NCHARS).fit_transform(vecs)
+  return OneHotEncoder(len(codec.alphabet)).fit_transform(vecs)

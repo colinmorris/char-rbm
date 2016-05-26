@@ -384,41 +384,49 @@ class BernoulliRBM(BaseEstimator, TransformerMixin):
 
             if verbose:
                 end = time.time()
-                
-                validation_debug = ''
-                if validation is not None:
-                    v_energy, t_energy = self.score_validation_data(X, validation)
-                    validation_debug = "\nE(vali):\t{:.2f}\tE(train):\t{:.2f}\tRelative difference: {:.2f}".format(
-                        t_energy, v_energy, t_energy/v_energy)
-                
-                # TODO: This is pretty expensive. Figure out why? Or just do less often. 
-                e_train, e_corrupted = self.score_samples(X)
-                fantasy_samples = '|'.join([common.decode_onehot(vec) for vec in
-                self._sample_visibles(self.h_samples_[:3], sample_max=True)])
-                print re.sub('\n *', '\n', """[{}] Iteration\t{}\tt = {:.2f}s
-                        E(train):\t{:.2f}\tE(corrupt):\t{:.2f}\tRelative difference: {:.2f}{}
-                        Fantasy samples: {}
-                """.format(type(self).__name__, iteration, end - begin,
-                         e_train, e_corrupted, e_corrupted/e_train, validation_debug,
-                         fantasy_samples
-                         ))
-                         
-                
+                self.wellness_check(iteration, end-begin, X, validation)
                 begin = end
 
         return self
         
-
-class BernoulliRBMSoftmax(BernoulliRBM):
-
-    def __init__(self, softmax_shape, *args, **kwargs):
+    def wellness_check(self, epoch, duration, train, validation):
+        """Log some diagnostic information on how the model is doing so far."""
+        validation_debug = ''
+        if validation is not None:
+            v_energy, t_energy = self.score_validation_data(train, validation)
+            validation_debug = "\nE(vali):\t{:.2f}\tE(train):\t{:.2f}\tRelative difference: {:.2f}".format(
+                t_energy, v_energy, t_energy/v_energy)
+        
+        # TODO: This is pretty expensive. Figure out why? Or just do less often. 
+        # TODO: Maybe some of this information should be attached to self for the
+        # sake of pickle archaeology later?
+        e_train, e_corrupted = self.score_samples(train)
+        print re.sub('\n *', '\n', """[{}] Iteration {}\tt = {:.2f}s
+                E(train):\t{:.2f}\tE(corrupt):\t{:.2f}\tRelative difference: {:.2f}{}""".format
+                (type(self).__name__, epoch, duration,
+                 e_train, e_corrupted, e_corrupted/e_train, validation_debug,
+                 ))
+        
+class CharBernoulliRBM(BernoulliRBM):
+    
+    def __init__(self, codec, *args, **kwargs):
         """softmax_shape : tuple
-        (N, M) where N is the number of softmax units, and M is the number
-        of options per softmax unit. N*M will be the number of visible 
-        binary units.
+        (N, M) where N is the length of character sequences, and M is the number
+        of distinct characters. N*M will be the number of visible 
+        binary units. (Softmax visible units won't actually be used unless you use the Softmax subclass.)
         """
-        self.softmax_shape = softmax_shape
-        super(self, BernoulliRBMSoftmax).__init__(*args, **kwargs)
+        self.codec = codec
+        self.softmax_shape = codec.shape()
+        # Old-style class :(
+        BernoulliRBM.__init__(self, *args, **kwargs)
+        
+    def wellness_check(self, epoch, duration, train, validation):
+        BernoulliRBM.wellness_check(self, epoch, duration, train, validation)
+        fantasy_samples = '|'.join([self.codec.decode(vec) for vec in
+        self._sample_visibles(self.h_samples_[:3], sample_max=True)])
+        print "Fantasy samples: {}".format(fantasy_samples)
+
+class CharBernoulliRBMSoftmax(CharBernoulliRBM):
         
     def _sample_visibles(self, h, sample_max=False):
         """Sample from the distribution P(v|h). This obeys the softmax constraint
@@ -465,8 +473,9 @@ class BernoulliRBMSoftmax(BernoulliRBM):
         offsets = offsets - (n_opts * ( ( (indices_to_corrupt % n_opts) + offsets.ravel()) >= n_opts))
         
         v.indices[meta_indices_to_corrupt] += offsets
-        return v, offsets
+        return v, (meta_indices_to_corrupt,offsets)
         
-    def uncorrupt(self, visibles, offsets):
-        visibles -= offsets
+    def uncorrupt(self, visibles, state):
+        mitc, offsets = state
+        visibles.indices[mitc] -= offsets
 
