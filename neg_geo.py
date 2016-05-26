@@ -34,7 +34,7 @@ class BernoulliRBM_(BernoulliRBM):
 def sample_model(model, n=100, max_iters=3):
   # TODO: Just make this a method of the RBM class?  
   #rand = np.random.randint(0, 2, (n, MAXLEN * NCHARS))
-  if 1:
+  if 0:
     # TODO: Should this actually sample according to the biases?
     rand_hidden = np.random.randint(0, 2, (n, len(model.components_)) )
     rand = model._sample_visibles(rand_hidden, model.random_state)
@@ -58,7 +58,7 @@ def sample_model(model, n=100, max_iters=3):
             
       print "After {} rounds of sampling".format(10**power)
       for vec in probs:
-          decode_and_print(vec)
+          print decode_onehot(vec)
       print
   
 if __name__ == '__main__':
@@ -68,17 +68,17 @@ if __name__ == '__main__':
     model = pickle.load(f)
     viz.visualize_hidden_activations(model, 'geo_100.txt')
     viz.receptive_fields(model)
-    #sample_model(model)
+    sample_model(model)
   else:
     # TODO: trap ctrl+c and do sampling before bailing
     #vecs = vectors_from_txtfile('../data/geonames_us.txt')
-    vecs = vectors_from_txtfile('micro_geo.txt')
+    vecs = vectors_from_txtfile('mini_geo.txt')
     train, validation = train_test_split(vecs, test_size=0.05)
     print "X Shape : " + str(train.shape)
     if SOFTMAX:
-      rbm = BernoulliRBMSoftmax( softmax_shape=(MAXLEN, NCHARS), n_components=190, learning_rate=0.05, n_iter=5, verbose=1)
+      rbm = BernoulliRBMSoftmax( softmax_shape=(MAXLEN, NCHARS), n_components=190, learning_rate=0.05, n_iter=10, verbose=1)
     else:
-      rbm = BernoulliRBM_(n_components=300, learning_rate=0.05, n_iter=50, verbose=1)
+      rbm = BernoulliRBM_(n_components=190, learning_rate=0.05, n_iter=10, verbose=1)
     rbm.fit(train, validation)
     f = open('model.pickle', 'wb')
     pickle.dump(rbm, f)

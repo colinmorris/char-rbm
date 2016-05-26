@@ -2,11 +2,12 @@ import numpy as np
 import time
 
 from sklearn.preprocessing import OneHotEncoder
+from sklearn.utils import issparse
 
 # TODO: Do a before-and-after comparison. If the non-softmax version is unambiguously worse,
 # then just remove this and a lot of associated cruft. If it isn't, weep over all the numpy
 # arcana you learned for nothing.
-SOFTMAX = 1
+SOFTMAX = 0
 
 # Keep it kind of small for now
 NCHARS = 27
@@ -36,17 +37,19 @@ for (i, o) in enumerate(range(ord('A'), ord('Z')+1)):
   _CHAR2I[chr(o)] = i
   
 # This happens to work out such that we get the lowercase letters as values, which is nice.
-_I2CHAR = {v:k for (k, v) in _CHAR2I.iteritems()}
+I2CHAR = {v:k for (k, v) in _CHAR2I.iteritems()}
 
-def decode_and_print(vec):
+def decode_onehot(vec):
   """Given a one-hot vector with a bunch of floats that we interpret as softmax,
   return a corresponding string repr"""
   # Let's start by just doing max instead of sampling randomly. Easier.
   chars = []
+  if issparse(vec):
+    vec = vec.toarray().reshape(-1)
   for position_index in range(MAXLEN):
       char_index = np.argmax(vec[position_index*NCHARS:(position_index+1)*NCHARS])
-      chars.append(_I2CHAR[char_index])
-  print ''.join(chars)
+      chars.append(I2CHAR[char_index])
+  return ''.join(chars)
   
 def vectorize_str(s):
   # Pad to fixed length with spaces

@@ -171,7 +171,7 @@ class BernoulliRBMSoftmax(BaseEstimator, TransformerMixin):
         p = self._mean_hiddens(v)
         return (rng.random_sample(size=p.shape) < p)
 
-    def _sample_visibles(self, h, rng, sample_max=False):
+    def _sample_visibles(self, h, rng=None, sample_max=False):
         """Sample from the distribution P(v|h). This obeys the softmax constraint
         on visible units. i.e. sum(v) == softmax_shape[0] for any visible 
         configuration v.
@@ -193,6 +193,8 @@ class BernoulliRBMSoftmax(BaseEstimator, TransformerMixin):
         v : array-like, shape (n_samples, n_features)
             Values of the visible layer.
         """
+        if rng is None and not hasattr(self, 'random_state_'):
+            self.random_state_ = check_random_state(self.random_state)
         p = np.dot(h, self.components_)
         p += self.intercept_visible_
         nsamples, nfeats = p.shape
@@ -418,10 +420,14 @@ class BernoulliRBMSoftmax(BaseEstimator, TransformerMixin):
                 
                 # TODO: This is pretty expensive. Figure out why? Or just do less often. 
                 e_train, e_corrupted = self.score_samples(X)
+                fantasy_samples = '|'.join([common.decode_onehot(vec) for vec in
+                self._sample_visibles(self.h_samples_[:3], sample_max=True)])
                 print re.sub('\n *', '\n', """[{}] Iteration\t{}\tt = {:.2f}s
                         E(train):\t{:.2f}\tE(corrupt):\t{:.2f}\tRelative difference: {:.2f}{}
+                        Fantasy samples: {}
                 """.format(type(self).__name__, iteration, end - begin,
                          e_train, e_corrupted, e_corrupted/e_train, validation_debug,
+                         fantasy_samples
                          ))
                          
                 

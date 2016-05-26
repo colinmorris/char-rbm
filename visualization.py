@@ -1,34 +1,5 @@
-# ZZZ
-_CHAR2I = {' ': 26}
-for (i, o) in enumerate(range(ord('a'), ord('z')+1)):
-  _CHAR2I[chr(o)] = i
-for (i, o) in enumerate(range(ord('A'), ord('Z')+1)):
-  _CHAR2I[chr(o)] = i
-  
-# This happens to work out such that we get the lowercase letters as values, which is nice.
-_I2CHAR = {v:k for (k, v) in _CHAR2I.iteritems()}
-
-def vectors_from_txtfile(fname):
-  f = open(fname)
-  skipped = 0
-  vecs = []
-  for line in f:
-    line = line.strip()
-    if len(line) > MAXLEN:
-      skipped += 1
-      continue
-    try:
-      vecs.append(vectorize_str(line))
-    except KeyError:
-      # Some non-ascii chars slipped in
-      skipped += 1
-
-  print "Gathered {} vectors. Skipped {}".format(len(vecs), skipped)
-  # TODO: Why default to dtype=float? Seems wasteful? Maybe it doesn't really matter. Actually, docs here seem inconsistent? Constructor docs say default float. transform docs say int. 
-  # TODO: should probably try using a sparse matrix here
-  vecs = np.asarray(vecs)
-  print vecs.shape
-  return OneHotEncoder(NCHARS).fit_transform(vecs)
+from common import *
+from sklearn.utils import check_random_state
 
 def receptive_fields(model):
   f = open('recep.html', 'w')
@@ -59,7 +30,7 @@ def receptive_fields(model):
       return "opacity: {:.2f}".format(w/UPPER_THRESH)
     return "font-size: {:.2f}em".format(w/UPPER_THRESH)
   opacity = lambda w: min(w, 1.0) / 1.0
-  MAXLEN, NCHARS = model.softmax_shape
+  #MAXLEN, NCHARS = model.softmax_shape
   for component_index, h in enumerate(model.components_):
     res += '<div><h2>' + str(component_index) + '</h2>'
     for cindex in range(MAXLEN):
@@ -70,7 +41,7 @@ def receptive_fields(model):
       for i, w in weights:
         if w < THRESH:
           break
-        char = _I2CHAR[i]
+        char = I2CHAR[i]
         if char == ' ':
           char = '_'
         res += '<span style="{}">'.format(style(w)) + char + '</span>'
@@ -86,7 +57,7 @@ def receptive_fields(model):
         w = -1 * w
         if w < THRESH:
           break
-        char = _I2CHAR[i]
+        char = I2CHAR[i]
         if char == ' ':
           char = '_'
         res += '<span style="{}">'.format(style(w)) + char + '</span>'
