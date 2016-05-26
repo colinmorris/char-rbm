@@ -1,4 +1,5 @@
-"""Restricted Boltzmann Machine
+"""Restricted Boltzmann Machine with softmax visible units.
+Based on sklearn's BernoulliRBM class.
 """
 
 # Authors: Yann N. Dauphin <dauphiya@iro.umontreal.ca>
@@ -11,8 +12,6 @@ import time
 
 import numpy as np
 import scipy.sparse as sp
-
-from sklearn.preprocessing import OneHotEncoder
 
 from sklearn.base import BaseEstimator
 from sklearn.base import TransformerMixin
@@ -32,7 +31,7 @@ from smh import softmax_and_sample
 class BernoulliRBMSoftmax(BaseEstimator, TransformerMixin):
     """Bernoulli Restricted Boltzmann Machine (RBM).
 
-    A Restricted Boltzmann Machine with binary visible units and
+    A Restricted Boltzmann Machine with binary softmax visible units and
     binary hiddens. Parameters are estimated using Stochastic Maximum
     Likelihood (SML), also known as Persistent Contrastive Divergence (PCD)
     [2].
@@ -44,6 +43,12 @@ class BernoulliRBMSoftmax(BaseEstimator, TransformerMixin):
 
     Parameters
     ----------
+    
+    softmax_shape : tuple
+        (N, M) where N is the number of softmax units, and M is the number
+        of options per softmax unit. N*M will be the number of visible 
+        binary units.
+    
     n_components : int, optional
         Number of binary hidden units.
 
@@ -110,7 +115,6 @@ class BernoulliRBMSoftmax(BaseEstimator, TransformerMixin):
         self.verbose = verbose
         self.random_state = random_state
         self.softmax_shape = softmax_shape
-        self.onehot_encoder = OneHotEncoder(softmax_shape[1])
 
     def transform(self, X):
         """Compute the hidden layer activation probabilities, P(h=1|v=X).
@@ -167,7 +171,9 @@ class BernoulliRBMSoftmax(BaseEstimator, TransformerMixin):
         return (rng.random_sample(size=p.shape) < p)
 
     def _sample_visibles(self, h, rng, sample_max=False):
-        """Sample from the distribution P(v|h).
+        """Sample from the distribution P(v|h). This obeys the softmax constraint
+        on visible units. i.e. sum(v) == softmax_shape[0] for any visible 
+        configuration v.
 
         Parameters
         ----------
@@ -176,6 +182,10 @@ class BernoulliRBMSoftmax(BaseEstimator, TransformerMixin):
 
         rng : RandomState
             Random number generator to use.
+            
+        sample_max : bool
+            If True, then for each softmax unit, take the value with the highest
+            probability, rather than sampling randomly. 
 
         Returns
         -------
@@ -185,29 +195,8 @@ class BernoulliRBMSoftmax(BaseEstimator, TransformerMixin):
         p = np.dot(h, self.components_)
         p += self.intercept_visible_
         nsamples, nfeats = p.shape
-        # Softmax shape = e.g. length x n_distinct_chars
         reshaped = np.reshape(p, (nsamples,) + self.softmax_shape)
-        return softmax_and_sample(reshaped, copy=False).reshape( (nsamples, nfeats) )
-        #soft = softmax(np.reshape(p, (nsamples,) + self.softmax_shape), copy=False)
-        n, k = self.softmax_shape
-        visible = np.zeros( (nsamples, nfeats) )
-        # TODO: This seems inefficient. Cause for loops.
-        # Idea for a better way...
-        # Convert arrays to running sums. [.2, .5, .3] -> [.2, .7, 1.0]
-        # sample uniform x_1, x_2...x_n from 0-1
-        # argmax(array >= x)
-        # But Jesus, I don't want to write that code. :(
-        for i in range(nsamples):
-            soft = softmax(reshaped[i])
-            for j in range(n):
-                if sample_max:
-                    index = np.argmax(soft[j])
-                else:
-                    index = np.random.choice(k, p=soft[j])
-                visible[i][j*k+index] = 1
-        return visible
-        #expit(p, out=p)
-        #return (rng.random_sample(size=p.shape) < p)
+        return softmax_and_sample(reshaped).reshape( (nsamples, nfeats) )
 
     def _free_energy(self, v):
         """Computes the free energy F(v) = - log sum_h exp(-E(v,h)).
@@ -226,13 +215,19 @@ class BernoulliRBMSoftmax(BaseEstimator, TransformerMixin):
                 - np.logaddexp(0, safe_sparse_dot(v, self.components_.T)
                                + self.intercept_hidden_).sum(axis=1))
 
-    def gibbs(self, v):
+    def gibbs(self, v, sample_max=False):
         """Perform one Gibbs sampling step.
 
         Parameters
         ----------
         v : array-like, shape (n_samples, n_features)
             Values of the visible layer to start from.
+            
+        sample_max : bool
+            If true, then take the visible unit with the highest probability
+            for each softmax group, rather than sampling randomly. If you're 
+            trying to draw 'nice' samples from the model distribution, doing 
+            this for the last round of sampling may eliminate some noise.
 
         Returns
         -------
@@ -243,18 +238,10 @@ class BernoulliRBMSoftmax(BaseEstimator, TransformerMixin):
         if not hasattr(self, "random_state_"):
             self.random_state_ = check_random_state(self.random_state)
         h_ = self._sample_hiddens(v, self.random_state_)
-        v_ = self._sample_visibles(h_, self.random_state_)
+        v_ = self._sample_visibles(h_, self.random_state_, sample_max)
 
         return v_
         
-    def gibbs_max(self, v):
-        check_is_fitted(self, "components_")
-        if not hasattr(self, "random_state_"):
-            self.random_state_ = check_random_state(self.random_state)
-        h_ = self._sample_hiddens(v, self.random_state_)
-        v_ = self._sample_visibles(h_, self.random_state_, sample_max=True)
-        return v_
-
     def partial_fit(self, X, y=None):
         """Fit the model to the data X which should contain a partial
         segment of the data.
@@ -303,12 +290,9 @@ class BernoulliRBMSoftmax(BaseEstimator, TransformerMixin):
         rng : RandomState
             Random number generator to use for sampling.
         """
-        # Probabilities of hidden layer given visibles
         h_pos = self._mean_hiddens(v_pos)
-        # h_samples is initialized to zeros, then derived from alternating gibbs sampling? Oh, that's how SML works. ok.
         v_neg = self._sample_visibles(self.h_samples_, rng)
         h_neg = self._mean_hiddens(v_neg)
-        # pos vs. neg thing has to do with CNE?
 
         lr = float(self.learning_rate) / v_pos.shape[0]
         update = safe_sparse_dot(v_pos.T, h_pos, dense_output=True).T
@@ -320,8 +304,6 @@ class BernoulliRBMSoftmax(BaseEstimator, TransformerMixin):
                                          v_neg.sum(axis=0))
 
         h_neg[rng.uniform(size=h_neg.shape) < h_neg] = 1.0  # sample binomial
-        # Second param here seems redundant at best?
-        # Anyways, seemingly idea here is to booleanize h_neg
         self.h_samples_ = np.floor(h_neg, h_neg)
 
     def score_samples(self, X):
@@ -397,6 +379,7 @@ class BernoulliRBMSoftmax(BaseEstimator, TransformerMixin):
 
             if verbose:
                 end = time.time()
+                # TODO: Reinstate the call to score_samples once you figure out how to unbreak it
                 print("[%s] Iteration %d, pseudo-likelihood = %.2f,"
                       " time = %.2fs"
                       % (type(self).__name__, iteration,
