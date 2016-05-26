@@ -88,7 +88,7 @@ def visualize_hidden_activations(model, example_fname):
       }
   </style></head><body><pre>'''
   vecs = vectors_from_txtfile(example_fname)
-  hiddens = model._sample_hiddens(vecs, check_random_state(model.random_state))
+  hiddens = model._sample_hiddens(vecs)
   PADDING = 3 + 1
   s += ' '*5 + '0'
   for i in range(5*PADDING, hiddens.shape[1]*PADDING, 5*PADDING):

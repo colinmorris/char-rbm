@@ -2,33 +2,14 @@
 import numpy as np
 import time
 import pickle
-from sklearn.neural_network import BernoulliRBM
 from sklearn.utils.fixes import expit
 from sklearn.utils import check_random_state
 from sklearn.cross_validation import train_test_split
-from rbm_softmax import BernoulliRBMSoftmax
+from rbm_softmax import BernoulliRBM, BernoulliRBMSoftmax
 import sys
 
 import visualization as viz
 from common import *
-
-# TODO: Remove
-class BernoulliRBM_(BernoulliRBM):
-    
-    def gibbs_prob(self, v):
-        h_ = self._sample_hiddens(v, self.random_state_)
-        return self.sample_vis_probs(h_)
-        
-    def sample_vis_probs(self, h):
-        p = np.dot(h, self.components_)
-        p += self.intercept_visible_
-        expit(p, out=p)
-        return p
-
-
-
-  
-
     
 @timeit
 def sample_model(model, n=100, max_iters=3):
@@ -51,10 +32,7 @@ def sample_model(model, n=100, max_iters=3):
       for _ in range(10**power):
         sample = model.gibbs(sample)
      
-      if SOFTMAX:
-        probs = model.gibbs(sample, sample_max=True)
-      else: 
-        probs = model.gibbs_prob(sample)
+      probs = model.gibbs(sample, sample_max=True)
             
       print "After {} rounds of sampling".format(10**power)
       for vec in probs:
@@ -70,16 +48,18 @@ if __name__ == '__main__':
     viz.receptive_fields(model)
     sample_model(model)
   else:
-    # TODO: trap ctrl+c and do sampling before bailing
+    # TODO: trap ctrl+c and pickle the model before bailing
     #vecs = vectors_from_txtfile('../data/geonames_us.txt')
     vecs = vectors_from_txtfile('mini_geo.txt')
     train, validation = train_test_split(vecs, test_size=0.05)
     print "X Shape : " + str(train.shape)
+    # TODO: Write some tedious optparse code for these parameters
     if SOFTMAX:
       rbm = BernoulliRBMSoftmax( softmax_shape=(MAXLEN, NCHARS), n_components=190, learning_rate=0.05, n_iter=10, verbose=1)
     else:
-      rbm = BernoulliRBM_(n_components=190, learning_rate=0.05, n_iter=10, verbose=1)
+      rbm = BernoulliRBM(n_components=190, learning_rate=0.05, n_iter=10, verbose=1)
     rbm.fit(train, validation)
+    # TODO: Name pickle by hyperparams
     f = open('model.pickle', 'wb')
     pickle.dump(rbm, f)
     f.close()
