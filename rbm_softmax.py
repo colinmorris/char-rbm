@@ -9,6 +9,7 @@ Based on sklearn's BernoulliRBM class.
 # License: BSD 3 clause
 
 import time
+import re
 
 import numpy as np
 import scipy.sparse as sp
@@ -21,11 +22,11 @@ from sklearn.utils import check_random_state
 from sklearn.utils import gen_even_slices
 from sklearn.utils import issparse
 from sklearn.utils.extmath import safe_sparse_dot, softmax, log_logistic
-from sklearn.utils.extmath import log_logistic
 from sklearn.utils.fixes import expit             # logistic function
 from sklearn.utils.validation import check_is_fitted
 
 from smh import softmax_and_sample
+import common
 
 
 class BernoulliRBMSoftmax(BaseEstimator, TransformerMixin):
@@ -306,6 +307,7 @@ class BernoulliRBMSoftmax(BaseEstimator, TransformerMixin):
         h_neg[rng.uniform(size=h_neg.shape) < h_neg] = 1.0  # sample binomial
         self.h_samples_ = np.floor(h_neg, h_neg)
 
+    @common.timeit
     def score_samples(self, X):
         """Compute the pseudo-likelihood of X.
 
@@ -329,28 +331,56 @@ class BernoulliRBMSoftmax(BaseEstimator, TransformerMixin):
 
         v = check_array(X, accept_sparse='csr')
         rng = check_random_state(self.random_state)
-
-        # Randomly corrupt one feature in each sample in v.
-        ind = (np.arange(v.shape[0]),
-               rng.randint(0, v.shape[1], v.shape[0]))
-        if issparse(v):
-            data = -2 * v[ind] + 1
-            v_ = v + sp.csr_matrix((data.A.ravel(), ind), shape=v.shape)
-        else:
-            v_ = v.copy()
-            v_[ind] = 1 - v_[ind]
-
         fe = self._free_energy(v)
-        fe_ = self._free_energy(v_)
-        return v.shape[1] * log_logistic(fe_ - fe)
 
-    def fit(self, X, y=None):
+        n_softmax, n_opts = self.softmax_shape
+        # Select a random index in to the indices of the non-zero values of each input
+        # TODO: In the char-RBM case, if I wanted to really challenge the model, I would avoid selecting any 
+        # trailing spaces here. Cause any dumb model can figure out that it should assign high energy to 
+        # any instance of /  [^ ]/
+        meta_indices_to_corrupt = rng.randint(0, n_softmax, v.shape[0]) + np.arange(0, n_softmax*v.shape[0], n_softmax)
+        
+        # Offset these indices by a random amount (but not 0 - we want to actually change them)
+        offsets = rng.randint(1, n_opts, v.shape[0])   
+        # Also, do some math to make sure we don't "spill over" into a different softmax.
+        # E.g. if n_opts=5, and we're corrupting index 3, we should choose offsets from {-3, -2, -1, +1}
+        # 1-d array that matches with meta_i_t_c but which contains the indices themselves
+        indices_to_corrupt = v.indices[meta_indices_to_corrupt]
+        # Sweet lucifer
+        offsets = offsets - (n_opts * ( ( (indices_to_corrupt % n_opts) + offsets.ravel()) >= n_opts))
+        
+        v.indices[meta_indices_to_corrupt] += offsets
+        fe_corrupted = self._free_energy(v)
+        # Uncorrupt
+        v.indices[meta_indices_to_corrupt] -= offsets
+        return fe.mean(), fe_corrupted.mean()
+            
+        # TODO: I don't have a great intuition about this. Why multiply by n_features?
+        # The overfitting section of "Practical Guide" just says to compare the 
+        # average free energy of train and validation and to compare them. Any reason
+        # not to just do that here as well? Seems much simpler to interpret. Maybe 
+        # it's because we're supposed to be dealing with smaller deltas here?
+        #return v.shape[1] * log_logistic(fe_corrupted - fe)
+
+    @common.timeit
+    def score_validation_data(self, train, validation):
+        """Return the energy difference between the given validation data, and a
+        subset of the training data. This is useful for monitoring overfitting.
+        If the model isn't overfitting, the difference should be around 0. The
+        greater the difference, the more the model is overfitting.
+        """
+        # It's important to use the same subset of the training data every time (per Hinton's "Practical Guide")
+        return self._free_energy(train[:validation.shape[0]]).mean() , self._free_energy(validation).mean()
+        
+    def fit(self, X, validation=None):
         """Fit the model to the data X.
 
         Parameters
         ----------
         X : {array-like, sparse matrix} shape (n_samples, n_features)
             Training data.
+            
+        validation : {array-like, sparse matrix}
 
         Returns
         -------
@@ -379,11 +409,24 @@ class BernoulliRBMSoftmax(BaseEstimator, TransformerMixin):
 
             if verbose:
                 end = time.time()
-                # TODO: Reinstate the call to score_samples once you figure out how to unbreak it
-                print("[%s] Iteration %d, pseudo-likelihood = %.2f,"
-                      " time = %.2fs"
-                      % (type(self).__name__, iteration,
-                         1337.0, end - begin))
+                
+                validation_debug = ''
+                if validation is not None:
+                    v_energy, t_energy = self.score_validation_data(X, validation)
+                    validation_debug = "\nE(vali):\t{:.2f}\tE(train):\t{:.2f}\tRelative difference: {:.2f}".format(
+                        t_energy, v_energy, t_energy/v_energy)
+                
+                # TODO: This is pretty expensive. Figure out why? Or just do less often. 
+                e_train, e_corrupted = self.score_samples(X)
+                print re.sub('\n *', '\n', """[{}] Iteration\t{}\tt = {:.2f}s
+                        E(train):\t{:.2f}\tE(corrupt):\t{:.2f}\tRelative difference: {:.2f}{}
+                """.format(type(self).__name__, iteration, end - begin,
+                         e_train, e_corrupted, e_corrupted/e_train, validation_debug,
+                         ))
+                         
+                
                 begin = end
 
         return self
+        
+      
