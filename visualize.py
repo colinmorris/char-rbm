@@ -121,7 +121,8 @@ if __name__ == '__main__':
         print "USAGE: visualize.py model.pickle sample.txt"
         print (" (The sample file is used for visualizing the" 
             + " activation rate of hidden units on typical inputs. It should be " +
-            + "no more than a few hundred lines")
+            "no more than a few hundred lines")
+        sys.exit(1)
     model_fname = sys.argv[1]
     f = open(model_fname)
     model = pickle.load(f)
