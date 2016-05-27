@@ -8,7 +8,7 @@ from short_text_codec import ShortTextCodec
 from rbm_softmax import CharBernoulliRBM, CharBernoulliRBMSoftmax
 
 def pickle_name(args):
-	fname = args.tag if args.tag else args.input_fname.split('.')[0]
+	fname = args.tag if args.tag else args.input_fname.split('.')[0].split('/')[-1]
 	fname += '_'
 	if not args.softmax:
 		fname += '_nosm'
@@ -17,7 +17,8 @@ def pickle_name(args):
 	
 
 if __name__ == '__main__':
-  parser = argparse.ArgumentParser(description='Train a character-level RBM on short texts')
+  parser = argparse.ArgumentParser(description='Train a character-level RBM on short texts',
+    formatter_class=argparse.ArgumentDefaultsHelpFormatter)
   parser.add_argument('input_fname', metavar='txtfile',
                       help='A text file to train on, with one instance per line')
   parser.add_argument('--test-ratio', dest='test_ratio', type=float, default=0.05,
@@ -33,7 +34,7 @@ if __name__ == '__main__':
   parser.add_argument('--hid', '--hidden-units', dest='n_hidden', default=180, type=int,
 		                  help='Number of hidden units')
   parser.add_argument('-l', '--learning-rate', dest='learning_rate', default=0.05, type=float)
-  parser.add_argument('-e', '--epochs', dest='epochs', default=5, type=int)
+  parser.add_argument('-e', '--epochs', dest='epochs', default=5, type=int, help="Number of times to cycle through the training data")
   parser.add_argument('--tag', dest='tag', default='',
 										  help='A name for this run. The model will be pickled to ' +
 										  'a corresponding filename. That name will already encode ' +

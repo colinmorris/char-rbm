@@ -28,7 +28,8 @@ def sample_model(model, n, iters, prog):
   print_samples(model, sample)
 
 if __name__ == '__main__':
-  parser = argparse.ArgumentParser(description='Sample short texts from a pickled model')
+  parser = argparse.ArgumentParser(description='Sample short texts from a pickled model',
+    formatter_class=argparse.ArgumentDefaultsHelpFormatter)
   parser.add_argument('model_fname', metavar='model.pickle',
                       help='A pickled RBM model')
   parser.add_argument('-n', '--n-samples', dest='n_samples', type=int, default=20,
