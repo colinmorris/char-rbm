@@ -94,6 +94,9 @@ def visualize_hidden_activations(model, example_fname, out="activations.html"):
       }
   </style></head><body><pre>'''
   vecs = common.vectors_from_txtfile(example_fname, model.codec)
+  if vecs.shape[0] > 5000:
+    print "WARNING: You passed in a text file with over 5k lines. Surely you didn't mean to do that. Truncating to 300"
+    vecs = vecs[:300]
   hiddens = model._sample_hiddens(vecs)
   PADDING = 3 + 1
   s += ' '*5 + '0'
