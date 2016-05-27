@@ -17,6 +17,7 @@ def pickle_name(args):
 	
 
 if __name__ == '__main__':
+  # TODO: An option for checkpointing model every n epochs
   parser = argparse.ArgumentParser(description='Train a character-level RBM on short texts',
     formatter_class=argparse.ArgumentDefaultsHelpFormatter)
   parser.add_argument('input_fname', metavar='txtfile',
@@ -35,6 +36,8 @@ if __name__ == '__main__':
 		                  help='Number of hidden units')
   parser.add_argument('-l', '--learning-rate', dest='learning_rate', default=0.05, type=float)
   parser.add_argument('-e', '--epochs', dest='epochs', default=5, type=int, help="Number of times to cycle through the training data")
+  parser.add_argument('-m', '--model', dest='model', default=None, 
+    help="Start from a previously trained model. Options affecting network topology will be ignored.")
   parser.add_argument('--tag', dest='tag', default='',
 										  help='A name for this run. The model will be pickled to ' +
 										  'a corresponding filename. That name will already encode ' +
@@ -43,18 +46,28 @@ if __name__ == '__main__':
   args = parser.parse_args()
 
   # TODO: trap ctrl+c and pickle the model before bailing
-  codec = ShortTextCodec(args.extra_chars, args.text_length)
+  if args.model:
+    f = open(args.model)
+    rbm = pickle.load(f)
+    f.close()
+    rbm.learning_rate = args.learning_rate
+    rbm.n_iter = args.epochs
+    codec = rbm.codec
+  else:
+    codec = ShortTextCodec(args.extra_chars, args.text_length)
+    model_kwargs = {'codec':codec,
+	    'n_components': args.n_hidden,
+	    'learning_rate': args.learning_rate,
+	    'n_iter': args.epochs,
+	    'verbose': 1
+      }
+    kls = CharBernoulliRBMSoftmax if args.softmax else CharBernoulliRBM
+    rbm = kls(**model_kwargs)
+  
   vecs = common.vectors_from_txtfile(args.input_fname, codec)
   train, validation = train_test_split(vecs, test_size=args.test_ratio)
   print "Training data shape : " + str(train.shape)
-  model_kwargs = {'codec':codec,
-	  'n_components': args.n_hidden,
-	  'learning_rate': args.learning_rate,
-	  'n_iter': args.epochs,
-	  'verbose': 1
-  }
-  kls = CharBernoulliRBMSoftmax if args.softmax else CharBernoulliRBM
-  rbm = kls(**model_kwargs)
+  
 
   rbm.fit(train, validation)
   f = open(pickle_name(args), 'wb')
