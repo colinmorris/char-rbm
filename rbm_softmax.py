@@ -366,11 +366,15 @@ class BernoulliRBM(BaseEstimator, TransformerMixin):
         X = check_array(X, accept_sparse='csr', dtype=np.float)
         n_samples = X.shape[0]
 
-        self.components_ = np.asarray(
-            self.rng_.normal(0, 0.01, (self.n_components, X.shape[1])),
-            order='fortran')
-        self.intercept_hidden_ = np.zeros(self.n_components, )
-        self.intercept_visible_ = np.zeros(X.shape[1], )
+        if not hasattr(self, 'components_'):
+            self.components_ = np.asarray(
+                self.rng_.normal(0, 0.01, (self.n_components, X.shape[1])),
+                order='fortran')
+            self.intercept_hidden_ = np.zeros(self.n_components, )
+            self.intercept_visible_ = np.zeros(X.shape[1], )
+        else:
+            print "Resuing existing weights and biases"
+        # Don't necessarily want to reuse h_samples if we have one leftover from before - batch size might have changed
         self.h_samples_ = np.zeros((self.batch_size, self.n_components))
 
         n_batches = int(np.ceil(float(n_samples) / self.batch_size))
