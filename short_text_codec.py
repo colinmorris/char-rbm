@@ -7,13 +7,13 @@ class NonEncodableTextException(Exception):
 
 
 class ShortTextCodec(object):
-
-    FILLER = ' '
+    # TODO: problematic if this char appears in the training text
+    FILLER = '$' 
 
     def __init__(self, extra_chars, textlength):
-        # Spaces are on the house
-        if ' ' not in extra_chars:
-            extra_chars = ' ' + extra_chars
+        for mandatory_extra in set([' ', self.FILLER]):
+            if mandatory_extra not in extra_chars:
+                extra_chars = mandatory_extra + extra_chars
         self.maxlen = textlength
         self.char_lookup = {}
         self.alphabet = ''

@@ -11,8 +11,11 @@ from rbm_softmax import CharBernoulliRBM, CharBernoulliRBMSoftmax
 def pickle_name(args):
     fname = args.tag if args.tag else args.input_fname.split('.')[0].split('/')[-1]
     fname += '_'
+    # TODO: For the sake of brevity, maybe we should only encode parameters that didn't take their default value (though defaults may drift over time...)
     if not args.softmax:
         fname += '_nosm'
+    if args.learning_rate_backoff:
+        fname += '_lrb'
     fname += '_{}_{}_{:.3f}.pickle'.format(args.epochs, args.n_hidden, args.learning_rate)
     return fname
 
@@ -56,6 +59,7 @@ if __name__ == '__main__':
         rbm = pickle.load(f)
         f.close()
         rbm.learning_rate = args.learning_rate
+        rbm.base_learning_rate = args.learning_rate
         rbm.lr_backoff = args.learning_rate_backoff
         rbm.n_iter = args.epochs
         rbm.batch_size = args.batch_size

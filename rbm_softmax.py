@@ -397,7 +397,7 @@ class BernoulliRBM(BaseEstimator, TransformerMixin):
                 # If, e.g., we're doing 10 epochs, use the full learning rate for
                 # the first iteration, 90% of the base learning rate for the second
                 # iteration... and 10% for the final iteration
-                self.learning_rate = (self.n_iter - iteration - 1) / self.n_iter
+                self.learning_rate = ((self.n_iter - (iteration - 1)) / (self.n_iter+0.0)) * self.base_learning_rate
                 print "Using learning rate of {:.3f} (base LR={:.3f})".format(self.learning_rate, self.base_learning_rate)
 
             for batch_slice in batch_slices:
