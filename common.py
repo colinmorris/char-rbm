@@ -18,7 +18,7 @@ def timeit(f):
         te = time.time()
 
         print 'func:%r took: %2.4f sec' % \
-            (f.__name__, te-ts)
+            (f.__name__, te - ts)
         return result
 
     return timed

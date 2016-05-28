@@ -103,7 +103,6 @@ class BernoulliRBM(BaseEstimator, TransformerMixin):
         on Machine Learning (ICML) 2008
     """
 
-
     def __init__(self, n_components=256, learning_rate=0.1, batch_size=10,
                  n_iter=10, verbose=0, random_state=None, lr_backoff=False):
         self.n_components = n_components
@@ -348,7 +347,7 @@ class BernoulliRBM(BaseEstimator, TransformerMixin):
         greater the difference, the more the model is overfitting.
         """
         # It's important to use the same subset of the training data every time (per Hinton's "Practical Guide")
-        return self._free_energy(train[:validation.shape[0]]).mean() , self._free_energy(validation).mean()
+        return self._free_energy(train[:validation.shape[0]]).mean(), self._free_energy(validation).mean()
 
     def fit(self, X, validation=None):
         """Fit the model to the data X.
@@ -391,7 +390,7 @@ class BernoulliRBM(BaseEstimator, TransformerMixin):
 
             if verbose:
                 end = time.time()
-                self.wellness_check(iteration, end-begin, X, validation)
+                self.wellness_check(iteration, end - begin, X, validation)
                 begin = end
 
         return self
@@ -402,7 +401,7 @@ class BernoulliRBM(BaseEstimator, TransformerMixin):
         if validation is not None:
             v_energy, t_energy = self.score_validation_data(train, validation)
             validation_debug = "\nE(vali):\t{:.2f}\tE(train):\t{:.2f}\tRelative difference: {:.2f}".format(
-                t_energy, v_energy, t_energy/v_energy)
+                t_energy, v_energy, t_energy / v_energy)
 
         # TODO: This is pretty expensive. Figure out why? Or just do less often.
         # TODO: Maybe some of this information should be attached to self for the
@@ -410,9 +409,9 @@ class BernoulliRBM(BaseEstimator, TransformerMixin):
         e_train, e_corrupted = self.score_samples(train)
         print re.sub('\n *', '\n', """[{}] Iteration {}\tt = {:.2f}s
                 E(train):\t{:.2f}\tE(corrupt):\t{:.2f}\tRelative difference: {:.2f}{}""".format
-                    (type(self).__name__, epoch, duration,
-                     e_train, e_corrupted, e_corrupted/e_train, validation_debug,
-                     ))
+                     (type(self).__name__, epoch, duration,
+                      e_train, e_corrupted, e_corrupted / e_train, validation_debug,
+                      ))
 
 
 class CharBernoulliRBM(BernoulliRBM):
@@ -460,7 +459,7 @@ class CharBernoulliRBMSoftmax(CharBernoulliRBM):
         p += self.intercept_visible_
         nsamples, nfeats = p.shape
         reshaped = np.reshape(p, (nsamples,) + self.softmax_shape)
-        return softmax_and_sample(reshaped).reshape( (nsamples, nfeats) )
+        return softmax_and_sample(reshaped).reshape((nsamples, nfeats))
 
     def corrupt(self, v):
         # TODO: Should probably make this available in the parent class as well.
@@ -470,7 +469,7 @@ class CharBernoulliRBMSoftmax(CharBernoulliRBM):
         # TODO: In the char-RBM case, if I wanted to really challenge the model, I would avoid selecting any
         # trailing spaces here. Cause any dumb model can figure out that it should assign high energy to
         # any instance of /  [^ ]/
-        meta_indices_to_corrupt = self.rng_.randint(0, n_softmax, v.shape[0]) + np.arange(0, n_softmax*v.shape[0], n_softmax)
+        meta_indices_to_corrupt = self.rng_.randint(0, n_softmax, v.shape[0]) + np.arange(0, n_softmax * v.shape[0], n_softmax)
 
         # Offset these indices by a random amount (but not 0 - we want to actually change them)
         offsets = self.rng_.randint(1, n_opts, v.shape[0])
@@ -479,10 +478,10 @@ class CharBernoulliRBMSoftmax(CharBernoulliRBM):
         # 1-d array that matches with meta_i_t_c but which contains the indices themselves
         indices_to_corrupt = v.indices[meta_indices_to_corrupt]
         # Sweet lucifer
-        offsets = offsets - (n_opts * ( ( (indices_to_corrupt % n_opts) + offsets.ravel()) >= n_opts))
+        offsets = offsets - (n_opts * (((indices_to_corrupt % n_opts) + offsets.ravel()) >= n_opts))
 
         v.indices[meta_indices_to_corrupt] += offsets
-        return v, (meta_indices_to_corrupt,offsets)
+        return v, (meta_indices_to_corrupt, offsets)
 
     def uncorrupt(self, visibles, state):
         mitc, offsets = state

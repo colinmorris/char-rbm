@@ -17,10 +17,10 @@ class ShortTextCodec(object):
         self.maxlen = textlength
         self.char_lookup = {}
         self.alphabet = ''
-        for i, o in enumerate(range(ord('a'), ord('z')+1)):
+        for i, o in enumerate(range(ord('a'), ord('z') + 1)):
             self.char_lookup[chr(o)] = i
             self.alphabet += chr(o)
-        for i, o in enumerate(range(ord('A'), ord('Z')+1)):
+        for i, o in enumerate(range(ord('A'), ord('Z') + 1)):
             self.char_lookup[chr(o)] = i
 
         offset = len(self.alphabet)
@@ -47,7 +47,7 @@ class ShortTextCodec(object):
         assert vec.shape == (self.nchars * self.maxlen,)
         chars = []
         for position_index in range(self.maxlen):
-            char_index = np.argmax(vec[position_index*self.nchars:(position_index+1)*self.nchars])
+            char_index = np.argmax(vec[position_index * self.nchars:(position_index + 1) * self.nchars])
             chars.append(self.alphabet[char_index])
         return ''.join(chars)
 

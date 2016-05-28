@@ -65,8 +65,8 @@ def softmax_and_sample(X, copy=True):
     x, y, z = np.indices(cumsum.shape)
     # This relies on the fact that, if there are multiple instances of the max
     # value in an array, argmax returns the index of the first one
-    to_select = np.argmax(cumsum > thresholds, axis=2).reshape(a,b,1)
+    to_select = np.argmax(cumsum > thresholds, axis=2).reshape(a, b, 1)
     bin_sample = np.zeros(X_shape)
-    bin_sample[x,y,to_select] = 1
+    bin_sample[x, y, to_select] = 1
 
     return bin_sample
