@@ -1,8 +1,10 @@
 from sklearn.utils import issparse
 import numpy as np
 
+
 class NonEncodableTextException(Exception):
     pass
+
 
 class ShortTextCodec(object):
 
@@ -34,7 +36,7 @@ class ShortTextCodec(object):
         try:
             if len(s) > self.maxlen:
                 raise NonEncodableTextException
-            return ([self.char_lookup[c] for c in s] + 
+            return ([self.char_lookup[c] for c in s] +
                     [self.char_lookup[self.FILLER] for _ in range(self.maxlen - len(s))])
         except KeyError:
             raise NonEncodableTextException

@@ -6,6 +6,7 @@ import pickle
 
 import common
 
+
 def receptive_fields(model, out="recep.html"):
     f = open(out, 'w')
     res = '''<html><head><style>
@@ -78,6 +79,7 @@ def receptive_fields(model, out="recep.html"):
     f.write(res)
     print "Wrote visualization to " + out
     f.close()
+
 
 def visualize_hidden_activations(model, example_fname, out="activations.html"):
     s = '''<html><head><style>

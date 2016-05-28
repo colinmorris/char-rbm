@@ -334,9 +334,9 @@ class BernoulliRBM(BaseEstimator, TransformerMixin):
         return fe.mean(), fe_corrupted.mean()
 
         # TODO: I don't have a great intuition about this. Why multiply by n_features?
-        # The overfitting section of "Practical Guide" just says to compare the 
+        # The overfitting section of "Practical Guide" just says to compare the
         # average free energy of train and validation and to compare them. Any reason
-        # not to just do that here as well? Seems much simpler to interpret. Maybe 
+        # not to just do that here as well? Seems much simpler to interpret. Maybe
         # it's because we're supposed to be dealing with smaller deltas here?
         #return v.shape[1] * log_logistic(fe_corrupted - fe)
 
@@ -404,7 +404,7 @@ class BernoulliRBM(BaseEstimator, TransformerMixin):
             validation_debug = "\nE(vali):\t{:.2f}\tE(train):\t{:.2f}\tRelative difference: {:.2f}".format(
                 t_energy, v_energy, t_energy/v_energy)
 
-        # TODO: This is pretty expensive. Figure out why? Or just do less often. 
+        # TODO: This is pretty expensive. Figure out why? Or just do less often.
         # TODO: Maybe some of this information should be attached to self for the
         # sake of pickle archaeology later?
         e_train, e_corrupted = self.score_samples(train)
@@ -413,6 +413,7 @@ class BernoulliRBM(BaseEstimator, TransformerMixin):
                     (type(self).__name__, epoch, duration,
                      e_train, e_corrupted, e_corrupted/e_train, validation_debug,
                      ))
+
 
 class CharBernoulliRBM(BernoulliRBM):
 
@@ -432,6 +433,7 @@ class CharBernoulliRBM(BernoulliRBM):
         fantasy_samples = '|'.join([self.codec.decode(vec) for vec in
                                     self._sample_visibles(self.h_samples_[:3], sample_max=True)])
         print "Fantasy samples: {}".format(fantasy_samples)
+
 
 class CharBernoulliRBMSoftmax(CharBernoulliRBM):
 
@@ -461,17 +463,17 @@ class CharBernoulliRBMSoftmax(CharBernoulliRBM):
         return softmax_and_sample(reshaped).reshape( (nsamples, nfeats) )
 
     def corrupt(self, v):
-        # TODO: Should probably make this available in the parent class as well. 
+        # TODO: Should probably make this available in the parent class as well.
         # So that the two models can be compared on even ground.
         n_softmax, n_opts = self.softmax_shape
         # Select a random index in to the indices of the non-zero values of each input
-        # TODO: In the char-RBM case, if I wanted to really challenge the model, I would avoid selecting any 
-        # trailing spaces here. Cause any dumb model can figure out that it should assign high energy to 
+        # TODO: In the char-RBM case, if I wanted to really challenge the model, I would avoid selecting any
+        # trailing spaces here. Cause any dumb model can figure out that it should assign high energy to
         # any instance of /  [^ ]/
         meta_indices_to_corrupt = self.rng_.randint(0, n_softmax, v.shape[0]) + np.arange(0, n_softmax*v.shape[0], n_softmax)
 
         # Offset these indices by a random amount (but not 0 - we want to actually change them)
-        offsets = self.rng_.randint(1, n_opts, v.shape[0])   
+        offsets = self.rng_.randint(1, n_opts, v.shape[0])
         # Also, do some math to make sure we don't "spill over" into a different softmax.
         # E.g. if n_opts=5, and we're corrupting index 3, we should choose offsets from {-3, -2, -1, +1}
         # 1-d array that matches with meta_i_t_c but which contains the indices themselves
@@ -485,4 +487,3 @@ class CharBernoulliRBMSoftmax(CharBernoulliRBM):
     def uncorrupt(self, visibles, state):
         mitc, offsets = state
         visibles.indices[mitc] -= offsets
-

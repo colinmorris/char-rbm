@@ -1,5 +1,6 @@
 import numpy as np
 
+
 def softmax(X, copy=True):
     """
     Calculate the softmax function.
@@ -27,6 +28,7 @@ def softmax(X, copy=True):
     sum_prob = np.sum(X, axis=1).reshape((-1, 1))
     X /= sum_prob
     return X
+
 
 def softmax_and_sample(X, copy=True):
     """

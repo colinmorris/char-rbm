@@ -5,6 +5,8 @@ from short_text_codec import NonEncodableTextException
 from sklearn.preprocessing import OneHotEncoder
 
 DEBUG_TIMING = False
+
+
 def timeit(f):
     if not DEBUG_TIMING:
         return f
@@ -20,6 +22,7 @@ def timeit(f):
         return result
 
     return timed
+
 
 def vectors_from_txtfile(fname, codec):
     f = open(fname)
