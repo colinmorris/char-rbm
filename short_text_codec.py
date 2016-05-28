@@ -7,6 +7,7 @@ class NonEncodableTextException(Exception):
 
 
 class ShortTextCodec(object):
+    # TODO: Make it configurable whether we force space/filler. There are some datasets where one or neither is needed.
     # TODO: problematic if this char appears in the training text
     FILLER = '$' 
 

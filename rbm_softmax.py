@@ -374,12 +374,12 @@ class BernoulliRBM(BaseEstimator, TransformerMixin):
             self.intercept_hidden_ = np.zeros(self.n_components, )
             #self.intercept_visible_ = np.zeros(X.shape[1], )
             # 'It is usually helpful to initialize the bias of visible unit i to log[p_i/(1-p_i)] where p_i is the prptn of training vectors where i is on' - Practical Guide
-            counts = np.sum(X, axis=0)
+            counts = X.sum(axis=0).A.reshape(-1)
             # There should be no units that are always on
             assert np.max(counts) < X.shape[0], "Found a visible unit always on in the training data. Fishy."
             # There might be some units never on. Add a pseudo-count of 1 to avoid inf
             vis_priors = (counts + 1) / float(X.shape[0])
-            self.intercept_visible = np.log( vis_priors / (1 - vis_priors) )
+            self.intercept_visible_ = np.log( vis_priors / (1 - vis_priors) )
 
 
         else:
