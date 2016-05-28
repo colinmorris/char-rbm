@@ -384,7 +384,13 @@ class BernoulliRBM(BaseEstimator, TransformerMixin):
         verbose = self.verbose
         begin = time.time()
         for iteration in xrange(1, self.n_iter + 1):
-            # YOUAREHERE
+            if self.lr_backoff:
+                # If, e.g., we're doing 10 epochs, use the full learning rate for
+                # the first iteration, 90% of the base learning rate for the second
+                # iteration... and 10% for the final iteration
+                self.learning_rate = (self.n_iter - iteration - 1) / self.n_iter
+                print "Using learning rate of {:.3f} (base LR={:.3f})".format(self.learning_rate, self.base_learning_rate)
+
             for batch_slice in batch_slices:
                 self._fit(X[batch_slice])
 
