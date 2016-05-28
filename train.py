@@ -7,6 +7,7 @@ import common
 from short_text_codec import ShortTextCodec
 from rbm_softmax import CharBernoulliRBM, CharBernoulliRBMSoftmax
 
+
 def pickle_name(args):
     fname = args.tag if args.tag else args.input_fname.split('.')[0].split('/')[-1]
     fname += '_'
@@ -61,7 +62,7 @@ if __name__ == '__main__':
         codec = rbm.codec
     else:
         codec = ShortTextCodec(args.extra_chars, args.text_length)
-        model_kwargs = {'codec':codec,
+        model_kwargs = {'codec': codec,
                         'n_components': args.n_hidden,
                         'learning_rate': args.learning_rate,
                         'lr_backoff': args.learning_rate_backoff,
@@ -75,7 +76,6 @@ if __name__ == '__main__':
     vecs = common.vectors_from_txtfile(args.input_fname, codec)
     train, validation = train_test_split(vecs, test_size=args.test_ratio)
     print "Training data shape : " + str(train.shape)
-
 
     rbm.fit(train, validation)
     f = open(pickle_name(args), 'wb')

@@ -5,14 +5,16 @@ import numpy as np
 import common
 from short_text_codec import ShortTextCodec
 
+
 def print_samples(model, visibles):
     for v in visibles:
         print model.codec.decode(v)
 
+
 @common.timeit
 def sample_model(model, n, iters, prog):
     # TODO: Should this actually sample according to the biases?
-    rand_hidden = np.random.randint(0, 2, (n, len(model.components_)) )
+    rand_hidden = np.random.randint(0, 2, (n, len(model.components_)))
     vis = model._sample_visibles(rand_hidden, model.random_state)
     power = 0
     for i in range(iters):
