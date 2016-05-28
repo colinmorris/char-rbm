@@ -94,6 +94,9 @@ def visualize_hidden_activations(model, example_fname, out="activations.html"):
       }
   </style></head><body><pre>'''
   vecs = common.vectors_from_txtfile(example_fname, model.codec)
+  if vecs.shape[0] > 5000:
+    print "WARNING: You passed in a text file with over 5k lines. Surely you didn't mean to do that. Truncating to 300"
+    vecs = vecs[:300]
   hiddens = model._sample_hiddens(vecs)
   PADDING = 3 + 1
   s += ' '*5 + '0'
@@ -121,7 +124,8 @@ if __name__ == '__main__':
         print "USAGE: visualize.py model.pickle sample.txt"
         print (" (The sample file is used for visualizing the" 
             + " activation rate of hidden units on typical inputs. It should be " +
-            + "no more than a few hundred lines")
+            "no more than a few hundred lines")
+        sys.exit(1)
     model_fname = sys.argv[1]
     f = open(model_fname)
     model = pickle.load(f)
