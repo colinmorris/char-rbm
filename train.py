@@ -37,6 +37,8 @@ if __name__ == '__main__':
   parser.add_argument('--hid', '--hidden-units', dest='n_hidden', default=180, type=int,
 		                  help='Number of hidden units')
   parser.add_argument('-l', '--learning-rate', dest='learning_rate', default=0.05, type=float)
+  parser.add_argument('--lr-backoff', dest='learning_rate_backoff', action='store_true', 
+    help='Gradually reduce the learning rate at each epoch')
   parser.add_argument('-e', '--epochs', dest='epochs', default=5, type=int, help="Number of times to cycle through the training data")
   parser.add_argument('-m', '--model', dest='model', default=None, 
     help="Start from a previously trained model. Options affecting network topology will be ignored.")
@@ -53,6 +55,7 @@ if __name__ == '__main__':
     rbm = pickle.load(f)
     f.close()
     rbm.learning_rate = args.learning_rate
+    rbm.lr_backoff = args.learning_rate_backoff
     rbm.n_iter = args.epochs
     rbm.batch_size = args.batch_size
     codec = rbm.codec
@@ -61,6 +64,7 @@ if __name__ == '__main__':
     model_kwargs = {'codec':codec,
 	    'n_components': args.n_hidden,
 	    'learning_rate': args.learning_rate,
+            'lr_backoff': args.learning_rate_backoff,
 	    'n_iter': args.epochs,
 	    'verbose': 1,
             'batch_size': args.batch_size,

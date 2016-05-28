@@ -105,9 +105,11 @@ class BernoulliRBM(BaseEstimator, TransformerMixin):
     
     
     def __init__(self, n_components=256, learning_rate=0.1, batch_size=10,
-                 n_iter=10, verbose=0, random_state=None):
+                 n_iter=10, verbose=0, random_state=None, lr_backoff=False):
         self.n_components = n_components
+        self.base_learning_rate = learning_rate
         self.learning_rate = learning_rate
+        self.lr_backoff = lr_backoff
         self.batch_size = batch_size
         self.n_iter = n_iter
         self.verbose = verbose
@@ -383,6 +385,7 @@ class BernoulliRBM(BaseEstimator, TransformerMixin):
         verbose = self.verbose
         begin = time.time()
         for iteration in xrange(1, self.n_iter + 1):
+            # YOUAREHERE
             for batch_slice in batch_slices:
                 self._fit(X[batch_slice])
 
