@@ -26,6 +26,8 @@ if __name__ == '__main__':
                       help='The ratio of data to hold out to monitor for overfitting')
   parser.add_argument('--no-softmax', dest='softmax', action='store_false',
                       help='Don\'t use softmax visible units')
+  parser.add_argument('-b', '--batch-size', dest='batch_size', type=int, default=10,
+	                    help='Size of a (mini)batch. This also controls # of fantasy particles.')
   parser.add_argument('--len', dest='text_length', type=int, default=20,
 	                    help='Maximum length of strings (i.e. # of softmax units).' +
 	                    ' Longer lines in the input file will be ignored')
@@ -52,6 +54,7 @@ if __name__ == '__main__':
     f.close()
     rbm.learning_rate = args.learning_rate
     rbm.n_iter = args.epochs
+    rbm.batch_size = args.batch_size
     codec = rbm.codec
   else:
     codec = ShortTextCodec(args.extra_chars, args.text_length)
@@ -59,7 +62,8 @@ if __name__ == '__main__':
 	    'n_components': args.n_hidden,
 	    'learning_rate': args.learning_rate,
 	    'n_iter': args.epochs,
-	    'verbose': 1
+	    'verbose': 1,
+            'batch_size': args.batch_size,
       }
     kls = CharBernoulliRBMSoftmax if args.softmax else CharBernoulliRBM
     rbm = kls(**model_kwargs)
