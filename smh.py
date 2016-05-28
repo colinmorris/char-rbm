@@ -27,7 +27,7 @@ def softmax(X, copy=True):
     sum_prob = np.sum(X, axis=1).reshape((-1, 1))
     X /= sum_prob
     return X
-    
+
 def softmax_and_sample(X, copy=True):
     """
     Calculate the softmax function.
@@ -56,7 +56,7 @@ def softmax_and_sample(X, copy=True):
     np.exp(X, X)
     sum_prob = np.sum(X, axis=2).reshape((X.shape[0], X.shape[1], 1))
     X /= sum_prob
-    
+
     # We've got our probabilities, now sample from them
     thresholds = np.random.rand(X.shape[0], X.shape[1], 1)
     cumsum = np.cumsum(X, axis=2, out=X)
@@ -66,5 +66,5 @@ def softmax_and_sample(X, copy=True):
     to_select = np.argmax(cumsum > thresholds, axis=2).reshape(a,b,1)
     bin_sample = np.zeros(X_shape)
     bin_sample[x,y,to_select] = 1
-    
+
     return bin_sample

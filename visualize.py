@@ -55,7 +55,7 @@ def receptive_fields(model, out="recep.html"):
       if maxw >= THRESH:
         res += '<span class="maxw">{:.1f}</span>'.format(weights[0][1])
       res += '</span>'
-      
+
       # Highly negative weights
       res += '<span class="neg"><span class="chars">'
       for i, w in reversed(weights):
@@ -71,14 +71,14 @@ def receptive_fields(model, out="recep.html"):
       if minw >= THRESH:
         res += '<span class="maxw">{:.1f}</span>'.format(minw)
       res += '</span>'
-        
+
       res += '<br/>'
     res += '</div>'
   res += '</body></html>'
   f.write(res)
   print "Wrote visualization to " + out
   f.close()
-      
+
 def visualize_hidden_activations(model, example_fname, out="activations.html"):
   s = '''<html><head><style>
     body {
@@ -110,27 +110,27 @@ def visualize_hidden_activations(model, example_fname, out="activations.html"):
       )
     s += ' ' + str(sum(hid))
     s += '<br/>'
-  
-  
+
+
   s += ' ' * 5 + ''.join([str(sum(active)).ljust(PADDING, ' ') 
-    for active in hiddens.T])
+                          for active in hiddens.T])
   s += '</pre></body></html>'
   fout = open(out, 'w')
   fout.write(s)
   print "Wrote visualization to " + out
-  
+
 if __name__ == '__main__':
     if len(sys.argv) < 3:
         print "USAGE: visualize.py model.pickle sample.txt"
         print (" (The sample file is used for visualizing the" 
-            + " activation rate of hidden units on typical inputs. It should be " +
-            "no more than a few hundred lines")
+               + " activation rate of hidden units on typical inputs. It should be " +
+               "no more than a few hundred lines")
         sys.exit(1)
     model_fname = sys.argv[1]
     f = open(model_fname)
     model = pickle.load(f)
-    
+
     tag = model_fname[:model_fname.rfind(".")]
     receptive_fields(model, tag + '_receptive_fields.html')
-    
+
     visualize_hidden_activations(model, sys.argv[2], tag + '_activations.html')

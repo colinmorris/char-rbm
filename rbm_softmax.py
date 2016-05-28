@@ -44,7 +44,7 @@ class BernoulliRBM(BaseEstimator, TransformerMixin):
 
     Parameters
     ----------
-    
+
     n_components : int, optional
         Number of binary hidden units.
 
@@ -102,8 +102,8 @@ class BernoulliRBM(BaseEstimator, TransformerMixin):
         Approximations to the Likelihood Gradient. International Conference
         on Machine Learning (ICML) 2008
     """
-    
-    
+
+
     def __init__(self, n_components=256, learning_rate=0.1, batch_size=10,
                  n_iter=10, verbose=0, random_state=None, lr_backoff=False):
         self.n_components = n_components
@@ -212,7 +212,7 @@ class BernoulliRBM(BaseEstimator, TransformerMixin):
         ----------
         v : array-like, shape (n_samples, n_features)
             Values of the visible layer to start from.
-            
+
         sample_max : bool
             If this RBM uses softmax visible units, then take the unit with
             the highest probability per group, rather than randomly sampling.
@@ -227,7 +227,7 @@ class BernoulliRBM(BaseEstimator, TransformerMixin):
         v_ = self._sample_visibles(h_, sample_max)
 
         return v_
-        
+
     def partial_fit(self, X, y=None):
         """Fit the model to the data X which should contain a partial
         segment of the data.
@@ -286,7 +286,7 @@ class BernoulliRBM(BaseEstimator, TransformerMixin):
 
         h_neg[self.rng_.uniform(size=h_neg.shape) < h_neg] = 1.0  # sample binomial
         self.h_samples_ = np.floor(h_neg, h_neg)
-        
+
     def corrupt(self, v):
         # Randomly corrupt one feature in each sample in v.
         ind = (np.arange(v.shape[0]),
@@ -298,7 +298,7 @@ class BernoulliRBM(BaseEstimator, TransformerMixin):
             v_ = v.copy()
             v_[ind] = 1 - v_[ind]
         return v_, None
-        
+
     def uncorrupt(self, visibles, state):
         pass
 
@@ -332,7 +332,7 @@ class BernoulliRBM(BaseEstimator, TransformerMixin):
         fe_corrupted = self._free_energy(v)
         self.uncorrupt(v, state)
         return fe.mean(), fe_corrupted.mean()
-            
+
         # TODO: I don't have a great intuition about this. Why multiply by n_features?
         # The overfitting section of "Practical Guide" just says to compare the 
         # average free energy of train and validation and to compare them. Any reason
@@ -349,7 +349,7 @@ class BernoulliRBM(BaseEstimator, TransformerMixin):
         """
         # It's important to use the same subset of the training data every time (per Hinton's "Practical Guide")
         return self._free_energy(train[:validation.shape[0]]).mean() , self._free_energy(validation).mean()
-        
+
     def fit(self, X, validation=None):
         """Fit the model to the data X.
 
@@ -357,7 +357,7 @@ class BernoulliRBM(BaseEstimator, TransformerMixin):
         ----------
         X : {array-like, sparse matrix} shape (n_samples, n_features)
             Training data.
-            
+
         validation : {array-like, sparse matrix}
 
         Returns
@@ -395,7 +395,7 @@ class BernoulliRBM(BaseEstimator, TransformerMixin):
                 begin = end
 
         return self
-        
+
     def wellness_check(self, epoch, duration, train, validation):
         """Log some diagnostic information on how the model is doing so far."""
         validation_debug = ''
@@ -403,19 +403,19 @@ class BernoulliRBM(BaseEstimator, TransformerMixin):
             v_energy, t_energy = self.score_validation_data(train, validation)
             validation_debug = "\nE(vali):\t{:.2f}\tE(train):\t{:.2f}\tRelative difference: {:.2f}".format(
                 t_energy, v_energy, t_energy/v_energy)
-        
+
         # TODO: This is pretty expensive. Figure out why? Or just do less often. 
         # TODO: Maybe some of this information should be attached to self for the
         # sake of pickle archaeology later?
         e_train, e_corrupted = self.score_samples(train)
         print re.sub('\n *', '\n', """[{}] Iteration {}\tt = {:.2f}s
                 E(train):\t{:.2f}\tE(corrupt):\t{:.2f}\tRelative difference: {:.2f}{}""".format
-                (type(self).__name__, epoch, duration,
-                 e_train, e_corrupted, e_corrupted/e_train, validation_debug,
-                 ))
-        
+                    (type(self).__name__, epoch, duration,
+                     e_train, e_corrupted, e_corrupted/e_train, validation_debug,
+                     ))
+
 class CharBernoulliRBM(BernoulliRBM):
-    
+
     def __init__(self, codec, *args, **kwargs):
         """softmax_shape : tuple
         (N, M) where N is the length of character sequences, and M is the number
@@ -426,15 +426,15 @@ class CharBernoulliRBM(BernoulliRBM):
         self.softmax_shape = codec.shape()
         # Old-style class :(
         BernoulliRBM.__init__(self, *args, **kwargs)
-        
+
     def wellness_check(self, epoch, duration, train, validation):
         BernoulliRBM.wellness_check(self, epoch, duration, train, validation)
         fantasy_samples = '|'.join([self.codec.decode(vec) for vec in
-        self._sample_visibles(self.h_samples_[:3], sample_max=True)])
+                                    self._sample_visibles(self.h_samples_[:3], sample_max=True)])
         print "Fantasy samples: {}".format(fantasy_samples)
 
 class CharBernoulliRBMSoftmax(CharBernoulliRBM):
-        
+
     def _sample_visibles(self, h, sample_max=False):
         """Sample from the distribution P(v|h). This obeys the softmax constraint
         on visible units. i.e. sum(v) == softmax_shape[0] for any visible 
@@ -459,7 +459,7 @@ class CharBernoulliRBMSoftmax(CharBernoulliRBM):
         nsamples, nfeats = p.shape
         reshaped = np.reshape(p, (nsamples,) + self.softmax_shape)
         return softmax_and_sample(reshaped).reshape( (nsamples, nfeats) )
-        
+
     def corrupt(self, v):
         # TODO: Should probably make this available in the parent class as well. 
         # So that the two models can be compared on even ground.
@@ -469,7 +469,7 @@ class CharBernoulliRBMSoftmax(CharBernoulliRBM):
         # trailing spaces here. Cause any dumb model can figure out that it should assign high energy to 
         # any instance of /  [^ ]/
         meta_indices_to_corrupt = self.rng_.randint(0, n_softmax, v.shape[0]) + np.arange(0, n_softmax*v.shape[0], n_softmax)
-        
+
         # Offset these indices by a random amount (but not 0 - we want to actually change them)
         offsets = self.rng_.randint(1, n_opts, v.shape[0])   
         # Also, do some math to make sure we don't "spill over" into a different softmax.
@@ -478,10 +478,10 @@ class CharBernoulliRBMSoftmax(CharBernoulliRBM):
         indices_to_corrupt = v.indices[meta_indices_to_corrupt]
         # Sweet lucifer
         offsets = offsets - (n_opts * ( ( (indices_to_corrupt % n_opts) + offsets.ravel()) >= n_opts))
-        
+
         v.indices[meta_indices_to_corrupt] += offsets
         return v, (meta_indices_to_corrupt,offsets)
-        
+
     def uncorrupt(self, visibles, state):
         mitc, offsets = state
         visibles.indices[mitc] -= offsets
