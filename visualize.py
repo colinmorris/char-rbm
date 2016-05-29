@@ -1,4 +1,5 @@
 """These are pretty hacky, but they get the job done.
+# TODO: It would be nice to have a command line visualization (at least for activation rate)
 """
 
 import sys
