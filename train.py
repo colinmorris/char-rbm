@@ -16,6 +16,8 @@ def pickle_name(args):
         fname += '_nosm'
     if args.learning_rate_backoff:
         fname += '_lrb'
+    if args.preserve_case:
+        fname += '_case'
     fname += '_{}_{}_{:.3f}.pickle'.format(args.epochs, args.n_hidden, args.learning_rate)
     return fname
 

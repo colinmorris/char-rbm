@@ -8,7 +8,7 @@ from short_text_codec import ShortTextCodec
 
 def print_samples(model, visibles):
     for v in visibles:
-        print model.codec.decode(v)
+        print model.codec.decode(v, pretty=True)
 
 
 @common.timeit
