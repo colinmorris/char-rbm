@@ -32,12 +32,14 @@ if __name__ == '__main__':
                         help='Don\'t use softmax visible units')
     parser.add_argument('-b', '--batch-size', dest='batch_size', type=int, default=10,
                               help='Size of a (mini)batch. This also controls # of fantasy particles.')
-    parser.add_argument('--len', dest='text_length', type=int, default=20,
+    parser.add_argument('--maxlen', dest='max_text_length', type=int, default=20,
                         help='Maximum length of strings (i.e. # of softmax units).' +
                         ' Longer lines in the input file will be ignored')
+    parser.add_argument('--minlen', dest='min_text_length', type=int, default=0,
+                        help='Minimum length of strings. Shorter lines in input file will be ignored.')
     # TODO: It'd be cool to be able to say "take the n most frequent non-alpha characters in the input file"
-    parser.add_argument('--extra-chars', dest='extra_chars', default='',
-                        help='Characters to consider in addition to [a-zA-Z ]')
+    parser.add_argument('--extra-chars', dest='extra_chars', default=' ',
+                        help='Characters to consider in addition to [a-zA-Z]')
     parser.add_argument('--hid', '--hidden-units', dest='n_hidden', default=180, type=int,
                         help='Number of hidden units')
     parser.add_argument('-l', '--learning-rate', dest='learning_rate', default=0.05, type=float)
@@ -65,7 +67,7 @@ if __name__ == '__main__':
         rbm.batch_size = args.batch_size
         codec = rbm.codec
     else:
-        codec = ShortTextCodec(args.extra_chars, args.text_length)
+        codec = ShortTextCodec(args.extra_chars, args.max_text_length, args.min_text_length)
         model_kwargs = {'codec': codec,
                         'n_components': args.n_hidden,
                         'learning_rate': args.learning_rate,

@@ -7,15 +7,15 @@ class NonEncodableTextException(Exception):
 
 
 class ShortTextCodec(object):
-    # TODO: Make it configurable whether we force space/filler. There are some datasets where one or neither is needed.
     # TODO: problematic if this char appears in the training text
     FILLER = '$' 
 
-    def __init__(self, extra_chars, textlength):
-        for mandatory_extra in set([' ', self.FILLER]):
-            if mandatory_extra not in extra_chars:
-                extra_chars = mandatory_extra + extra_chars
-        self.maxlen = textlength
+    def __init__(self, extra_chars, maxlength, minlength=0):
+        assert 0 <= minlength <= maxlength
+        if self.FILLER not in extra_chars and maxlength != minlength:
+            extra_chars = self.FILLER + extra_chars
+        self.maxlen = maxlength
+        self.minlen = minlength
         self.char_lookup = {}
         self.alphabet = ''
         for i, o in enumerate(range(ord('a'), ord('z') + 1)):
@@ -35,7 +35,7 @@ class ShortTextCodec(object):
 
     def encode(self, s):
         try:
-            if len(s) > self.maxlen:
+            if len(s) > self.maxlen or len(s) < self.minlen:
                 raise NonEncodableTextException
             return ([self.char_lookup[c] for c in s] +
                     [self.char_lookup[self.FILLER] for _ in range(self.maxlen - len(s))])
