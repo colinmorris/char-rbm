@@ -48,14 +48,17 @@ class ShortTextCodec(object):
         except KeyError:
             raise NonEncodableTextException
 
-    def decode(self, vec):
+    def decode(self, vec, pretty=False):
         if issparse(vec):
             vec = vec.toarray().reshape(-1)
         assert vec.shape == (self.nchars * self.maxlen,)
         chars = []
         for position_index in range(self.maxlen):
             char_index = np.argmax(vec[position_index * self.nchars:(position_index + 1) * self.nchars])
-            chars.append(self.alphabet[char_index])
+            char = self.alphabet[char_index]
+            if pretty and char == self.FILLER:
+                char = ' '
+            chars.append(char)
         return ''.join(chars)
 
     def shape(self):
