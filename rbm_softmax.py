@@ -114,6 +114,13 @@ class BernoulliRBM(BaseEstimator, TransformerMixin):
         self.verbose = verbose
         self.random_state = random_state
         self.rng_ = check_random_state(self.random_state)
+        # A history of some summary statistics recorded at the end of each epoch of training
+        # Each key maps to a 2-d array. One row per 'session', one value per epoch. 
+        # (Another session means this model was pickled, then loaded and fit again.)
+        self.history = {'pseudo-likelihood': [], 'overfit': []}
+
+    def record(self, name, value):
+        self.history[name][-1].append(value)
 
     def transform(self, X):
         """Compute the hidden layer activation probabilities, P(h=1|v=X).
@@ -389,6 +396,10 @@ class BernoulliRBM(BaseEstimator, TransformerMixin):
         # Don't necessarily want to reuse h_samples if we have one leftover from before - batch size might have changed
         self.h_samples_ = np.zeros((self.batch_size, self.n_components))
 
+        # Add new inner lists for this session
+        for session in self.history.itervalues():
+            session.append([])
+
         n_batches = int(np.ceil(float(n_samples) / self.batch_size))
         batch_slices = list(gen_even_slices(n_batches * self.batch_size,
                                             n_batches, n_samples))
@@ -420,11 +431,11 @@ class BernoulliRBM(BaseEstimator, TransformerMixin):
             # TODO: Not clear whether relative or absolute difference is the more relevant metric here.
             validation_debug = "\nE(vali):\t{:.2f}\tE(train):\t{:.2f}\tdifference: {:.2f}".format(
                 v_energy, t_energy, v_energy-t_energy)
+            self.record('overfit', (v_energy, t_energy))
 
         # TODO: This is pretty expensive. Figure out why? Or just do less often.
-        # TODO: Maybe some of this information should be attached to self for the
-        # sake of pickle archaeology later?
         e_train, e_corrupted = self.score_samples(train)
+        self.record('pseudo-likelihood', (e_corrupted, e_train))
         print re.sub('\n *', '\n', """[{}] Iteration {}\tt = {:.2f}s
                 E(train):\t{:.2f}\tE(corrupt):\t{:.2f}\tdifference: {:.2f}{}""".format
                      (type(self).__name__, epoch, duration,
