@@ -16,7 +16,7 @@ def sample_model(model, n, iters, prog):
     # TODO: Should this actually sample according to the biases?
     rand_hidden = np.random.randint(0, 2, (n, len(model.components_)))
     vis = model._sample_visibles(rand_hidden, model.random_state)
-    power = 0
+    power = 1
     for i in range(iters):
         if prog and (i == 10**power):
             power += 1
@@ -39,7 +39,7 @@ if __name__ == '__main__':
     parser.add_argument('-i', '--iters', dest='iters', type=int, default=1000,
                               help='How many rounds of Gibbs sampling to perform before generating the outputs')
     parser.add_argument('--prog', '--progressively-sample', dest='prog', action='store_true',
-                        help='Output n samples after 1 round of sampling, then 10, 100... until we reach a power of 10 >=iters')
+                        help='Output n samples after 10 rounds of sampling, then 100, 1000... until we reach a power of 10 >=iters')
 
     args = parser.parse_args()
 
