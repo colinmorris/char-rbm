@@ -417,7 +417,7 @@ class BernoulliRBM(BaseEstimator, TransformerMixin):
             v_energy, t_energy = self.score_validation_data(train, validation)
             # TODO: Not clear whether relative or absolute difference is the more relevant metric here.
             validation_debug = "\nE(vali):\t{:.2f}\tE(train):\t{:.2f}\tdifference: {:.2f}".format(
-                t_energy, v_energy, v_energy-t_energy)
+                v_energy, t_energy, v_energy-t_energy)
 
         # TODO: This is pretty expensive. Figure out why? Or just do less often.
         # TODO: Maybe some of this information should be attached to self for the
