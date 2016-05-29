@@ -425,9 +425,9 @@ class BernoulliRBM(BaseEstimator, TransformerMixin):
         # TODO: Maybe some of this information should be attached to self for the
         # sake of pickle archaeology later?
         e_train, e_corrupted = self.score_samples(train)
-        print re.sub('\n *', '\n', """[{}] Iteration {}\tt = {:.2f}s
+        print re.sub('\n *', '\n', """[{}] Iteration {}/{}\tt = {:.2f}s
                 E(train):\t{:.2f}\tE(corrupt):\t{:.2f}\tdifference: {:.2f}{}""".format
-                     (type(self).__name__, epoch, duration,
+                     (type(self).__name__, epoch, self.n_iter, duration,
                       e_train, e_corrupted, e_corrupted - e_train, validation_debug,
                       ))
 
