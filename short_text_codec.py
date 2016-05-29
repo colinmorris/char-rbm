@@ -21,10 +21,14 @@ class ShortTextCodec(object):
         for i, o in enumerate(range(ord('a'), ord('z') + 1)):
             self.char_lookup[chr(o)] = i
             self.alphabet += chr(o)
+        nextidx = len(self.alphabet)
         for i, o in enumerate(range(ord('A'), ord('Z') + 1)):
-            self.char_lookup[chr(o)] = i
             if preserve_case:
+                self.char_lookup[chr(o)] = nextidx
+                nextidx += 1
                 self.alphabet += chr(o)
+            else:
+                self.char_lookup[chr(o)] = i
 
         offset = len(self.alphabet)
         for i, extra in enumerate(extra_chars):
