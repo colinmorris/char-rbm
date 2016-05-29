@@ -372,7 +372,6 @@ class BernoulliRBM(BaseEstimator, TransformerMixin):
                 self.rng_.normal(0, 0.01, (self.n_components, X.shape[1])),
                 order='fortran')
             self.intercept_hidden_ = np.zeros(self.n_components, )
-            #self.intercept_visible_ = np.zeros(X.shape[1], )
             # 'It is usually helpful to initialize the bias of visible unit i to log[p_i/(1-p_i)] where p_i is the prptn of training vectors where i is on' - Practical Guide
             counts = X.sum(axis=0).A.reshape(-1)
             # There should be no units that are always on
@@ -381,9 +380,12 @@ class BernoulliRBM(BaseEstimator, TransformerMixin):
             vis_priors = (counts + 1) / float(X.shape[0])
             self.intercept_visible_ = np.log( vis_priors / (1 - vis_priors) )
 
-
+        # If this already *does* have weights and biases before fit() is called,
+        # we'll start from them rather than wiping them out. May want to train
+        # a model further with a different learning rate, or even on a different
+        # dataset.
         else:
-            print "Resuing existing weights and biases"
+            print "Reusing existing weights and biases"
         # Don't necessarily want to reuse h_samples if we have one leftover from before - batch size might have changed
         self.h_samples_ = np.zeros((self.batch_size, self.n_components))
 
@@ -433,11 +435,15 @@ class BernoulliRBM(BaseEstimator, TransformerMixin):
 class CharBernoulliRBM(BernoulliRBM):
 
     def __init__(self, codec, *args, **kwargs):
-        """softmax_shape : tuple
-        (N, M) where N is the length of character sequences, and M is the number
-        of distinct characters. N*M will be the number of visible 
-        binary units. (Softmax visible units won't actually be used unless you use the Softmax subclass.)
         """
+        codec is the ShortTextCodec used to create the vectors being fit. The 
+        most important function of the codec is as a proxy to the shape of the
+        softmax units in the visible layer (if you're using the CharBernoulliRBMSoftmax
+        subclass). It's also used to decode and print
+        fantasy particles at the end of each epoch.
+        """
+        # Attaching this to the object is really helpful later on when models 
+        # are loaded from pickle in visualize.py and sample.py
         self.codec = codec
         self.softmax_shape = codec.shape()
         # Old-style class :(

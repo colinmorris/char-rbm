@@ -58,6 +58,10 @@ if __name__ == '__main__':
     args = parser.parse_args()
 
     # TODO: trap ctrl+c and pickle the model before bailing
+
+    # If the path to a pretrained, pickled model was provided, resurrect it, and
+    # update the attributes that make sense to change (stuff like #hidden units,
+    # or max string length of course can't be changed)
     if args.model:
         f = open(args.model)
         rbm = pickle.load(f)
@@ -69,7 +73,8 @@ if __name__ == '__main__':
         rbm.batch_size = args.batch_size
         codec = rbm.codec
     else:
-        codec = ShortTextCodec(args.extra_chars, args.max_text_length, args.min_text_length, args.preserve_case)
+        codec = ShortTextCodec(args.extra_chars, args.max_text_length, 
+            args.min_text_length, args.preserve_case)
         model_kwargs = {'codec': codec,
                         'n_components': args.n_hidden,
                         'learning_rate': args.learning_rate,
