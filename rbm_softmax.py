@@ -25,7 +25,7 @@ from sklearn.utils.extmath import safe_sparse_dot, softmax, log_logistic
 from sklearn.utils.fixes import expit             # logistic function
 from sklearn.utils.validation import check_is_fitted
 
-from smh import softmax_and_sample
+import utils
 import common
 
 
@@ -475,7 +475,7 @@ class CharBernoulliRBMSoftmax(CharBernoulliRBM):
         p += self.intercept_visible_
         nsamples, nfeats = p.shape
         reshaped = np.reshape(p, (nsamples,) + self.softmax_shape)
-        return softmax_and_sample(reshaped).reshape((nsamples, nfeats))
+        return utils.softmax_and_sample(reshaped).reshape((nsamples, nfeats))
 
     def corrupt(self, v):
         # TODO: Should probably make this available in the parent class as well.

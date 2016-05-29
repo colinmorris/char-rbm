@@ -6,7 +6,7 @@ from sklearn.preprocessing import OneHotEncoder
 
 DEBUG_TIMING = False
 
-
+# Taken from StackOverflow
 def timeit(f):
     if not DEBUG_TIMING:
         return f
