@@ -30,6 +30,8 @@ if __name__ == '__main__':
                         help='The ratio of data to hold out to monitor for overfitting')
     parser.add_argument('--no-softmax', dest='softmax', action='store_false',
                         help='Don\'t use softmax visible units')
+    parser.add_argument('--preserve-case', dest='preserve_case', action='store_true',
+                        help="Preserve case, rather than lowercasing all input strings. Increases size of visible layer substantially.")
     parser.add_argument('-b', '--batch-size', dest='batch_size', type=int, default=10,
                               help='Size of a (mini)batch. This also controls # of fantasy particles.')
     parser.add_argument('--maxlen', dest='max_text_length', type=int, default=20,
@@ -67,7 +69,7 @@ if __name__ == '__main__':
         rbm.batch_size = args.batch_size
         codec = rbm.codec
     else:
-        codec = ShortTextCodec(args.extra_chars, args.max_text_length, args.min_text_length)
+        codec = ShortTextCodec(args.extra_chars, args.max_text_length, args.min_text_length, args.preserve_case)
         model_kwargs = {'codec': codec,
                         'n_components': args.n_hidden,
                         'learning_rate': args.learning_rate,

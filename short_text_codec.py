@@ -10,7 +10,7 @@ class ShortTextCodec(object):
     # TODO: problematic if this char appears in the training text
     FILLER = '$' 
 
-    def __init__(self, extra_chars, maxlength, minlength=0):
+    def __init__(self, extra_chars, maxlength, minlength=0, preserve_case=False):
         assert 0 <= minlength <= maxlength
         if self.FILLER not in extra_chars and maxlength != minlength:
             extra_chars = self.FILLER + extra_chars
@@ -23,6 +23,8 @@ class ShortTextCodec(object):
             self.alphabet += chr(o)
         for i, o in enumerate(range(ord('A'), ord('Z') + 1)):
             self.char_lookup[chr(o)] = i
+            if preserve_case:
+                self.alphabet += chr(o)
 
         offset = len(self.alphabet)
         for i, extra in enumerate(extra_chars):
