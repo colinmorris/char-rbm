@@ -427,7 +427,7 @@ class BernoulliRBM(BaseEstimator, TransformerMixin):
         """Log some diagnostic information on how the model is doing so far."""
         validation_debug = ''
         if validation is not None:
-            v_energy, t_energy = self.score_validation_data(train, validation)
+            t_energy, v_energy = self.score_validation_data(train, validation)
             # TODO: Not clear whether relative or absolute difference is the more relevant metric here.
             validation_debug = "\nE(vali):\t{:.2f}\tE(train):\t{:.2f}\tdifference: {:.2f}".format(
                 v_energy, t_energy, v_energy-t_energy)
