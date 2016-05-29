@@ -415,17 +415,18 @@ class BernoulliRBM(BaseEstimator, TransformerMixin):
         validation_debug = ''
         if validation is not None:
             v_energy, t_energy = self.score_validation_data(train, validation)
-            validation_debug = "\nE(vali):\t{:.2f}\tE(train):\t{:.2f}\tRelative difference: {:.2f}".format(
-                t_energy, v_energy, t_energy / v_energy)
+            # TODO: Not clear whether relative or absolute difference is the more relevant metric here.
+            validation_debug = "\nE(vali):\t{:.2f}\tE(train):\t{:.2f}\tdifference: {:.2f}".format(
+                t_energy, v_energy, v_energy-t_energy)
 
         # TODO: This is pretty expensive. Figure out why? Or just do less often.
         # TODO: Maybe some of this information should be attached to self for the
         # sake of pickle archaeology later?
         e_train, e_corrupted = self.score_samples(train)
         print re.sub('\n *', '\n', """[{}] Iteration {}\tt = {:.2f}s
-                E(train):\t{:.2f}\tE(corrupt):\t{:.2f}\tRelative difference: {:.2f}{}""".format
+                E(train):\t{:.2f}\tE(corrupt):\t{:.2f}\tdifference: {:.2f}{}""".format
                      (type(self).__name__, epoch, duration,
-                      e_train, e_corrupted, e_corrupted / e_train, validation_debug,
+                      e_train, e_corrupted, e_corrupted - e_train, validation_debug,
                       ))
 
 
