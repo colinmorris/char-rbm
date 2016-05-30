@@ -120,6 +120,8 @@ class BernoulliRBM(BaseEstimator, TransformerMixin):
         self.history = {'pseudo-likelihood': [], 'overfit': []}
 
     def record(self, name, value):
+        if not hasattr(self, 'history'):
+            self.history = {'pseudo-likelihood': [], 'overfit': []}
         self.history[name][-1].append(value)
 
     def transform(self, X):
@@ -397,6 +399,8 @@ class BernoulliRBM(BaseEstimator, TransformerMixin):
         self.h_samples_ = np.zeros((self.batch_size, self.n_components))
 
         # Add new inner lists for this session
+        if not hasattr(self, 'history'):
+            self.history = {'pseudo-likelihood': [], 'overfit': []}
         for session in self.history.itervalues():
             session.append([])
 

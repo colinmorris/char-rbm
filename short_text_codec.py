@@ -41,7 +41,7 @@ class ShortTextCodec(object):
 
     def encode(self, s):
         try:
-            if len(s) > self.maxlen or len(s) < self.minlen:
+            if len(s) > self.maxlen or (hasattr(self, 'minlen') and len(s) < self.minlen):
                 raise NonEncodableTextException
             return ([self.char_lookup[c] for c in s] +
                     [self.char_lookup[self.FILLER] for _ in range(self.maxlen - len(s))])
