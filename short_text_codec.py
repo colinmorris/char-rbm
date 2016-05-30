@@ -6,12 +6,15 @@ class NonEncodableTextException(Exception):
     
     def __init__(self, reason=None, *args):
         self.reason = reason
-        super(self, NonEncodableTextException).__init__(*args)
+        super(NonEncodableTextException, self).__init__(*args)
 
 
 class ShortTextCodec(object):
     # TODO: problematic if this char appears in the training text
     FILLER = '$' 
+
+    # If a one-hot vector can't be decoded meaningfully, render this char in its place
+    MYSTERY = '?'
 
     # Backward-compatibility. Was probably a mistake to have FILLER be a class var rather than instance
     @property
@@ -67,10 +70,14 @@ class ShortTextCodec(object):
         assert vec.shape == (self.nchars * self.maxlen,)
         chars = []
         for position_index in range(self.maxlen):
-            char_index = np.argmax(vec[position_index * self.nchars:(position_index + 1) * self.nchars])
-            char = self.alphabet[char_index]
-            if pretty and char == self.FILLER:
-                char = ' '
+            subarr = vec[position_index * self.nchars:(position_index + 1) * self.nchars]
+            if np.count_nonzero(subarr) != 1:
+                char = self.MYSTERY
+            else:
+                char_index = np.argmax(subarr)
+                char = self.alphabet[char_index]
+                if pretty and char == self.FILLER:
+                    char = ' '
             chars.append(char)
         return ''.join(chars)
 
