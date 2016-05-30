@@ -2,10 +2,18 @@ import argparse
 import pickle
 import numpy as np
 import utils
+import enum
 
 import common
 from short_text_codec import ShortTextCodec
 
+class VisInit(enum.Enum):
+    """Ways of initializing visible units before repeated gibbs sampling."""
+    zeros = 1
+    biases = 2
+    uniform = 3
+    spaces = 4
+    train = 5
 
 def print_samples(model, visibles):
     for v in visibles:
@@ -13,16 +21,34 @@ def print_samples(model, visibles):
 
 
 @common.timeit
-def sample_model(model, n, iters, prog, max_prob):
+def sample_model(model, n, iters, prog, max_prob, init_method=VisInit.biases, training_examples=None):
     # Rather than starting from a random configuration of hidden or visible nodes, 
     # sample visible nodes treating their biases as softmax inputs. Intuitively,
     # this makes sense as a way to give the sampling a head start to convergence,
     # and it empirically seems to produce more natural samples after a small
     # number of iterations, compared to a uniformly random initialization over
     # visible or hidden nodes.
-    sm = np.tile(model.intercept_visible_, [n, 1]).reshape( (-1,) + model.codec.shape() )
-    vis = utils.softmax_and_sample(sm).reshape(n, -1)
-    power = 1
+    vis_shape = (n, model.intercept_visible_.shape[0])
+    if init_method == VisInit.biases:
+        sm = np.tile(model.intercept_visible_, [n, 1]).reshape( (-1,) + model.codec.shape() )
+        vis = utils.softmax_and_sample(sm).reshape(vis_shape)
+    elif init_method == VisInit.zeros:
+        vis = np.zeros(vis_shape)
+    elif init_method == VisInit.uniform:
+        vis = np.random.randint(0, 2, vis_shape)
+    # This will fail if ' ' isn't in the alphabet of this model
+    elif init_method == VisInit.spaces:
+        vis = np.zeros( (n,) + model.codec.shape())
+        vis[:,:,model.codec.char_lookup[' ']] = 1
+        vis = vis.reshape(vis_shape)
+    elif init_method == VisInit.train:
+        assert training_examples is not None, "No training examples provided to initialize with"
+        examples = common.vectors_from_txtfile(training_examples, model.codec)
+        vis = examples[:n]
+    else:
+        raise ValueError("Unrecognized init method: {}".format(init_method))
+    print_samples(model, vis)
+    power = 0
     for i in range(iters):
         if prog and (i == 10**power):
             power += 1
