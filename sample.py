@@ -22,7 +22,8 @@ class VisInit(enum.Enum):
     train = 5
     # Choose a random length. Fill in that many uniformly random chars. Fill the rest with padding character.
     chunks = 6
-    # TODO: Use training examples but randomly mutate non-space/padding characters
+    # Use training examples but randomly mutate non-space/padding characters. Only the "shape" is preserved.
+    silhouettes = 8
 
 def print_samples(model, visibles):
     for v in visibles:
@@ -31,7 +32,7 @@ def print_samples(model, visibles):
 class BadInitMethodException(Exception):
     pass
 
-def starting_visible_configs(init_method, n, model, training_examples):
+def starting_visible_configs(init_method, n, model, training_examples_fname):
     vis_shape = (n, model.intercept_visible_.shape[0])
     maxlen, nchars = model.codec.maxlen, model.codec.nchars
     if init_method == VisInit.biases:
@@ -52,10 +53,10 @@ def starting_visible_configs(init_method, n, model, training_examples):
 
         vis[:,:,fill] = 1
         return vis.reshape(vis_shape)
-    elif init_method == VisInit.train:
-        assert training_examples is not None, "No training examples provided to initialize with"
-        examples = common.vectors_from_txtfile(training_examples, model.codec)
-        return examples[:n]
+    elif init_method == VisInit.train or init_method == VisInit.silhouettes:
+        assert training_examples_fname is not None, "No training examples provided to initialize with"
+        examples = common.vectors_from_txtfile(training_examples_fname, model.codec, limit=n, mutate=(init_method==VisInit.silhouettes))
+        return examples
     elif init_method == VisInit.chunks:
         # This works, but probably isn't idiomatic numpy.
         # I don't think I'll ever write idiomatic numpy.
@@ -82,9 +83,9 @@ def sample_model(model, n, iters, prog, max_prob, init_method=VisInit.biases, tr
     i = 0
     def gather(visible):
         model_samples[i] = [model.codec.decode(v, pretty=True) for v in visible]
-    gather(vis) # XXX
+    gather(vis) 
     while i < iters:
-        if prog and (i == 10**power or i % MAX_PROG_SAMPLE_INTERVAL == 0):
+        if prog and (i == 10**power or i % MAX_PROG_SAMPLE_INTERVAL == 0) and i > 0:
             power += 1
             sample = model.gibbs(vis, sample_max=max_prob)
             gather(sample)
@@ -187,7 +188,7 @@ if __name__ == '__main__':
                         'special round of sampling where we take the visible unit with the highest probability. ' +
                         'If this flag is enabled, the final round of sampling will be standard one, where we ' +
                         'sample randomly according to the softmax probabilities of visible units.')
-    parser.add_argument('--init', '--init-method', dest='init_method', type=int, default=VisInit.zeros)
+    parser.add_argument('--init', '--init-method', dest='init_method', type=int, default=VisInit.silhouettes)
 
     # TODO: Make initialization method configurable
     args = parser.parse_args()

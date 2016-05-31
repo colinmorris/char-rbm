@@ -26,14 +26,16 @@ def timeit(f):
     return timed
 
 
-def vectors_from_txtfile(fname, codec):
+def vectors_from_txtfile(fname, codec, limit=-1, mutate=False):
     f = open(fname)
     skipped = Counter()
     vecs = []
     for line in f:
         line = line.strip()
         try:
-            vecs.append(codec.encode(line))
+            vecs.append(codec.encode(line, mutate=mutate))
+            if len(vecs) == limit:
+                break
         except NonEncodableTextException as e:
             # Too long, or illegal characters
             skipped[e.reason] += 1

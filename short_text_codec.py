@@ -1,5 +1,6 @@
 from sklearn.utils import issparse
 import numpy as np
+import random
 
 
 class NonEncodableTextException(Exception):
@@ -53,12 +54,18 @@ class ShortTextCodec(object):
     def nchars(self):
         return len(self.alphabet)
 
-    def encode(self, s):
+    @property
+    def non_special_char_alphabet(self):
+        return ''.join(c for c in self.alphabet if (c != ' ' and c != self.FILLER)) 
+
+    def encode(self, s, mutate=False):
         try:
             if len(s) > self.maxlen: 
                 raise NonEncodableTextException(reason='toolong')
             elif (hasattr(self, 'minlen') and len(s) < self.minlen):
                 raise NonEncodableTextException(reason='tooshort')
+            if mutate:
+                s = ''.join(c if c == ' ' else random.choice(self.non_special_char_alphabet) for c in s)
             return ([self.char_lookup[c] for c in s] +
                     [self.char_lookup[self.filler] for _ in range(self.maxlen - len(s))])
         except KeyError:
