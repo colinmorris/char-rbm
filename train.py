@@ -7,19 +7,30 @@ import common
 from short_text_codec import ShortTextCodec
 from rbm_softmax import CharBernoulliRBM, CharBernoulliRBMSoftmax
 
+def stringify_param(name, value):
+    if name == 'tag':
+        prefix = ''
+    else:
+        prefix = ''.join([token[0] for token in name.split('_')])
 
-def pickle_name(args):
-    fname = args.tag if args.tag else args.input_fname.split('.')[0].split('/')[-1]
+    if isinstance(value, bool):
+        value = '' # The prefix alone tells us what we need to know - that this boolean param is the opposite of its default
+    elif isinstance(value, float):
+        # e.g. 1E-03
+        value = '{:.0E}'.format(value)
+    elif not isinstance(value, int) and not isinstance(value, basestring):
+        raise ValueError("Don't know how to format {}".format(type(value)))
+    return prefix + str(value)
+
+def pickle_name(args, parser):
+    fname = args.input_fname.split('.')[0].split('/')[-1]
     fname += '_'
-    # TODO: For the sake of brevity, maybe we should only encode parameters that didn't take their default value (though defaults may drift over time...)
-    if not args.softmax:
-        fname += '_nosm'
-    if args.learning_rate_backoff:
-        fname += '_lrb'
-    if args.preserve_case:
-        fname += '_case'
-    fname += '_{}_{}_{:.3f}.pickle'.format(args.epochs, args.n_hidden, args.learning_rate)
-    return fname
+    for arg in ['tag', 'n_hidden', 'softmax', 'learning_rate_backoff', 'preserve_case', 'epochs', 'learning_rate', 'weight_cost']:
+        value = getattr(args, arg)
+        if value != parser.get_default(arg):
+            fname += '_' + stringify_param(arg, value)
+
+    return fname + '.pickle'
 
 
 if __name__ == '__main__':
@@ -46,7 +57,9 @@ if __name__ == '__main__':
                         help='Characters to consider in addition to [a-zA-Z]')
     parser.add_argument('--hid', '--hidden-units', dest='n_hidden', default=180, type=int,
                         help='Number of hidden units')
-    parser.add_argument('-l', '--learning-rate', dest='learning_rate', default=0.05, type=float)
+    parser.add_argument('-l', '--learning-rate', dest='learning_rate', default=0.1, type=float)
+    parser.add_argument('--weight-cost', dest='weight_cost', default=0, type=float,
+                        help='Multiplied by derivative of L2 norm on weights. Practical Guide recommends 0.0001 to start')
     parser.add_argument('--lr-backoff', dest='learning_rate_backoff', action='store_true',
                         help='Gradually reduce the learning rate at each epoch')
     parser.add_argument('-e', '--epochs', dest='epochs', default=5, type=int, help="Number of times to cycle through the training data")
@@ -73,6 +86,7 @@ if __name__ == '__main__':
         rbm.lr_backoff = args.learning_rate_backoff
         rbm.n_iter = args.epochs
         rbm.batch_size = args.batch_size
+        rbm.weight_cost = args.weight_cost
         codec = rbm.codec
     else:
         codec = ShortTextCodec(args.extra_chars, args.max_text_length, 
@@ -84,6 +98,7 @@ if __name__ == '__main__':
                         'n_iter': args.epochs,
                         'verbose': 1,
                         'batch_size': args.batch_size,
+                        'weight_cost': args.weight_cost,
                         }
         kls = CharBernoulliRBMSoftmax if args.softmax else CharBernoulliRBM
         rbm = kls(**model_kwargs)
@@ -93,6 +108,6 @@ if __name__ == '__main__':
     print "Training data shape : " + str(train.shape)
 
     rbm.fit(train, validation)
-    f = open(pickle_name(args), 'wb')
+    f = open(pickle_name(args, parser), 'wb')
     pickle.dump(rbm, f)
     f.close()

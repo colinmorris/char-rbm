@@ -104,16 +104,19 @@ class BernoulliRBM(BaseEstimator, TransformerMixin):
     """
 
     def __init__(self, n_components=256, learning_rate=0.1, batch_size=10,
-                 n_iter=10, verbose=0, random_state=None, lr_backoff=False):
+                 n_iter=10, verbose=0, random_state=None, lr_backoff=False, weight_cost=0):
         self.n_components = n_components
         self.base_learning_rate = learning_rate
         self.learning_rate = learning_rate
         self.lr_backoff = lr_backoff
         self.batch_size = batch_size
+        # Experimental: How many times more fantasy particles compared to minibatch size
+        self.fantasy_to_batch = 1
         self.n_iter = n_iter
         self.verbose = verbose
         self.random_state = random_state
         self.rng_ = check_random_state(self.random_state)
+        self.weight_cost = weight_cost
         # A history of some summary statistics recorded at the end of each epoch of training
         # Each key maps to a 2-d array. One row per 'session', one value per epoch. 
         # (Another session means this model was pickled, then loaded and fit again.)
@@ -285,12 +288,14 @@ class BernoulliRBM(BaseEstimator, TransformerMixin):
 
         lr = float(self.learning_rate) / v_pos.shape[0]
         update = safe_sparse_dot(v_pos.T, h_pos, dense_output=True).T
-        update -= np.dot(h_neg.T, v_neg)
+        update -= np.dot(h_neg.T, v_neg) / self.fantasy_to_batch
+        # L2 weight penalty
+        update -= self.components_ * self.weight_cost
         self.components_ += lr * update
-        self.intercept_hidden_ += lr * (h_pos.sum(axis=0) - h_neg.sum(axis=0))
+        self.intercept_hidden_ += lr * (h_pos.sum(axis=0) - h_neg.sum(axis=0)/self.fantasy_to_batch)
         self.intercept_visible_ += lr * (np.asarray(
                                          v_pos.sum(axis=0)).squeeze() -
-                                         v_neg.sum(axis=0))
+                                         v_neg.sum(axis=0)/self.fantasy_to_batch)
 
         h_neg[self.rng_.uniform(size=h_neg.shape) < h_neg] = 1.0  # sample binomial
         self.h_samples_ = np.floor(h_neg, h_neg)
@@ -396,7 +401,7 @@ class BernoulliRBM(BaseEstimator, TransformerMixin):
         else:
             print "Reusing existing weights and biases"
         # Don't necessarily want to reuse h_samples if we have one leftover from before - batch size might have changed
-        self.h_samples_ = np.zeros((self.batch_size, self.n_components))
+        self.h_samples_ = np.zeros((self.batch_size * self.fantasy_to_batch, self.n_components))
 
         # Add new inner lists for this session
         if not hasattr(self, 'history'):
