@@ -437,7 +437,6 @@ class BernoulliRBM(BaseEstimator, TransformerMixin):
         validation_debug = ''
         if validation is not None:
             t_energy, v_energy = self.score_validation_data(train, validation)
-            # TODO: Not clear whether relative or absolute difference is the more relevant metric here.
             validation_debug = "\nE(vali):\t{:.2f}\tE(train):\t{:.2f}\tdifference: {:.2f}".format(
                 v_energy, t_energy, v_energy-t_energy)
             self.record('overfit', (v_energy, t_energy))
