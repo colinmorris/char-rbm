@@ -1,0 +1,4 @@
+*.pickle
+*.pyc
+*.html
+data/
