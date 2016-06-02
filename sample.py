@@ -82,7 +82,10 @@ def sample_model(model, n, iters, prog, max_prob, init_method=VisInit.biases, tr
     power = 0
     i = 0
     def gather(visible):
-        model_samples[i] = [model.codec.decode(v, pretty=True) for v in visible]
+        # Turn off 'strict' mode for i>0. The only way we'll have invalid one-hot vectors
+        # past that point is if we trained our model without softmax sampling. If so, we
+        # want to visualize the most likely char at each position.
+        model_samples[i] = [model.codec.decode(v, pretty=True, strict=i==0) for v in visible]
     gather(vis) 
     while i < iters:
         if prog and (i == 10**power or i % MAX_PROG_SAMPLE_INTERVAL == 0) and i > 0:

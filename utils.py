@@ -1,6 +1,20 @@
 import numpy as np
 
 # Adapted from sklearn.utils.extmath.softmax
+def softmax(X, copy=True):
+    if copy:
+            X = np.copy(X)
+    X_shape = X.shape
+    a, b, c = X_shape
+    # This will cause overflow when large values are exponentiated.
+    # Hence the largest value in each row is subtracted from each data
+    max_prob = np.max(X, axis=2).reshape((X.shape[0], X.shape[1], 1))
+    X -= max_prob
+    np.exp(X, X)
+    sum_prob = np.sum(X, axis=2).reshape((X.shape[0], X.shape[1], 1))
+    X /= sum_prob
+    return X
+
 def softmax_and_sample(X, copy=True):
     """
     Given an array of 2-d arrays, each having shape (M, N) representing M softmax
@@ -20,18 +34,9 @@ def softmax_and_sample(X, copy=True):
     out: array of 0,1, shape (n_samples, M, N)
         Softmax function evaluated at every point in x and sampled
     """
-    if copy:
-        X = np.copy(X)
+    a,b,c = X.shape
     X_shape = X.shape
-    a, b, c = X_shape
-    # This will cause overflow when large values are exponentiated.
-    # Hence the largest value in each row is subtracted from each data
-    max_prob = np.max(X, axis=2).reshape((X.shape[0], X.shape[1], 1))
-    X -= max_prob
-    np.exp(X, X)
-    sum_prob = np.sum(X, axis=2).reshape((X.shape[0], X.shape[1], 1))
-    X /= sum_prob
-
+    X = softmax(X, copy)
     # We've got our probabilities, now sample from them
     thresholds = np.random.rand(X.shape[0], X.shape[1], 1)
     cumsum = np.cumsum(X, axis=2, out=X)

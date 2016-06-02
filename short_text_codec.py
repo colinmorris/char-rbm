@@ -71,14 +71,14 @@ class ShortTextCodec(object):
         except KeyError:
             raise NonEncodableTextException(reason='illegal_char')
 
-    def decode(self, vec, pretty=False):
+    def decode(self, vec, pretty=False, strict=True):
         if issparse(vec):
             vec = vec.toarray().reshape(-1)
         assert vec.shape == (self.nchars * self.maxlen,)
         chars = []
         for position_index in range(self.maxlen):
             subarr = vec[position_index * self.nchars:(position_index + 1) * self.nchars]
-            if np.count_nonzero(subarr) != 1:
+            if np.count_nonzero(subarr) != 1 and strict:
                 char = self.MYSTERY
             else:
                 char_index = np.argmax(subarr)

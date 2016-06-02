@@ -21,7 +21,7 @@ from sklearn.utils import check_array
 from sklearn.utils import check_random_state
 from sklearn.utils import gen_even_slices
 from sklearn.utils import issparse
-from sklearn.utils.extmath import safe_sparse_dot, softmax, log_logistic
+from sklearn.utils.extmath import safe_sparse_dot, log_logistic
 from sklearn.utils.fixes import expit             # logistic function
 from sklearn.utils.validation import check_is_fitted
 
@@ -178,6 +178,9 @@ class BernoulliRBM(BaseEstimator, TransformerMixin):
         p = self._mean_hiddens(v)
         return (self.rng_.random_sample(size=p.shape) < p)
 
+    def sample_max(self, probs):
+        raise NotImplementedError
+    
     def _sample_visibles(self, h, sample_max=False):
         """Sample from the distribution P(v|h).
 
@@ -197,6 +200,8 @@ class BernoulliRBM(BaseEstimator, TransformerMixin):
         p = np.dot(h, self.components_)
         p += self.intercept_visible_
         expit(p, out=p)
+        if sample_max:
+            return self.sample_max(p)
         return (self.rng_.random_sample(size=p.shape) < p)
 
     def _free_energy(self, v):
@@ -387,12 +392,16 @@ class BernoulliRBM(BaseEstimator, TransformerMixin):
                 order='fortran')
             self.intercept_hidden_ = np.zeros(self.n_components, )
             # 'It is usually helpful to initialize the bias of visible unit i to log[p_i/(1-p_i)] where p_i is the prptn of training vectors where i is on' - Practical Guide
-            counts = X.sum(axis=0).A.reshape(-1)
-            # There should be no units that are always on
-            assert np.max(counts) < X.shape[0], "Found a visible unit always on in the training data. Fishy."
-            # There might be some units never on. Add a pseudo-count of 1 to avoid inf
-            vis_priors = (counts + 1) / float(X.shape[0])
-            self.intercept_visible_ = np.log( vis_priors / (1 - vis_priors) )
+            # TODO: Make this configurable?
+            if 1:
+                counts = X.sum(axis=0).A.reshape(-1)
+                # There should be no units that are always on
+                assert np.max(counts) < X.shape[0], "Found a visible unit always on in the training data. Fishy."
+                # There might be some units never on. Add a pseudo-count of 1 to avoid inf
+                vis_priors = (counts + 1) / float(X.shape[0])
+                self.intercept_visible_ = np.log( vis_priors / (1 - vis_priors) )
+            else:
+                self.intercept_visible_ = np.zeros(X.shape[1], )
 
         # If this already *does* have weights and biases before fit() is called,
         # we'll start from them rather than wiping them out. May want to train
@@ -474,6 +483,17 @@ class CharBernoulliRBM(BernoulliRBM):
                                     self._sample_visibles(self.h_samples_[:3], sample_max=True)])
         print "Fantasy samples: {}".format(fantasy_samples)
 
+    def sample_max(self, probs):
+        shape = (probs.shape[0],) + self.codec.shape()
+        n, maxlen, nchars = shape
+        if probs.shape != shape:
+            probs = np.reshape(probs, shape)
+        one_indices = np.argmax(probs, axis=2).reshape((n, maxlen, 1))
+        sample = np.zeros(shape)
+        i,j,k = np.indices(shape)
+        sample[i,j,one_indices] = 1
+        return sample.reshape(n, maxlen*nchars)
+
 
 class CharBernoulliRBMSoftmax(CharBernoulliRBM):
 
@@ -500,6 +520,8 @@ class CharBernoulliRBMSoftmax(CharBernoulliRBM):
         p += self.intercept_visible_
         nsamples, nfeats = p.shape
         reshaped = np.reshape(p, (nsamples,) + self.softmax_shape)
+        if sample_max:
+            return self.sample_max(utils.softmax(reshaped))
         return utils.softmax_and_sample(reshaped).reshape((nsamples, nfeats))
 
     def corrupt(self, v):

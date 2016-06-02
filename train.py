@@ -57,7 +57,7 @@ if __name__ == '__main__':
                         help='Characters to consider in addition to [a-zA-Z]')
     parser.add_argument('--hid', '--hidden-units', dest='n_hidden', default=180, type=int,
                         help='Number of hidden units')
-    parser.add_argument('-l', '--learning-rate', dest='learning_rate', default=0.1, type=float)
+    parser.add_argument('-l', '--learning-rate', dest='learning_rate', default=0.1, type=float, help="Learning rate.")
     parser.add_argument('--weight-cost', dest='weight_cost', default=0, type=float,
                         help='Multiplied by derivative of L2 norm on weights. Practical Guide recommends 0.0001 to start')
     parser.add_argument('--lr-backoff', dest='learning_rate_backoff', action='store_true',
