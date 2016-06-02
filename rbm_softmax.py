@@ -40,8 +40,6 @@ class BernoulliRBM(BaseEstimator, TransformerMixin):
     The time complexity of this implementation is ``O(d ** 2)`` assuming
     d ~ n_features ~ n_components.
 
-    Read more in the :ref:`User Guide <rbm>`.
-
     Parameters
     ----------
 
@@ -80,17 +78,6 @@ class BernoulliRBM(BaseEstimator, TransformerMixin):
         Weight matrix, where n_features in the number of
         visible units and n_components is the number of hidden units.
 
-    Examples
-    --------
-
-    >>> import numpy as np
-    >>> from sklearn.neural_network import BernoulliRBM
-    >>> X = np.array([[0, 0, 0], [0, 1, 1], [1, 0, 1], [1, 1, 1]])
-    >>> model = BernoulliRBM(n_components=2)
-    >>> model.fit(X)
-    BernoulliRBM(batch_size=10, learning_rate=0.1, n_components=2, n_iter=10,
-           random_state=None, verbose=0)
-
     References
     ----------
 
@@ -127,29 +114,9 @@ class BernoulliRBM(BaseEstimator, TransformerMixin):
             self.history = {'pseudo-likelihood': [], 'overfit': []}
         self.history[name][-1].append(value)
 
-    def transform(self, X):
-        """Compute the hidden layer activation probabilities, P(h=1|v=X).
-
-        Parameters
-        ----------
-        X : {array-like, sparse matrix} shape (n_samples, n_features)
-            The data to be transformed.
-
-        Returns
-        -------
-        h : array, shape (n_samples, n_components)
-            Latent representations of the data.
-        """
-        check_is_fitted(self, "components_")
-
-        X = check_array(X, accept_sparse='csr', dtype=np.float)
-        return self._mean_hiddens(X)
-
     def _mean_hiddens(self, v):
         """Computes the probabilities P(h=1|v).
 
-        Parameters
-        ----------
         v : array-like, shape (n_samples, n_features)
             Values of the visible layer.
 
@@ -165,8 +132,6 @@ class BernoulliRBM(BaseEstimator, TransformerMixin):
     def _sample_hiddens(self, v):
         """Sample from the distribution P(h|v).
 
-        Parameters
-        ----------
         v : array-like, shape (n_samples, n_features)
             Values of the visible layer to sample from.
 
@@ -184,8 +149,6 @@ class BernoulliRBM(BaseEstimator, TransformerMixin):
     def _sample_visibles(self, h, sample_max=False):
         """Sample from the distribution P(v|h).
 
-        Parameters
-        ----------
         h : array-like, shape (n_samples, n_components)
             Values of the hidden layer to sample from.
 
@@ -207,8 +170,6 @@ class BernoulliRBM(BaseEstimator, TransformerMixin):
     def _free_energy(self, v):
         """Computes the free energy F(v) = - log sum_h exp(-E(v,h)).
 
-        Parameters
-        ----------
         v : array-like, shape (n_samples, n_features)
             Values of the visible layer.
 
@@ -224,8 +185,6 @@ class BernoulliRBM(BaseEstimator, TransformerMixin):
     def gibbs(self, v, sample_max=False):
         """Perform one Gibbs sampling step.
 
-        Parameters
-        ----------
         v : array-like, shape (n_samples, n_features)
             Values of the visible layer to start from.
 
@@ -248,8 +207,6 @@ class BernoulliRBM(BaseEstimator, TransformerMixin):
         """Fit the model to the data X which should contain a partial
         segment of the data.
 
-        Parameters
-        ----------
         X : array-like, shape (n_samples, n_features)
             Training data.
 
@@ -282,8 +239,6 @@ class BernoulliRBM(BaseEstimator, TransformerMixin):
         Adjust the parameters to maximize the likelihood of v using
         Stochastic Maximum Likelihood (SML).
 
-        Parameters
-        ----------
         v_pos : array-like, shape (n_samples, n_features)
             The data to use for training.
         """
@@ -324,8 +279,6 @@ class BernoulliRBM(BaseEstimator, TransformerMixin):
     def score_samples(self, X):
         """Compute the pseudo-likelihood of X.
 
-        Parameters
-        ----------
         X : {array-like, sparse matrix} shape (n_samples, n_features)
             Values of the visible layer. Must be all-boolean (not checked).
 
@@ -371,8 +324,6 @@ class BernoulliRBM(BaseEstimator, TransformerMixin):
     def fit(self, X, validation=None):
         """Fit the model to the data X.
 
-        Parameters
-        ----------
         X : {array-like, sparse matrix} shape (n_samples, n_features)
             Training data.
 
@@ -502,8 +453,6 @@ class CharBernoulliRBMSoftmax(CharBernoulliRBM):
         on visible units. i.e. sum(v) == softmax_shape[0] for any visible 
         configuration v.
 
-        Parameters
-        ----------
         h : array-like, shape (n_samples, n_components)
             Values of the hidden layer to sample from.
 
