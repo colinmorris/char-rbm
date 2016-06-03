@@ -104,23 +104,8 @@ def _hidden_activations_html(hiddens, title):
     s += '</pre>'
     return s
 
-
-def visualize_hidden_activations(model, example_fname, out="activations.html"):
-    s = '''<html><head><style>
-    body {
-      font-family: monospace;
-      font-size: 0.9em;
-      }
-    .n {
-      color: black;
-      opacity: .2;
-      }
-    .y {
-      color: blue;
-      }
-  </style></head><body>'''
-    vecs = common.vectors_from_txtfile(example_fname, model.codec, limit=300) # TODO: make configurable
-    for n_gibbs in [0, 5, 1000]:
+'''
+   for n_gibbs in [0, 5, 1000]:
         if n_gibbs > 0:
             vecs = model.repeated_gibbs(vecs, n_gibbs, sample_max=False)
         # TODO: Visualize hidden probabilities to avoid sampling noise? Should at least offer option
@@ -130,6 +115,25 @@ def visualize_hidden_activations(model, example_fname, out="activations.html"):
     fout = open(out, 'w')
     fout.write(s)
     print "Wrote visualization to " + out
+'''
+from bokeh.plotting import figure, output_file, show, save
+import numpy as np
+def visualize_hidden_activations(model, example_fname, out="activations.html"):
+    output_file(out, title="Hidden activations")
+    vecs = common.vectors_from_txtfile(example_fname, model.codec, limit=300) # TODO: make configurable
+    for n_gibbs in [0, 5, 1000]:
+        if n_gibbs > 0:
+            vecs = model.repeated_gibbs(vecs, n_gibbs, sample_max=False)
+        # TODO: Visualize hidden probabilities to avoid sampling noise? Should at least offer option
+        hiddens = model._sample_hiddens(vecs)
+        x, y = np.nonzero(hiddens)
+        p = figure(title="After {} rounds of Gibbs sampling".format(n_gibbs),
+                    x_axis_location="above", x_range=(0,hiddens.shape[1]), y_range=(0,hiddens.shape[0])
+        )
+        p.rect(x=x, y=y)
+        save(p)
+        break
+
 
 if __name__ == '__main__':
     # TODO: argparse
