@@ -12,4 +12,6 @@ More details on the arguments to these scripts can be seen by running them with 
 
 # Requirements
 
-scikit-learn and its dependencies (numpy, scipy). Probably some other stuff that I've forgotten.
+scikit-learn and its dependencies (numpy, scipy). 
+bokeh for some optional visualizations
+Probably some other stuff that I've forgotten.

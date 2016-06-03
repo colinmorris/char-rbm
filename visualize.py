@@ -3,7 +3,11 @@
 """
 
 import sys
+import os
 import pickle
+import bokeh.plotting
+import bokeh.io
+import numpy as np
 
 import common
 
@@ -82,57 +86,34 @@ def receptive_fields(model, out="recep.html"):
     print "Wrote visualization to " + out
     f.close()
 
-
-def _hidden_activations_html(hiddens, title):
-    # TODO: There are a million trillion better ways to do this. Could at least use svg.
-    s = '<h2>{}</h2><pre>'.format(title)
-    PADDING = 3 + 1
-    s += ' ' * 5 + '0'
-    for i in range(5 * PADDING, hiddens.shape[1] * PADDING, 5 * PADDING):
-        s += str(i / PADDING).rjust(5 * PADDING, ' ')
-    s += '<br/>'
-    for i, hid in enumerate(hiddens):
-        #s += '{:3d}  '.format(i) + ''.join(['|' if h == 1 else '.' for h in hid]) + '<br/>'
-        s += '{:3d}  '.format(i) + ''.join(
-            ['<span class="{}">|{}</span>'.format("y" if h == 1 else "n", " " * (PADDING - 1)) for h in hid]
-        )
-        s += ' ' + str(sum(hid))
-        s += '<br/>'
-
-    s += ' ' * 5 + ''.join([str(sum(active)).ljust(PADDING, ' ')
-                            for active in hiddens.T])
-    s += '</pre>'
-    return s
-
-'''
-   for n_gibbs in [0, 5, 1000]:
-        if n_gibbs > 0:
-            vecs = model.repeated_gibbs(vecs, n_gibbs, sample_max=False)
-        # TODO: Visualize hidden probabilities to avoid sampling noise? Should at least offer option
-        hiddens = model._sample_hiddens(vecs)
-        s += _hidden_activations_html(hiddens, 'Hidden activations after {} rounds of gibbs sampling'.format(n_gibbs))
-    s += '</body></html>'
-    fout = open(out, 'w')
-    fout.write(s)
-    print "Wrote visualization to " + out
-'''
-from bokeh.plotting import figure, output_file, show, save
-import numpy as np
 def visualize_hidden_activations(model, example_fname, out="activations.html"):
-    output_file(out, title="Hidden activations")
-    vecs = common.vectors_from_txtfile(example_fname, model.codec, limit=300) # TODO: make configurable
+    bokeh.plotting.output_file(out, title="Hidden activations - {}".format(model.name))
+    figures = []
+    n = 300 # TODO: make configurable
+    vecs = common.vectors_from_txtfile(example_fname, model.codec, limit=n) 
     for n_gibbs in [0, 5, 1000]:
         if n_gibbs > 0:
             vecs = model.repeated_gibbs(vecs, n_gibbs, sample_max=False)
         # TODO: Visualize hidden probabilities to avoid sampling noise? Should at least offer option
         hiddens = model._sample_hiddens(vecs)
-        x, y = np.nonzero(hiddens)
-        p = figure(title="After {} rounds of Gibbs sampling".format(n_gibbs),
+        y, x = np.nonzero(hiddens)
+        max_y, max_x = hiddens.shape
+        hidden_counts = np.sum(hiddens, axis=0)
+        n_dead = (hidden_counts == 0).sum()
+        n_immortal = (hidden_counts == n).sum()
+        p = bokeh.plotting.figure(title="After {} rounds of Gibbs sampling. Dead = {}. Immortal = {}".format(n_gibbs, n_dead, n_immortal),
                     x_axis_location="above", x_range=(0,hiddens.shape[1]), y_range=(0,hiddens.shape[0])
         )
-        p.rect(x=x, y=y)
-        save(p)
-        break
+        p.plot_width = 1100
+        sidelen = p.plot_width / (max_x + 0.0)
+        p.plot_height = int(p.plot_width * (max_y / (max_x + 0.0)))
+        p.rect(x=x, y=y, width=sidelen, height=sidelen,
+            width_units='screen', height_units='screen',
+        )
+        figures.append(p)
+
+    p = bokeh.io.vplot(*figures)
+    bokeh.plotting.save(p)
 
 
 if __name__ == '__main__':
@@ -146,6 +127,7 @@ if __name__ == '__main__':
     model_fname = sys.argv[1]
     f = open(model_fname)
     model = pickle.load(f)
+    model.name = os.path.basename(model_fname)
 
     tag = model_fname[:model_fname.rfind(".")]
     receptive_fields(model, tag + '_receptive_fields.html')
