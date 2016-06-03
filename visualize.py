@@ -83,25 +83,9 @@ def receptive_fields(model, out="recep.html"):
     f.close()
 
 
-def visualize_hidden_activations(model, example_fname, out="activations.html"):
-    s = '''<html><head><style>
-    body {
-      font-family: monospace;
-      font-size: 0.9em;
-      }
-    .n {
-      color: black;
-      opacity: .2;
-      }
-    .y {
-      color: blue;
-      }
-  </style></head><body><pre>'''
-    vecs = common.vectors_from_txtfile(example_fname, model.codec)
-    if vecs.shape[0] > 5000:
-        print "WARNING: You passed in a text file with over 5k lines. Surely you didn't mean to do that. Truncating to 300"
-        vecs = vecs[:300]
-    hiddens = model._sample_hiddens(vecs)
+def _hidden_activations_html(hiddens, title):
+    # TODO: There are a million trillion better ways to do this. Could at least use svg.
+    s = '<h2>{}</h2><pre>'.format(title)
     PADDING = 3 + 1
     s += ' ' * 5 + '0'
     for i in range(5 * PADDING, hiddens.shape[1] * PADDING, 5 * PADDING):
@@ -117,12 +101,38 @@ def visualize_hidden_activations(model, example_fname, out="activations.html"):
 
     s += ' ' * 5 + ''.join([str(sum(active)).ljust(PADDING, ' ')
                             for active in hiddens.T])
-    s += '</pre></body></html>'
+    s += '</pre>'
+    return s
+
+
+def visualize_hidden_activations(model, example_fname, out="activations.html"):
+    s = '''<html><head><style>
+    body {
+      font-family: monospace;
+      font-size: 0.9em;
+      }
+    .n {
+      color: black;
+      opacity: .2;
+      }
+    .y {
+      color: blue;
+      }
+  </style></head><body>'''
+    vecs = common.vectors_from_txtfile(example_fname, model.codec, limit=300) # TODO: make configurable
+    for n_gibbs in [0, 5, 1000]:
+        if n_gibbs > 0:
+            vecs = model.repeated_gibbs(vecs, n_gibbs, sample_max=False)
+        # TODO: Visualize hidden probabilities to avoid sampling noise? Should at least offer option
+        hiddens = model._sample_hiddens(vecs)
+        s += _hidden_activations_html(hiddens, 'Hidden activations after {} rounds of gibbs sampling'.format(n_gibbs))
+    s += '</body></html>'
     fout = open(out, 'w')
     fout.write(s)
     print "Wrote visualization to " + out
 
 if __name__ == '__main__':
+    # TODO: argparse
     if len(sys.argv) < 3:
         print "USAGE: visualize.py model.pickle sample.txt"
         print (" (The sample file is used for visualizing the"

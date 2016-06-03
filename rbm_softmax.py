@@ -208,6 +208,16 @@ class BernoulliRBM(BaseEstimator, TransformerMixin):
 
         return v_
 
+    def repeated_gibbs(self, v, niters, sample_max=True):
+        """Perform n rounds of alternating Gibbs sampling starting from the
+        given visible vectors. If sample_max is True, then sample the most
+        probable visible units on the *last* round of sampling.
+        """
+        for i in range(niters):
+            h = self._sample_hiddens(v)
+            v = self._sample_visibles(h, sample_max and i == niters-1)
+        return v
+
     def partial_fit(self, X, y=None):
         """Fit the model to the data X which should contain a partial
         segment of the data.
