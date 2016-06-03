@@ -179,9 +179,9 @@ if __name__ == '__main__':
                                      formatter_class=argparse.ArgumentDefaultsHelpFormatter)
     parser.add_argument('model_fname', metavar='model.pickle', nargs='+',
                         help='One or more pickled RBM models')
-    parser.add_argument('-n', '--n-samples', dest='n_samples', type=int, default=20,
+    parser.add_argument('-n', '--n-samples', dest='n_samples', type=int, default=30,
                               help='How many samples to draw')
-    parser.add_argument('-i', '--iters', dest='iters', type=int, default=1000,
+    parser.add_argument('-i', '--iters', dest='iters', type=int, default=10**4,
                               help='How many rounds of Gibbs sampling to perform before generating the outputs')
     parser.add_argument('--prog', '--progressively-sample', dest='prog', action='store_true',
                         help='Output n samples after 10 rounds of sampling, then 100, 1000... until we reach a power of 10 >=iters')
@@ -202,8 +202,9 @@ if __name__ == '__main__':
         f = open(model_fname)
         model = pickle.load(f)
         f.close()
+        # TODO: add as arg
         if 'usgeo' in model_fname:
-            example_file = 'data/microgeo.txt'
+            example_file = 'data/usgeo.txt'
         elif 'reponames' in model_fname:
             example_file = 'data/reponames.txt'
         elif 'names' in model_fname:

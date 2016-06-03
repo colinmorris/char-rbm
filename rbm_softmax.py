@@ -258,6 +258,16 @@ class BernoulliRBM(BaseEstimator, TransformerMixin):
             The data to use for training.
         """
         h_pos = self._mean_hiddens(v_pos)
+        # TODO: Worth trying with visible probabilities rather than binary states.
+        # PG: it is common to use p_i instead of sampling a binary value'... 'it reduces
+        # sampling noise this allowing faster learning. There is some evidence that it leads
+        # to slightly worse density models'
+
+        # I'm confounded by the fact that we seem to get more effective models WITHOUT
+        # softmax visible units. The only explanation I can think of is that it's like
+        # a pseudo-version of using visible probabilities. Without softmax, v_neg
+        # can have multiple 1s per one-hot vector, which maybe somehow accelerates learning?
+        # Need to think about this some more.
         v_neg = self._sample_visibles(self.h_samples_)
         h_neg = self._mean_hiddens(v_neg)
 
@@ -326,6 +336,7 @@ class BernoulliRBM(BaseEstimator, TransformerMixin):
         # it's because we're supposed to be dealing with smaller deltas here?
         #return v.shape[1] * log_logistic(fe_corrupted - fe)
 
+    # TODO: No longer used
     def pseudolikelihood_ratio(self, good, bad):
         assert good.shape == bad.shape
         good_energy = self._free_energy(good)
