@@ -26,20 +26,23 @@ def timeit(f):
     return timed
 
 
-def vectors_from_txtfile(fname, codec, limit=-1, mutate=False):
+
+
+def vectors_from_txtfile(fname, codec, limit=-1, mutagen=None):
     f = open(fname)
     skipped = Counter()
     vecs = []
     for line in f:
         line = line.strip()
         try:
-            vecs.append(codec.encode(line, mutate=mutate))
+            vecs.append(codec.encode(line, mutagen=mutagen))
             if len(vecs) == limit:
                 break
         except NonEncodableTextException as e:
             # Too long, or illegal characters
             skipped[e.reason] += 1
 
+    # TODO: logging.debug
     print "Gathered {} vectors. Skipped {} ({})".format(len(vecs), 
         sum(skipped.values()), dict(skipped))
     # TODO: Why default to dtype=float? Seems wasteful? Maybe it doesn't really matter. Actually, docs here seem inconsistent? Constructor docs say default float. transform docs say int.

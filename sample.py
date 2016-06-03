@@ -55,7 +55,8 @@ def starting_visible_configs(init_method, n, model, training_examples_fname):
         return vis.reshape(vis_shape)
     elif init_method == VisInit.train or init_method == VisInit.silhouettes:
         assert training_examples_fname is not None, "No training examples provided to initialize with"
-        examples = common.vectors_from_txtfile(training_examples_fname, model.codec, limit=n, mutate=(init_method==VisInit.silhouettes))
+        mutagen = model.codec.mutagen_silhouettes if init_method == VisInit.silhouettes else None
+        examples = common.vectors_from_txtfile(training_examples_fname, model.codec, limit=n, mutagen=mutagen)
         return examples
     elif init_method == VisInit.chunks:
         # This works, but probably isn't idiomatic numpy.

@@ -58,14 +58,14 @@ class ShortTextCodec(object):
     def non_special_char_alphabet(self):
         return ''.join(c for c in self.alphabet if (c != ' ' and c != self.FILLER)) 
 
-    def encode(self, s, mutate=False):
+    def encode(self, s, mutagen=None):
         try:
             if len(s) > self.maxlen: 
                 raise NonEncodableTextException(reason='toolong')
             elif (hasattr(self, 'minlen') and len(s) < self.minlen):
                 raise NonEncodableTextException(reason='tooshort')
-            if mutate:
-                s = ''.join(c if c == ' ' else random.choice(self.non_special_char_alphabet) for c in s)
+            if mutagen:
+                s = mutagen(s)
             return ([self.char_lookup[c] for c in s] +
                     [self.char_lookup[self.filler] for _ in range(self.maxlen - len(s))])
         except KeyError:
@@ -91,3 +91,33 @@ class ShortTextCodec(object):
     def shape(self):
         """The shape of a set of RBM inputs given this codecs configuration."""
         return (self.maxlen, len(self.alphabet))
+
+    def mutagen_nudge(self, s):
+        # Mutate a single character chosen uniformly at random.
+        # If s is shorter than the max length, include an extra virtual character at the end
+        i = random.randint(0, min(len(s), self.maxlen-1))
+        def roll(forbidden):
+            newchar = random.choice(self.alphabet)
+            while newchar in forbidden:
+                newchar = random.choice(self.alphabet)
+            return newchar
+                
+        if i == len(s):
+            return s + roll(self.FILLER + ' ')
+        if i == len(s)-1:
+            return s[:-1] + roll(' ' + s[-1])
+        else:
+            return s[:i] + roll(s[i] + self.FILLER) + s[i+1:]
+
+
+    def mutagen_silhouettes(self, s):
+        newchars = []
+        for char in s:
+            if char == ' ':
+                newchars.append(char)
+            else:
+                newchars.append(random.choice(self.non_special_char_alphabet))
+        return ''.join(newchars)
+        
+    def mutagen_noise(self, s):
+        return ''.join(random.choice(self.alphabet) for _ in range(self.maxlen))

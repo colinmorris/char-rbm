@@ -178,7 +178,6 @@ class BernoulliRBM(BaseEstimator, TransformerMixin):
         free_energy : array-like, shape (n_samples,)
             The value of the free energy.
         """
-        # TODO: This doesn't seem to match with eq 2.7 in http://www.jmlr.org/proceedings/papers/v9/marlin10a/marlin10a.pdf
         return (- safe_sparse_dot(v, self.intercept_visible_)
                 - np.logaddexp(0, safe_sparse_dot(v, self.components_.T)
                                + self.intercept_hidden_).sum(axis=1))
@@ -311,6 +310,13 @@ class BernoulliRBM(BaseEstimator, TransformerMixin):
         # not to just do that here as well? Seems much simpler to interpret. Maybe
         # it's because we're supposed to be dealing with smaller deltas here?
         #return v.shape[1] * log_logistic(fe_corrupted - fe)
+
+    def pseudolikelihood_ratio(self, good, bad):
+        assert good.shape == bad.shape
+        good_energy = self._free_energy(good)
+        bad_energy = self._free_energy(bad)
+        # Let's do ratio of log probabilities instead
+        return (bad_energy - good_energy).mean()
 
     @common.timeit
     def score_validation_data(self, train, validation):
