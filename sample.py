@@ -166,8 +166,9 @@ def sample_table(model, example_file, args):
     for init in reversed(VisInit):
         print "init = " + str(init)
         try:
+            # Note: we ignore the --prog option, since table-mode implies we want to do progrssive sampling
             samples[init.name] = sample_model(model, args.n_samples, args.iters, 
-                args.prog, max_prob=not args.nomax, init_method=init, 
+                prog=True, max_prob=not args.nomax, init_method=init, 
                 training_examples=example_file)
         except BadInitMethodException as e:
             print e
@@ -194,7 +195,6 @@ if __name__ == '__main__':
                         'sample randomly according to the softmax probabilities of visible units.')
     parser.add_argument('--init', '--init-method', dest='init_method', type=int, default=VisInit.silhouettes)
 
-    # TODO: Make initialization method configurable
     args = parser.parse_args()
 
     for model_fname in args.model_fname:

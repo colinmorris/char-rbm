@@ -2,21 +2,23 @@ import argparse
 import pickle
 import common
 import csv
+import os
 
 common.DEBUG_TIMING = True
 
 # TODO: Hyperparams would be nice. Models should probably just know their hyperparams.
-FIELDS = ['name', 'nchars', 'minlen', 'maxlen', 'nhidden', 'PR_nudge', 'PR_noise', 'PR_sil', 'recon_error']
+FIELDS = ['nchars', 'minlen', 'maxlen', 'nhidden', 'PR_nudge', 'PR_noise', 'PR_sil', 'recon_error', 'filler', 'name']
 
 @common.timeit
 def eval_model(model, trainfile, n):
     # TODO: Instead of just mean PR, should maybe also have stdev and median?
-    row  = {'name': model.name[:6]}
+    row  = {'name': model.name}
     codec = model.codec
     row['nchars'] = codec.nchars
-    row['minlen'] = getattr(codec, 'minlen', 0)
+    row['minlen'] = getattr(codec, 'minlen', None)
     row['maxlen'] = codec.maxlen
     row['nhidden'] = model.intercept_hidden_.shape[0]
+    row['filler'] = codec.filler
 
 
     # The untainted vectorizations
@@ -32,7 +34,7 @@ def eval_model(model, trainfile, n):
     row['recon_error'] = 1.0
     for k in row:
         if isinstance(row[k], float):
-            row[k] = '{:.2f}'.format(row[k])
+            row[k] = '{:.1f}'.format(row[k])
     return row
 
 if __name__ == '__main__':
@@ -46,7 +48,7 @@ if __name__ == '__main__':
     for fname in args.models:
         f = open(fname)
         models.append(pickle.load(f))
-        models[-1].name = fname
+        models[-1].name = os.path.basename(fname)
         f.close()
 
     # We could try to be efficient and only load the training data once for all models

@@ -21,6 +21,7 @@ from sklearn.utils import check_array
 from sklearn.utils import check_random_state
 from sklearn.utils import gen_even_slices
 from sklearn.utils import issparse
+from sklearn.utils import shuffle
 from sklearn.utils.extmath import safe_sparse_dot, log_logistic
 from sklearn.utils.fixes import expit             # logistic function
 from sklearn.utils.validation import check_is_fitted
@@ -97,8 +98,6 @@ class BernoulliRBM(BaseEstimator, TransformerMixin):
         self.learning_rate = learning_rate
         self.lr_backoff = lr_backoff
         self.batch_size = batch_size
-        # Experimental: How many times more fantasy particles compared to minibatch size
-        self.fantasy_to_batch = 1
         self.n_iter = n_iter
         self.verbose = verbose
         self.random_state = random_state
@@ -108,6 +107,12 @@ class BernoulliRBM(BaseEstimator, TransformerMixin):
         # Each key maps to a 2-d array. One row per 'session', one value per epoch. 
         # (Another session means this model was pickled, then loaded and fit again.)
         self.history = {'pseudo-likelihood': [], 'overfit': []}
+
+    # TODO
+    # Experimental: How many times more fantasy particles compared to minibatch size
+    @property
+    def fantasy_to_batch(self):
+        return 1
 
     def record(self, name, value):
         if not hasattr(self, 'history'):
@@ -396,6 +401,8 @@ class BernoulliRBM(BaseEstimator, TransformerMixin):
                 end = time.time()
                 self.wellness_check(iteration, end - begin, X, validation)
                 begin = end
+            if iteration != self.n_iter:
+                X = shuffle(X)
 
         return self
 

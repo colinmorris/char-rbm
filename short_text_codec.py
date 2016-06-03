@@ -59,13 +59,13 @@ class ShortTextCodec(object):
         return ''.join(c for c in self.alphabet if (c != ' ' and c != self.FILLER)) 
 
     def encode(self, s, mutagen=None):
+        if len(s) > self.maxlen: 
+            raise NonEncodableTextException(reason='toolong')
+        elif (hasattr(self, 'minlen') and len(s) < self.minlen):
+            raise NonEncodableTextException(reason='tooshort')
+        if mutagen:
+            s = mutagen(s)
         try:
-            if len(s) > self.maxlen: 
-                raise NonEncodableTextException(reason='toolong')
-            elif (hasattr(self, 'minlen') and len(s) < self.minlen):
-                raise NonEncodableTextException(reason='tooshort')
-            if mutagen:
-                s = mutagen(s)
             return ([self.char_lookup[c] for c in s] +
                     [self.char_lookup[self.filler] for _ in range(self.maxlen - len(s))])
         except KeyError:
