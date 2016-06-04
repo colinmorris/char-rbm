@@ -81,6 +81,21 @@ def starting_visible_configs(init_method, n, model, training_examples_fname):
 
 @common.timeit
 def sample_model(model, n, iters, prog, max_prob, init_method=VisInit.biases, training_examples=None, energy=False):
+    # TODO: Idea: For each lineage of fantasy particles, return the version with
+    # the one with the lowest energy seen after n iterations. Would this lead to
+    # qualitatively better samples than just taking the nth?
+    # In practice, could probably get away with only taking the lowest-energy 
+    # of the last 10 or 100, so you didn't have to calculate the energy at every step.
+    # At the macro-level, energy *should* be decreasing over time (but
+    # TODO: should verify this intuition!). The concern is more that energy
+    # might be spiky at the small scale, and we might happen to be
+    # unlucky on the 10,000th iteration or whatever.
+    # Edit: Empirically, this seems to modestly improve results for models with
+    # good mixing rates, even after as many as 10k iterations, one of the last
+    # 100 samples can beat the most recent one with ~15% lower energy. For
+    # models with poor mixing rates, this doesn't do much. Some results 
+    # saved at notes/sampling_temperature_examples.txt
+
     vis = starting_visible_configs(init_method, n, model, training_examples)
     # #iters -> list of strings
     model_samples = {}

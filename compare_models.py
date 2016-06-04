@@ -48,7 +48,7 @@ def eval_model(model, trainfile, n):
         # models 'win' more often (assigning lower energy to authentic examples), but the bad models sometimes win
         # by a lot more. (And for our purposes, maybe this shouldn't really be worth many more points. We just want
         # the strings we get from sampling to be reasonable, and for unreasonable strings to have high enough energy
-        # that we won't encounter them. Whether "asdasdsf" gets LOW_ENERGY, or LOW_ENERGY x 10^100 doesn't really
+        # that we won't encounter them. Whether "asdasdsf" gets HIGH_ENERGY, or HIGH_ENERGY x 10^100 doesn't really
         # matter to us.)
         # The connection to KL-divergence here is interesting. If we say P is the model distribution over the training
         # data and Q is the corresponding distribution which 'sees' the noised version (i.e. Q(v) := P(mutate(v))) 
@@ -56,8 +56,12 @@ def eval_model(model, trainfile, n):
         # So our log-likelihood ratio is identical to KL-divergence except for the P(v) term (which is of course intractable).
         # The 'beating a dead horse' hypothesis is consistent with the 'bad' models having low KL-divergence in
         # spite of having a better log-likelihood ratio. These models may be assigning low absolute probabilities
-        # to the training examples, but even lower probabilities to the mutants. So P(v) = 10^10^100, P(mutate(v)) =
+        # to the training examples, but even lower probabilities to the mutants. So -log(P(v)) = 10^10^100, -log(P(mutate(v))) =
         # 10^10^200 isn't worth that many points, because the large ratio is tempered by the low P(v).
+        # One could hypothesize that the opposite phenomenon is occurring, and the bad models are overfit to the 
+        # training data, and have learned to assign precisely those strings very low energy. But using test data
+        # (or even a different dataset similar to the training data - e.g. testing on Canadian geo names models trained
+        # on US geo names) results in the same rankings.
         # Anyways, keeping this around regardless because it's kind of interesting, and at least serves as a useful sanity check.
         row['LR_{}'.format(name)] = (bad_energy - good_energy).mean()
         # "Error rate" (how often is lower energy assigned to the evil twin)
