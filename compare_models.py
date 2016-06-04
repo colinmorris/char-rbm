@@ -3,13 +3,14 @@ import pickle
 import common
 import csv
 import os
+import sklearn.metrics.pairwise
 
 common.DEBUG_TIMING = True
 
 FIELDS = (['nchars', 'minlen', 'maxlen', 'nhidden',]
             + ['{}_{}'.format(metric, mut) for metric in ('PR', 'Err') 
                 for mut in ('nudge', 'sil', 'noise')]
-            + ['recon_error', 'filler', 'name']
+            + ['recon_error', 'mix_20', 'mix_200', 'filler', 'name']
             )
 
 @common.timeit
@@ -38,9 +39,13 @@ def eval_model(model, trainfile, n):
         # "Error rate" (how often is lower energy assigned to the evil twin)
         row['Err_{}'.format(name)] = 100 * (bad_energy < good_energy).sum() / float(n)
         
-
-    # TODO
-    row['recon_error'] = 1.0
+    goodish = model.gibbs(good)
+    row['recon_error'] = sklearn.metrics.pairwise.paired_distances(good, goodish).mean()
+    goodisher = model.repeated_gibbs(good, 20, sample_max=False)
+    row['mix_20'] = sklearn.metrics.pairwise.paired_distances(good, goodisher).mean()
+    # TODO: This is too slow. Like 20 minutes per model.
+    #goodish = model.repeated_gibbs(goodisher, 200, sample_max=False)
+    row['mix_200'] = 0.0 #sklearn.metrics.pairwise.paired_distances(goodisher, goodish).mean()
     for k in row:
         if isinstance(row[k], float):
             row[k] = '{:.1f}'.format(row[k])
@@ -49,9 +54,12 @@ def eval_model(model, trainfile, n):
             row[k] = 'NA'
         elif row[k] == '':
             row[k] = "''"
+        elif row[k] == ' ':
+            row[k] = "<sp>"
     return row
 
 if __name__ == '__main__':
+    # TODO: "Append" mode so we don't have to do a bunch of redundant calculations when we add one or two new models
     parser = argparse.ArgumentParser(formatter_class=argparse.ArgumentDefaultsHelpFormatter)
     parser.add_argument('models', metavar='model', nargs='+', help='Pickled RBM models')
     parser.add_argument('trainfile', help='File with training examples')
