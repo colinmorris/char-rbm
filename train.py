@@ -25,7 +25,7 @@ def stringify_param(name, value):
 def pickle_name(args, parser):
     fname = args.input_fname.split('.')[0].split('/')[-1]
     fname += '_'
-    for arg in ['tag', 'n_hidden', 'softmax', 'learning_rate_backoff', 'preserve_case', 'epochs', 'learning_rate', 'weight_cost']:
+    for arg in ['tag', 'batch_size', 'n_hidden', 'softmax', 'learning_rate_backoff', 'preserve_case', 'epochs', 'learning_rate', 'weight_cost']:
         value = getattr(args, arg)
         if value != parser.get_default(arg):
             fname += '_' + stringify_param(arg, value)
@@ -35,6 +35,10 @@ def pickle_name(args, parser):
 
 if __name__ == '__main__':
     # TODO: An option for checkpointing model every n epochs
+    # TODO: Should maybe separate out vectorization and training? They're sort of
+    # orthogonal (options like maxlen, preserve-case etc. don't even do anything
+    # when starting from a pretrained model), and the options here are getting
+    # bloated. 
     parser = argparse.ArgumentParser(description='Train a character-level RBM on short texts',
                                      formatter_class=argparse.ArgumentDefaultsHelpFormatter)
     parser.add_argument('input_fname', metavar='txtfile',

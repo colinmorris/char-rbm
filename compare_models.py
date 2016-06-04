@@ -4,18 +4,19 @@ import common
 import csv
 import os
 import sklearn.metrics.pairwise
+from sklearn.utils.extmath import log_logistic
 
 common.DEBUG_TIMING = True
 
-FIELDS = (['nchars', 'minlen', 'maxlen', 'nhidden',]
-            + ['{}_{}'.format(metric, mut) for metric in ('PR', 'Err') 
+FIELDS = (['nchars', 'minlen', 'maxlen', 'nhidden', 'batch_size',]
+            + ['pseudol9']
+            + ['{}_{}'.format(metric, mut) for metric in ('LR', 'Err') 
                 for mut in ('nudge', 'sil', 'noise')]
             + ['recon_error', 'mix_20', 'mix_200', 'filler', 'name']
             )
 
 @common.timeit
 def eval_model(model, trainfile, n):
-    # TODO: Instead of just mean PR, should maybe also have stdev and median?
     row  = {'name': model.name}
     codec = model.codec
     row['nchars'] = codec.nchars
@@ -23,10 +24,12 @@ def eval_model(model, trainfile, n):
     row['maxlen'] = codec.maxlen
     row['nhidden'] = model.intercept_hidden_.shape[0]
     row['filler'] = codec.filler
+    row['batch_size'] = model.batch_size
 
     # The untainted vectorizations
     good = common.vectors_from_txtfile(trainfile, codec, n)
     good_energy = model._free_energy(good)
+    row['pseudol9'] = model.score_samples(good).mean()
     for name, mutagen in [ ('nudge', codec.mutagen_nudge), 
                             ('sil', codec.mutagen_silhouettes),
                             ('noise', codec.mutagen_noise),
@@ -34,9 +37,31 @@ def eval_model(model, trainfile, n):
         bad = common.vectors_from_txtfile(trainfile, codec, n, mutagen)
         bad_energy = model._free_energy(bad)
 
-        # Pseudolikelihood ratio
-        row['PR_{}'.format(name)] = (bad_energy - good_energy).mean()
+        # log-likelihood ratio
+        # This is precisely log(P_model(good)/P_model(bad))
+        # i.e. according to the model, how much more likely is the authentic data compared to the noised version?
+        # Which seems like a really useful thing to know, but actually gives results that are pretty counterintuitive.
+        # Some models score *really* well under this metric, but very poorly on the 'error rate' metric below and
+        # on pseudo-likelihood. In fact, this metric seems to be inversely correlated with success on other metrics.
+        # It's not clear to me why this is. My vague hypothesis is that models unconstrained by weight costs have
+        # learned to associate really-really-really high (relative) energy to certain configurations. So the good
+        # models 'win' more often (assigning lower energy to authentic examples), but the bad models sometimes win
+        # by a lot more. (And for our purposes, maybe this shouldn't really be worth many more points. We just want
+        # the strings we get from sampling to be reasonable, and for unreasonable strings to have high enough energy
+        # that we won't encounter them. Whether "asdasdsf" gets LOW_ENERGY, or LOW_ENERGY x 10^100 doesn't really
+        # matter to us.)
+        # The connection to KL-divergence here is interesting. If we say P is the model distribution over the training
+        # data and Q is the corresponding distribution which 'sees' the noised version (i.e. Q(v) := P(mutate(v))) 
+        # then D_KL(P||Q) = \sum{v} P(v) * (energy(mutate(v)) - energy(v))
+        # So our log-likelihood ratio is identical to KL-divergence except for the P(v) term (which is of course intractable).
+        # The 'beating a dead horse' hypothesis is consistent with the 'bad' models having low KL-divergence in
+        # spite of having a better log-likelihood ratio. These models may be assigning low absolute probabilities
+        # to the training examples, but even lower probabilities to the mutants. So P(v) = 10^10^100, P(mutate(v)) =
+        # 10^10^200 isn't worth that many points, because the large ratio is tempered by the low P(v).
+        # Anyways, keeping this around regardless because it's kind of interesting, and at least serves as a useful sanity check.
+        row['LR_{}'.format(name)] = (bad_energy - good_energy).mean()
         # "Error rate" (how often is lower energy assigned to the evil twin)
+        # TODO: Connection to noise contrastive estimation?
         row['Err_{}'.format(name)] = 100 * (bad_energy < good_energy).sum() / float(n)
         
     goodish = model.gibbs(good)
@@ -63,6 +88,7 @@ if __name__ == '__main__':
     parser = argparse.ArgumentParser(formatter_class=argparse.ArgumentDefaultsHelpFormatter)
     parser.add_argument('models', metavar='model', nargs='+', help='Pickled RBM models')
     parser.add_argument('trainfile', help='File with training examples')
+    parser.add_argument('-t', '--tag', default='', help='A tag to append to the output csv filename')
     parser.add_argument('-n', type=int, default=10**4, help="Number of samples to average over." +
                         "Default is pretty fast and, anecdotally, seems to give pretty reliable results."
                         + " Increasing it by a factor of 5-10 doesn't change much.")
@@ -83,7 +109,7 @@ if __name__ == '__main__':
     # But then we would need to require that all models passed in use equivalent codecs
     # Or do something clever to only load n times for n distinct codecs
     # Let's just do the dumb thing for now
-    outname = 'model_comparison.csv'
+    outname = 'model_comparison{}.csv'.format(args.tag)
     f = open(outname, 'w')
     writer = csv.DictWriter(f, FIELDS, delimiter='\t')
     writer.writeheader()

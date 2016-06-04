@@ -72,6 +72,9 @@ class ShortTextCodec(object):
             raise NonEncodableTextException(reason='illegal_char')
 
     def decode(self, vec, pretty=False, strict=True):
+        # TODO: Whether we should use 'strict' mode depends on whether the model
+        # we got this vector from does softmax sampling of visibles. Anywhere this
+        # is called on fantasy samples, we should use the model to set this param.
         if issparse(vec):
             vec = vec.toarray().reshape(-1)
         assert vec.shape == (self.nchars * self.maxlen,)
