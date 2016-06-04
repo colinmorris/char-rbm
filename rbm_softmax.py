@@ -327,14 +327,18 @@ class BernoulliRBM(BaseEstimator, TransformerMixin):
         # TODO: If I wanted to be really fancy here, I would do one of those "with..." things.
         fe_corrupted = self._free_energy(v)
         self.uncorrupt(v, state)
-        return fe.mean(), fe_corrupted.mean()
 
-        # TODO: I don't have a great intuition about this. Why multiply by n_features?
-        # The overfitting section of "Practical Guide" just says to compare the
-        # average free energy of train and validation and to compare them. Any reason
-        # not to just do that here as well? Seems much simpler to interpret. Maybe
-        # it's because we're supposed to be dealing with smaller deltas here?
-        #return v.shape[1] * log_logistic(fe_corrupted - fe)
+        # See https://en.wikipedia.org/wiki/Pseudolikelihood
+        # Let x be some visible vector. x_i is the ith entry. x_-i is the vector except that entry. 
+        #       x_iflipped is x with the ith bit flipped. F() is free energy.
+        # P(x_i | x_-i) = P(x) / P(x_-i) = P(x) / (P(x) + p(x_iflipped))
+        # expand def'n of P(x), cancel out the partition function on each term, and divide top and bottom by e^{-F(x)} to get...
+        # 1 / (1 + e^{F(x) - F(x_iflipped)})
+        # So we're just calculating the log of that. We multiply by the number of
+        # visible units because we're approximating P(x) as the product of the conditional likelihood
+        # of each individual unit. But we're too lazy to do each one individually, so we say the unit
+        # we tested represents an average.
+        return v.shape[1] * log_logistic(fe_corrupted - fe)
 
     # TODO: No longer used
     def pseudolikelihood_ratio(self, good, bad):
@@ -437,12 +441,12 @@ class BernoulliRBM(BaseEstimator, TransformerMixin):
             self.record('overfit', (v_energy, t_energy))
 
         # TODO: This is pretty expensive. Figure out why? Or just do less often.
-        e_train, e_corrupted = self.score_samples(train)
+        pseudo = self.score_samples(train)
         self.record('pseudo-likelihood', (e_corrupted, e_train))
         print re.sub('\n *', '\n', """[{}] Iteration {}/{}\tt = {:.2f}s
-                E(train):\t{:.2f}\tE(corrupt):\t{:.2f}\tdifference: {:.2f}{}""".format
+                Pseudo-log-likelihood sum: {:.2f}\tAverage per instance: {:.2f}""".format
                      (type(self).__name__, epoch, self.n_iter, duration,
-                      e_train, e_corrupted, e_corrupted - e_train, validation_debug,
+                      pseudo.sum(), pseudo.mean(), validation_debug,
                       ))
 
 
