@@ -81,10 +81,24 @@ def starting_visible_configs(init_method, n, model, training_examples_fname):
 
 @common.timeit
 def sample_model(model, n, iters, prog, max_prob, init_method=VisInit.biases, training_examples=None, energy=False):
+    # TODO: Idea: For each lineage of fantasy particles, return the version with
+    # the one with the lowest energy seen after n iterations. Would this lead to
+    # qualitatively better samples than just taking the nth?
+    # In practice, could probably get away with only taking the lowest-energy 
+    # of the last 10 or 100, so you didn't have to calculate the energy at every step.
+    # At the macro-level, energy *should* be decreasing over time (but
+    # TODO: should verify this intuition!). The concern is more that energy
+    # might be spiky at the small scale, and we might happen to be
+    # unlucky on the 10,000th iteration or whatever.
+    # Edit: Empirically, this seems to modestly improve results for models with
+    # good mixing rates, even after as many as 10k iterations, one of the last
+    # 100 samples can beat the most recent one with ~15% lower energy. For
+    # models with poor mixing rates, this doesn't do much. Some results 
+    # saved at notes/sampling_temperature_examples.txt
     vis = starting_visible_configs(init_method, n, model, training_examples)
     # #iters -> list of strings
     model_samples = {}
-    power = 0
+    power = 2
     i = 0
     def gather(visible):
         # Turn off 'strict' mode for i>0. The only way we'll have invalid one-hot vectors
@@ -96,17 +110,47 @@ def sample_model(model, n, iters, prog, max_prob, init_method=VisInit.biases, tr
             model_samples[i] = zip(sample_strings, sample_energies) 
         else:
             model_samples[i] = sample_strings
-    gather(vis) 
+    #gather(vis) 
+    energy_buffer = []
+    vis_buffer = []
     while i < iters:
-        if prog and (i == 10**power or i % MAX_PROG_SAMPLE_INTERVAL == 0) and i > 0:
+        if prog and (i == 10**power or i % MAX_PROG_SAMPLE_INTERVAL == 0) and i > 90:
+            #import pdb; pdb.set_trace()
             power += 1
-            sample = model.gibbs(vis, sample_max=max_prob)
-            gather(sample)
+            # XXX
+            #sample = model.gibbs(vis, sample_max=max_prob)
+            print "For i = {}...".format(i)
+            energies = np.asarray(energy_buffer).T
+            print energies.shape
+            low_nrg_indices = np.argmin(energies, axis=1)
+            print "Lowest energy among last {} occurs at indices..".format(len(energy_buffer))
+            print low_nrg_indices
+            print "Last samples\tenergy\tLowest\tenergy\tenergy_delta\tindex_delta"
+            #for i in range(n):
+            #    print model.codec.decode(vis[i], strict=False) + '\t' + str(energies[-1][i])
+            #print "Lowest energy samples:"
+            for j, low in enumerate(low_nrg_indices):
+                v = vis_buffer[low][j]
+                e_last = energies[j][-1]
+                e_low = energies[j][low]
+                print '{}\t{:.0f}\t{}\t{:.0f}\t{:.0f}\t{}'.format(
+                    model.codec.decode(vis[j], strict=False), energies[j][-1],
+                    model.codec.decode(vis_buffer[low][j], strict=False), energies[j][low],
+                    (e_low-e_last), -1 * (90 - low - 1)
+                    )
+                #print model.codec.decode(v, strict=False) + '\t' + str(e)
+            print
+            #gather(sample)
+            energy_buffer = []
+            vis_buffer = []
+        elif i >= (10**power - 90):
+            energy_buffer.append(model._free_energy(vis))
+            vis_buffer.append(vis)
         vis = model.gibbs(vis)
         i += 1
 
     sample = model.gibbs(vis, sample_max=max_prob)
-    gather(sample)
+    #gather(sample)
     return model_samples
 
 # TODO: This probably belongs in visualize.py
