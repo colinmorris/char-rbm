@@ -95,6 +95,11 @@ def sample_model(model, n, iters, prog, max_prob, init_method=VisInit.biases, tr
     # 100 samples can beat the most recent one with ~15% lower energy. For
     # models with poor mixing rates, this doesn't do much. Some results 
     # saved at notes/sampling_temperature_examples.txt
+    # TODO: Idea 2: Sort outputs by energy (within a given niters/init_method)
+    # May even want to use, say, 2n fantasy particles, and take the ones north
+    # of the median. (Though this interrupts the continuity across rows
+    # in table mode. It's nice being able to see the evolution of a particle
+    # over time.)
 
     vis = starting_visible_configs(init_method, n, model, training_examples)
     # #iters -> list of strings

@@ -18,6 +18,11 @@ FIELDS = (['nchars', 'minlen', 'maxlen', 'nhidden', 'batch_size',]
 @common.timeit
 def eval_model(model, trainfile, n):
     row  = {'name': model.name}
+    # Comparing models with different codec params seems problematic when they change the 
+    # set of examples each model is looking at (some strings will be too short/long for one
+    # model but not another). This could introduce a systematic bias where some models get
+    # strings that are a little easier or harder. Quick experiment performed to clamp minlen
+    # and maxlen to a shared middle ground for all models. Didn't really affect ranking.
     codec = model.codec
     row['nchars'] = codec.nchars
     row['minlen'] = getattr(codec, 'minlen', None)
@@ -25,6 +30,7 @@ def eval_model(model, trainfile, n):
     row['nhidden'] = model.intercept_hidden_.shape[0]
     row['filler'] = codec.filler
     row['batch_size'] = model.batch_size
+
 
     # The untainted vectorizations
     good = common.vectors_from_txtfile(trainfile, codec, n)
