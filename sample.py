@@ -24,6 +24,8 @@ class VisInit(enum.Enum):
     chunks = 6
     # Use training examples but randomly mutate non-space/padding characters. Only the "shape" is preserved.
     silhouettes = 8
+    # Valid one-hot vectors, each chosen uniformly at random
+    uniform_chars = 9
 
 def print_samples(model, visibles):
     for v in visibles:
@@ -58,25 +60,27 @@ def starting_visible_configs(init_method, n, model, training_examples_fname):
         mutagen = model.codec.mutagen_silhouettes if init_method == VisInit.silhouettes else None
         examples = common.vectors_from_txtfile(training_examples_fname, model.codec, limit=n, mutagen=mutagen)
         return examples
-    elif init_method == VisInit.chunks:
+    elif init_method == VisInit.chunks or init_method == VisInit.uniform_chars:
         # This works, but probably isn't idiomatic numpy.
         # I don't think I'll ever write idiomatic numpy.
 
         # Start w uniform dist
         char_indices = np.random.randint(0, nchars, (n,maxlen))
-        # Choose some random lengths
-        lengths = np.clip(maxlen*.25 * np.random.randn(n) + (maxlen*.66), 1, maxlen
-            ).astype('int8').reshape(n, 1)
-        _, i = np.indices((n, maxlen))
-        char_indices[i>=lengths] = model.codec.char_lookup[model.codec.filler]
+        if init_method == VisInit.chunks:
+            # Choose some random lengths
+            lengths = np.clip(maxlen*.25 * np.random.randn(n) + (maxlen*.66), 1, maxlen
+                ).astype('int8').reshape(n, 1)
+            _, i = np.indices((n, maxlen))
+            char_indices[i>=lengths] = model.codec.char_lookup[model.codec.filler]
         
+        # TODO: This is a useful little trick. Make it a helper function and reuse it elsewhere?
         return np.eye(nchars)[char_indices.ravel()].reshape(vis_shape)
     else:
         raise ValueError("Unrecognized init method: {}".format(init_method))
 
 
 @common.timeit
-def sample_model(model, n, iters, prog, max_prob, init_method=VisInit.biases, training_examples=None):
+def sample_model(model, n, iters, prog, max_prob, init_method=VisInit.biases, training_examples=None, energy=False):
     vis = starting_visible_configs(init_method, n, model, training_examples)
     # #iters -> list of strings
     model_samples = {}
@@ -86,7 +90,12 @@ def sample_model(model, n, iters, prog, max_prob, init_method=VisInit.biases, tr
         # Turn off 'strict' mode for i>0. The only way we'll have invalid one-hot vectors
         # past that point is if we trained our model without softmax sampling. If so, we
         # want to visualize the most likely char at each position.
-        model_samples[i] = [model.codec.decode(v, pretty=True, strict=i==0) for v in visible]
+        sample_strings = [model.codec.decode(v, pretty=True, strict=i==0) for v in visible]
+        if energy:
+            sample_energies = model._free_energy(visible)
+            model_samples[i] = zip(sample_strings, sample_energies) 
+        else:
+            model_samples[i] = sample_strings
     gather(vis) 
     while i < iters:
         if prog and (i == 10**power or i % MAX_PROG_SAMPLE_INTERVAL == 0) and i > 0:
@@ -157,6 +166,7 @@ def render_sample_table(samples, model, model_pickle_name):
     meaningfully represented as strings, because they don't consist of valid 'one-hot' vectors. 
    These malformed vectors are rendered as '<span style="font-family: monospace">?</span>'.</aside>
     </body></html>'''
+    # TODO: Make output filename configurable (or at least allow adding a tag of some kind)
     f = open('tablesamples_{}.html'.format(model_name), 'w')
     f.write(s)
     f.close()
@@ -174,6 +184,15 @@ def sample_table(model, example_file, args):
             print e
     render_sample_table(samples, model, model_fname)
 
+def _print_samples_value(samples):
+    for sample in samples:
+        # (samplestring, energy)
+        if isinstance(sample, tuple):
+            print "{}\t{:.1f}".format(sample[0], sample[1])
+        else:
+            print sample
+    
+
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(description='Sample short texts from a pickled model',
                                      formatter_class=argparse.ArgumentDefaultsHelpFormatter)
@@ -184,7 +203,7 @@ if __name__ == '__main__':
     parser.add_argument('-i', '--iters', dest='iters', type=int, default=10**4,
                               help='How many rounds of Gibbs sampling to perform before generating the outputs')
     parser.add_argument('--prog', '--progressively-sample', dest='prog', action='store_true',
-                        help='Output n samples after 10 rounds of sampling, then 100, 1000... until we reach a power of 10 >=iters')
+                        help='Output n samples after 0 rounds of sampling, then 1, 10, 100, 1000... until we reach a power of 10 >=iters')
     parser.add_argument('--table', action='store_true', help='Generate an html table of samples drawn at different ' +
                         'numbers of iterations starting with each possible initialization method. This presumes --prog ' +
                         'and ignores options relating to initialization method (since it cycles through them all).')
@@ -193,9 +212,12 @@ if __name__ == '__main__':
                         'special round of sampling where we take the visible unit with the highest probability. ' +
                         'If this flag is enabled, the final round of sampling will be standard one, where we ' +
                         'sample randomly according to the softmax probabilities of visible units.')
-    parser.add_argument('--init', '--init-method', dest='init_method', type=int, default=VisInit.silhouettes)
+    parser.add_argument('--init', '--init-method', dest='init_method', default='silhouettes', help="How to initialize vectors before sampling")
+    parser.add_argument('--energy', action='store_true', help='Along with each sample generated, print its free energy')
 
     args = parser.parse_args()
+
+    args.init_method = VisInit[args.init_method]
 
     for model_fname in args.model_fname:
         print "Drawing samples from model defined at {}".format(model_fname)
@@ -215,11 +237,11 @@ if __name__ == '__main__':
         else:
             samples = sample_model(model, args.n_samples, args.iters, args.prog, 
                                     max_prob=not args.nomax, init_method=args.init_method, 
-                                    training_examples=example_file)
+                                    training_examples=example_file, energy=args.energy)
             if len(samples) == 1:
-                print '\n'.join(samples.values()[0])
+                _print_samples_value(samples.values()[0])
             else:
                 for niters in sorted(samples.keys()):
                     print "After {} iterations...".format(niters)
-                    print '\n'.join(samples[niters])
+                    _print_samples_value(samples[niters])
                     print
