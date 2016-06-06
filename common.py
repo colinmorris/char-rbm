@@ -45,7 +45,6 @@ def vectors_from_txtfile(fname, codec, limit=-1, mutagen=None):
     # TODO: logging.debug
     print "Gathered {} vectors. Skipped {} ({})".format(len(vecs), 
         sum(skipped.values()), dict(skipped))
-    # TODO: Why default to dtype=float? Seems wasteful? Maybe it doesn't really matter. Actually, docs here seem inconsistent? Constructor docs say default float. transform docs say int. Should file a bug on sklearn.
-    # TODO: should probably try using a sparse matrix here
     vecs = np.asarray(vecs)
+    # TODO: Why default to dtype=float? Seems wasteful? Maybe it doesn't really matter. Actually, docs here seem inconsistent? Constructor docs say default float. transform docs say int. Should file a bug on sklearn.
     return OneHotEncoder(len(codec.alphabet)).fit_transform(vecs)
