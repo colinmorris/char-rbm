@@ -7,7 +7,13 @@ import enum
 import common
 from short_text_codec import ShortTextCodec
 
-MAX_PROG_SAMPLE_INTERVAL = 10000
+MAX_PROG_SAMPLE_INTERVAL = 1000
+
+# TODO: Profile this
+
+# TODO: Visualization idea. Put each fantasy particle on a line plot with x=iterations, y=energy. Label every kth point with the corresponding string.
+
+# TODO: Refactor this :(
 
 class VisInit(enum.Enum):
     """Ways of initializing visible units before repeated gibbs sampling."""
@@ -80,7 +86,7 @@ def starting_visible_configs(init_method, n, model, training_examples_fname):
 
 
 @common.timeit
-def sample_model(model, n, iters, prog, max_prob, init_method=VisInit.biases, training_examples=None, energy=False):
+def sample_model(model, n, iters, prog, max_prob, init_method=VisInit.biases, training_examples=None, energy=False, lookbehind=0):
     # TODO: Idea: For each lineage of fantasy particles, return the version with
     # the one with the lowest energy seen after n iterations. Would this lead to
     # qualitatively better samples than just taking the nth?
@@ -95,10 +101,17 @@ def sample_model(model, n, iters, prog, max_prob, init_method=VisInit.biases, tr
     # 100 samples can beat the most recent one with ~15% lower energy. For
     # models with poor mixing rates, this doesn't do much. Some results 
     # saved at notes/sampling_temperature_examples.txt
+    # TODO: Idea 2: Sort outputs by energy (within a given niters/init_method)
+    # May even want to use, say, 2n fantasy particles, and take the ones north
+    # of the median. (Though this interrupts the continuity across rows
+    # in table mode. It's nice being able to see the evolution of a particle
+    # over time.)
+
     vis = starting_visible_configs(init_method, n, model, training_examples)
     # #iters -> list of strings
     model_samples = {}
-    power = 2
+    lookbehind_threshold = 1000 # Only look behind when we're sampling from at least this many iters
+    power = 0
     i = 0
     def gather(visible):
         # Turn off 'strict' mode for i>0. The only way we'll have invalid one-hot vectors
@@ -110,51 +123,45 @@ def sample_model(model, n, iters, prog, max_prob, init_method=VisInit.biases, tr
             model_samples[i] = zip(sample_strings, sample_energies) 
         else:
             model_samples[i] = sample_strings
-    #gather(vis) 
+    gather(vis) 
     energy_buffer = []
     vis_buffer = []
+    def lowest_energy_visibles():
+        energies = np.asarray(energy_buffer).T
+        # shape = (lookbehind, n, visible_layer_size)
+        visarray = np.asarray(vis_buffer)
+        low_nrg_indices = np.argmin(energies, axis=1)
+        return visarray[low_nrg_indices,np.arange(n)]
+    next_sample_point = 1
     while i < iters:
-        if prog and (i == 10**power or i % MAX_PROG_SAMPLE_INTERVAL == 0) and i > 90:
-            #import pdb; pdb.set_trace()
-            power += 1
-            # XXX
-            #sample = model.gibbs(vis, sample_max=max_prob)
-            print "For i = {}...".format(i)
-            energies = np.asarray(energy_buffer).T
-            print energies.shape
-            low_nrg_indices = np.argmin(energies, axis=1)
-            print "Lowest energy among last {} occurs at indices..".format(len(energy_buffer))
-            print low_nrg_indices
-            print "Last samples\tenergy\tLowest\tenergy\tenergy_delta\tindex_delta"
-            #for i in range(n):
-            #    print model.codec.decode(vis[i], strict=False) + '\t' + str(energies[-1][i])
-            #print "Lowest energy samples:"
-            for j, low in enumerate(low_nrg_indices):
-                v = vis_buffer[low][j]
-                e_last = energies[j][-1]
-                e_low = energies[j][low]
-                print '{}\t{:.0f}\t{}\t{:.0f}\t{:.0f}\t{}'.format(
-                    model.codec.decode(vis[j], strict=False), energies[j][-1],
-                    model.codec.decode(vis_buffer[low][j], strict=False), energies[j][low],
-                    (e_low-e_last), -1 * (90 - low - 1)
-                    )
-                #print model.codec.decode(v, strict=False) + '\t' + str(e)
-            print
-            #gather(sample)
-            energy_buffer = []
-            vis_buffer = []
-        elif i >= (10**power - 90):
+        if prog and i == next_sample_point: 
+            if (i + MAX_PROG_SAMPLE_INTERVAL) < 10**(power+1):
+                next_sample_point = i + MAX_PROG_SAMPLE_INTERVAL
+            else:
+                next_sample_point = 10 ** (power+1)
+                power += 1
+            print "Next sample point: {}".format(next_sample_point)
+            if not energy_buffer:
+                sample = model.gibbs(vis, sample_max=max_prob)
+            else:
+                sample = lowest_energy_visibles()
+                energy_buffer = []
+                vis_buffer = []
+            gather(sample)
+        elif i >= (next_sample_point - lookbehind) and next_sample_point >= lookbehind_threshold:
             energy_buffer.append(model._free_energy(vis))
             vis_buffer.append(vis)
         vis = model.gibbs(vis)
         i += 1
 
     sample = model.gibbs(vis, sample_max=max_prob)
-    #gather(sample)
+    gather(sample)
     return model_samples
 
 # TODO: This probably belongs in visualize.py
 def render_sample_table(samples, model, model_pickle_name):
+    # TODO: If we're going to be calculating the energies anyways (for lookbehind), might as well visualize them
+    # here?
     model_name = model_pickle_name.split('.')[0].split('/')[-1]
     s = ('''<html><head><style>
         table {
@@ -223,7 +230,7 @@ def sample_table(model, example_file, args):
             # Note: we ignore the --prog option, since table-mode implies we want to do progrssive sampling
             samples[init.name] = sample_model(model, args.n_samples, args.iters, 
                 prog=True, max_prob=not args.nomax, init_method=init, 
-                training_examples=example_file)
+                training_examples=example_file, lookbehind=args.look_behind)
         except BadInitMethodException as e:
             print e
     render_sample_table(samples, model, model_fname)
@@ -244,7 +251,7 @@ if __name__ == '__main__':
                         help='One or more pickled RBM models')
     parser.add_argument('-n', '--n-samples', dest='n_samples', type=int, default=30,
                               help='How many samples to draw')
-    parser.add_argument('-i', '--iters', dest='iters', type=int, default=10**4,
+    parser.add_argument('-i', '--iters', dest='iters', type=int, default=5*10**3,
                               help='How many rounds of Gibbs sampling to perform before generating the outputs')
     parser.add_argument('--prog', '--progressively-sample', dest='prog', action='store_true',
                         help='Output n samples after 0 rounds of sampling, then 1, 10, 100, 1000... until we reach a power of 10 >=iters')
@@ -258,6 +265,8 @@ if __name__ == '__main__':
                         'sample randomly according to the softmax probabilities of visible units.')
     parser.add_argument('--init', '--init-method', dest='init_method', default='silhouettes', help="How to initialize vectors before sampling")
     parser.add_argument('--energy', action='store_true', help='Along with each sample generated, print its free energy')
+    parser.add_argument('--look-behind', type=int, default=50, help='For high numbers of iterations, look this many iterations'
+                        + 'into the past when sampling, and take the lowest-energy version of each particle.')
 
     args = parser.parse_args()
 
@@ -281,7 +290,7 @@ if __name__ == '__main__':
         else:
             samples = sample_model(model, args.n_samples, args.iters, args.prog, 
                                     max_prob=not args.nomax, init_method=args.init_method, 
-                                    training_examples=example_file, energy=args.energy)
+                                    training_examples=example_file, energy=args.energy, lookbehind=args.look_behind)
             if len(samples) == 1:
                 _print_samples_value(samples.values()[0])
             else:
