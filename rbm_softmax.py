@@ -422,7 +422,7 @@ class BernoulliRBM(BaseEstimator, TransformerMixin):
             for batch_slice in batch_slices:
                 self._fit(X[batch_slice])
 
-            if verbose:
+            if verbose and iteration != self.n_iter:
                 end = time.time()
                 self.wellness_check(iteration, end - begin, X, validation)
                 begin = end
@@ -442,7 +442,7 @@ class BernoulliRBM(BaseEstimator, TransformerMixin):
 
         # TODO: This is pretty expensive. Figure out why? Or just do less often.
         pseudo = self.score_samples(train)
-        self.record('pseudo-likelihood', (e_corrupted, e_train))
+        self.record('pseudo-likelihood', pseudo.mean())
         print re.sub('\n *', '\n', """[{}] Iteration {}/{}\tt = {:.2f}s
                 Pseudo-log-likelihood sum: {:.2f}\tAverage per instance: {:.2f}""".format
                      (type(self).__name__, epoch, self.n_iter, duration,

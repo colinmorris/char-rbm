@@ -112,6 +112,8 @@ if __name__ == '__main__':
     print "Training data shape : " + str(train.shape)
 
     rbm.fit(train, validation)
-    f = open(pickle_name(args, parser), 'wb')
+    out_fname = pickle_name(args, parser)
+    f = open(out_fname, 'wb')
     pickle.dump(rbm, f)
     f.close()
+    print "Wrote model to " + out_fname

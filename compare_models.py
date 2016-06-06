@@ -8,9 +8,9 @@ from sklearn.utils.extmath import log_logistic
 
 common.DEBUG_TIMING = True
 
-FIELDS = (['nchars', 'minlen', 'maxlen', 'nhidden', 'batch_size',]
+FIELDS = (['nchars', 'minlen', 'maxlen', 'nhidden', 'batch_size', 'epochs',]
             + ['pseudol9']
-            + ['{}_{}'.format(metric, mut) for metric in ('LR', 'Err') 
+            + ['{}_{}'.format(metric, mut) for metric in ('Err',) 
                 for mut in ('nudge', 'sil', 'noise')]
             + ['recon_error', 'mix_20', 'mix_200', 'filler', 'name']
             )
@@ -30,6 +30,8 @@ def eval_model(model, trainfile, n):
     row['nhidden'] = model.intercept_hidden_.shape[0]
     row['filler'] = codec.filler
     row['batch_size'] = model.batch_size
+    # TODO: Not accurate for incrementally trained models
+    row['epochs'] = model.n_iters
 
 
     # The untainted vectorizations
@@ -68,8 +70,8 @@ def eval_model(model, trainfile, n):
         # training data, and have learned to assign precisely those strings very low energy. But using test data
         # (or even a different dataset similar to the training data - e.g. testing on Canadian geo names models trained
         # on US geo names) results in the same rankings.
-        # Anyways, keeping this around regardless because it's kind of interesting, and at least serves as a useful sanity check.
-        row['LR_{}'.format(name)] = (bad_energy - good_energy).mean()
+        #row['LR_{}'.format(name)] = (bad_energy - good_energy).mean()
+        
         # "Error rate" (how often is lower energy assigned to the evil twin)
         # TODO: Connection to noise contrastive estimation?
         row['Err_{}'.format(name)] = 100 * (bad_energy < good_energy).sum() / float(n)
@@ -98,6 +100,9 @@ if __name__ == '__main__':
     parser = argparse.ArgumentParser(formatter_class=argparse.ArgumentDefaultsHelpFormatter)
     parser.add_argument('models', metavar='model', nargs='+', help='Pickled RBM models')
     parser.add_argument('trainfile', help='File with training examples')
+    parser.add_argument('-a', '--append', action='store_true', help='If there exists a model_comparison_<tag>.csv'
+                        + ' file, append a row for each model file passed in, rather than clobbering. Does not '
+                        + 'attempt to dedupe rows.')
     parser.add_argument('-t', '--tag', default='', help='A tag to append to the output csv filename')
     parser.add_argument('-n', type=int, default=10**4, help="Number of samples to average over." +
                         "Default is pretty fast and, anecdotally, seems to give pretty reliable results."
@@ -119,13 +124,18 @@ if __name__ == '__main__':
     # But then we would need to require that all models passed in use equivalent codecs
     # Or do something clever to only load n times for n distinct codecs
     # Let's just do the dumb thing for now
-    outname = 'model_comparison{}.csv'.format(args.tag)
-    f = open(outname, 'w')
+    outname = 'model_comparison_{}.csv'.format(args.tag)
+    append = args.append
+    if append and not os.path.exists(outname):
+        print "WARNING: received append option, but found no existing file {}".format(outname)
+        append = False
+    f = open(outname, 'a' if append else 'w')
     writer = csv.DictWriter(f, FIELDS, delimiter='\t')
-    writer.writeheader()
+    if not append:
+        writer.writeheader()
 
-    for model in models:
-        print "Evaluating " + str(model.name)
+    for i, model in enumerate(models):
+        print "Evaluating {} [{}/{}]".format(model.name, i+1, len(models))
         row = eval_model(model, args.trainfile, args.n)
         writer.writerow(row)
         print
