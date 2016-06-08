@@ -1,4 +1,5 @@
 import argparse
+import sys
 import pickle
 import common
 import csv
@@ -31,7 +32,7 @@ def eval_model(model, trainfile, n):
     row['filler'] = codec.filler
     row['batch_size'] = model.batch_size
     # TODO: Not accurate for incrementally trained models
-    row['epochs'] = model.n_iters
+    row['epochs'] = model.n_iter
 
 
     # The untainted vectorizations
@@ -112,6 +113,7 @@ if __name__ == '__main__':
     if args.trainfile.endswith('.pickle'):
         print "trainfile is mandatory"
         parser.print_usage()
+        sys.exit(1)
 
     models = []
     for fname in args.models:
