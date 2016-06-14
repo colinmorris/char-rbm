@@ -1,5 +1,6 @@
 import numpy as np
 import time
+import logging
 from collections import Counter
 
 from short_text_codec import NonEncodableTextException
@@ -42,9 +43,8 @@ def vectors_from_txtfile(fname, codec, limit=-1, mutagen=None):
             # Too long, or illegal characters
             skipped[e.reason] += 1
 
-    # TODO: logging.debug
-    print "Gathered {} vectors. Skipped {} ({})".format(len(vecs), 
-        sum(skipped.values()), dict(skipped))
+    logging.debug("Gathered {} vectors. Skipped {} ({})".format(len(vecs), 
+        sum(skipped.values()), dict(skipped)))
     vecs = np.asarray(vecs)
     # TODO: Why default to dtype=float? Seems wasteful? Maybe it doesn't really matter. Actually, docs here seem inconsistent? Constructor docs say default float. transform docs say int. Should file a bug on sklearn.
     return OneHotEncoder(len(codec.alphabet)).fit_transform(vecs)

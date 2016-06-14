@@ -119,7 +119,7 @@ class BernoulliRBM(BaseEstimator, TransformerMixin):
             self.history = {'pseudo-likelihood': [], 'overfit': []}
         self.history[name][-1].append(value)
 
-    def _mean_hiddens(self, v):
+    def _mean_hiddens(self, v, temperature=1.0):
         """Computes the probabilities P(h=1|v).
 
         v : array-like, shape (n_samples, n_features)
@@ -130,11 +130,11 @@ class BernoulliRBM(BaseEstimator, TransformerMixin):
         h : array-like, shape (n_samples, n_components)
             Corresponding mean field values for the hidden layer.
         """
-        p = safe_sparse_dot(v, self.components_.T)
-        p += self.intercept_hidden_
+        p = safe_sparse_dot(v, self.components_.T/temperature)
+        p += self.intercept_hidden_/temperature
         return expit(p, out=p)
 
-    def _sample_hiddens(self, v):
+    def _sample_hiddens(self, v, temperature=1.0):
         """Sample from the distribution P(h|v).
 
         v : array-like, shape (n_samples, n_features)
@@ -145,13 +145,13 @@ class BernoulliRBM(BaseEstimator, TransformerMixin):
         h : array-like, shape (n_samples, n_components)
             Values of the hidden layer.
         """
-        p = self._mean_hiddens(v)
+        p = self._mean_hiddens(v, temperature)
         return (self.rng_.random_sample(size=p.shape) < p)
 
     def sample_max(self, probs):
         raise NotImplementedError
     
-    def _sample_visibles(self, h, sample_max=False):
+    def _sample_visibles(self, h, temperature=1.0, sample_max=False):
         """Sample from the distribution P(v|h).
 
         h : array-like, shape (n_samples, n_components)
@@ -165,8 +165,8 @@ class BernoulliRBM(BaseEstimator, TransformerMixin):
         v : array-like, shape (n_samples, n_features)
             Values of the visible layer.
         """
-        p = np.dot(h, self.components_)
-        p += self.intercept_visible_
+        p = np.dot(h, self.components_/temperature)
+        p += self.intercept_visible_/temperature
         expit(p, out=p)
         if sample_max:
             return self.sample_max(p)
@@ -187,7 +187,7 @@ class BernoulliRBM(BaseEstimator, TransformerMixin):
                 - np.logaddexp(0, safe_sparse_dot(v, self.components_.T)
                                + self.intercept_hidden_).sum(axis=1))
 
-    def gibbs(self, v, sample_max=False):
+    def gibbs(self, v, temperature=1.0, sample_max=False):
         """Perform one Gibbs sampling step.
 
         v : array-like, shape (n_samples, n_features)
@@ -203,8 +203,8 @@ class BernoulliRBM(BaseEstimator, TransformerMixin):
             Values of the visible layer after one Gibbs step.
         """
         check_is_fitted(self, "components_")
-        h_ = self._sample_hiddens(v)
-        v_ = self._sample_visibles(h_, sample_max)
+        h_ = self._sample_hiddens(v, temperature)
+        v_ = self._sample_visibles(h_, temperature, sample_max)
 
         return v_
 
@@ -215,7 +215,7 @@ class BernoulliRBM(BaseEstimator, TransformerMixin):
         """
         for i in range(niters):
             h = self._sample_hiddens(v)
-            v = self._sample_visibles(h, sample_max and i == niters-1)
+            v = self._sample_visibles(h, temperature=1.0, sample_max=sample_max and i == niters-1)
         return v
 
     def partial_fit(self, X, y=None):
@@ -338,7 +338,11 @@ class BernoulliRBM(BaseEstimator, TransformerMixin):
         # visible units because we're approximating P(x) as the product of the conditional likelihood
         # of each individual unit. But we're too lazy to do each one individually, so we say the unit
         # we tested represents an average.
-        return v.shape[1] * log_logistic(fe_corrupted - fe)
+        if hasattr(self, 'codec'):
+            normalizer = self.codec.shape()[0]
+        else:
+            normalizer = v.shape[1]
+        return normalizer * log_logistic(fe_corrupted - fe)
 
     # TODO: No longer used
     def pseudolikelihood_ratio(self, good, bad):
@@ -511,7 +515,7 @@ class CharBernoulliRBM(BernoulliRBM):
 
 class CharBernoulliRBMSoftmax(CharBernoulliRBM):
 
-    def _sample_visibles(self, h, sample_max=False):
+    def _sample_visibles(self, h, temperature=1.0, sample_max=False):
         """Sample from the distribution P(v|h). This obeys the softmax constraint
         on visible units. i.e. sum(v) == softmax_shape[0] for any visible 
         configuration v.
@@ -528,8 +532,8 @@ class CharBernoulliRBMSoftmax(CharBernoulliRBM):
         v : array-like, shape (n_samples, n_features)
             Values of the visible layer.
         """
-        p = np.dot(h, self.components_)
-        p += self.intercept_visible_
+        p = np.dot(h, self.components_/temperature)
+        p += self.intercept_visible_/temperature
         nsamples, nfeats = p.shape
         reshaped = np.reshape(p, (nsamples,) + self.softmax_shape)
         if sample_max:

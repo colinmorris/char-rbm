@@ -9,11 +9,11 @@ from sklearn.utils.extmath import log_logistic
 
 common.DEBUG_TIMING = True
 
-FIELDS = (['nchars', 'minlen', 'maxlen', 'nhidden', 'batch_size', 'epochs',]
+FIELDS = (['nchars', 'minlen', 'maxlen', 'nhidden', 'batch_size', 'epochs', 'weight_cost',]
             + ['pseudol9']
-            + ['{}_{}'.format(metric, mut) for metric in ('Err',) 
+            + ['{}_{}'.format(metric, mut) for metric in ('LR', 'Err',) 
                 for mut in ('nudge', 'sil', 'noise')]
-            + ['recon_error', 'mix_20', 'mix_200', 'filler', 'name']
+            + ['recon_error', 'filler', 'name']
             )
 
 @common.timeit
@@ -33,6 +33,7 @@ def eval_model(model, trainfile, n):
     row['batch_size'] = model.batch_size
     # TODO: Not accurate for incrementally trained models
     row['epochs'] = model.n_iter
+    row['weight_cost'] = getattr(model, 'weight_cost', 'NA')
 
 
     # The untainted vectorizations
@@ -71,22 +72,25 @@ def eval_model(model, trainfile, n):
         # training data, and have learned to assign precisely those strings very low energy. But using test data
         # (or even a different dataset similar to the training data - e.g. testing on Canadian geo names models trained
         # on US geo names) results in the same rankings.
-        #row['LR_{}'.format(name)] = (bad_energy - good_energy).mean()
+        row['LR_{}'.format(name)] = (bad_energy - good_energy).mean()
         
         # "Error rate" (how often is lower energy assigned to the evil twin)
-        # TODO: Connection to noise contrastive estimation?
         row['Err_{}'.format(name)] = 100 * (bad_energy < good_energy).sum() / float(n)
         
     goodish = model.gibbs(good)
     row['recon_error'] = sklearn.metrics.pairwise.paired_distances(good, goodish).mean()
-    goodisher = model.repeated_gibbs(good, 20, sample_max=False)
-    row['mix_20'] = sklearn.metrics.pairwise.paired_distances(good, goodisher).mean()
+    #goodisher = model.repeated_gibbs(good, 20, sample_max=False)
+    #row['mix_20'] = sklearn.metrics.pairwise.paired_distances(good, goodisher).mean()
     # TODO: This is too slow. Like 20 minutes per model.
     #goodish = model.repeated_gibbs(goodisher, 200, sample_max=False)
-    row['mix_200'] = 0.0 #sklearn.metrics.pairwise.paired_distances(goodisher, goodish).mean()
+    #row['mix_200'] = 0.0 #sklearn.metrics.pairwise.paired_distances(goodisher, goodish).mean()
     for k in row:
         if isinstance(row[k], float):
-            row[k] = '{:.1f}'.format(row[k])
+            if 0 < abs(row[k]) < 10**(-3):
+                fmt_string = '{:.1E}'
+            else:
+                fmt_string = '{:.4g}'
+            row[k] = fmt_string.format(row[k])
         # By default, None is rendered as empty string, which messes up column output
         elif row[k] is None:
             row[k] = 'NA'

@@ -80,7 +80,7 @@ def starting_visible_configs(init_method, n, model, training_examples_fname):
 
 
 @common.timeit
-def sample_model(model, n, iters, prog, max_prob, init_method=VisInit.biases, training_examples=None, energy=False):
+def sample_model(model, n, iters, prog, max_prob, init_method=VisInit.biases, training_examples=None, energy=False, every=None):
     # TODO: Idea: For each lineage of fantasy particles, return the version with
     # the one with the lowest energy seen after n iterations. Would this lead to
     # qualitatively better samples than just taking the nth?
@@ -100,6 +100,8 @@ def sample_model(model, n, iters, prog, max_prob, init_method=VisInit.biases, tr
     # of the median. (Though this interrupts the continuity across rows
     # in table mode. It's nice being able to see the evolution of a particle
     # over time.)
+
+    assert not (every and prog)
 
     vis = starting_visible_configs(init_method, n, model, training_examples)
     # #iters -> list of strings
@@ -122,6 +124,9 @@ def sample_model(model, n, iters, prog, max_prob, init_method=VisInit.biases, tr
             power += 1
             sample = model.gibbs(vis, sample_max=max_prob)
             gather(sample)
+        elif every and (i % every) == 0:
+            # Don't really wanna do max prob here
+            gather(vis)
         vis = model.gibbs(vis)
         i += 1
 
@@ -234,6 +239,7 @@ if __name__ == '__main__':
                         'sample randomly according to the softmax probabilities of visible units.')
     parser.add_argument('--init', '--init-method', dest='init_method', default='silhouettes', help="How to initialize vectors before sampling")
     parser.add_argument('--energy', action='store_true', help='Along with each sample generated, print its free energy')
+    parser.add_argument('--every', type=int, default=None, help='Sample once every this many iters. Incompatible with --prog and --table.')
 
     args = parser.parse_args()
 
@@ -257,11 +263,14 @@ if __name__ == '__main__':
         else:
             samples = sample_model(model, args.n_samples, args.iters, args.prog, 
                                     max_prob=not args.nomax, init_method=args.init_method, 
-                                    training_examples=example_file, energy=args.energy)
+                                    training_examples=example_file, energy=args.energy,
+                                    every=args.every)
             if len(samples) == 1:
                 _print_samples_value(samples.values()[0])
             else:
                 for niters in sorted(samples.keys()):
-                    print "After {} iterations...".format(niters)
+                    if not args.every:
+                        print "After {} iterations...".format(niters)
                     _print_samples_value(samples[niters])
-                    print
+                    if args.n_samples > 1:
+                        print

@@ -25,13 +25,14 @@ class ShortTextCodec(object):
         # Old versions of this class used ' ' as filler
         return ' '
 
-    def __init__(self, extra_chars, maxlength, minlength=0, preserve_case=False):
+    def __init__(self, extra_chars, maxlength, minlength=0, preserve_case=False, leftpad=False):
         assert 0 <= minlength <= maxlength
         if self.FILLER not in extra_chars and maxlength != minlength:
             extra_chars = self.FILLER + extra_chars
         self.maxlen = maxlength
         self.minlen = minlength
         self.char_lookup = {}
+        self.leftpad_ = leftpad
         self.alphabet = ''
         for i, o in enumerate(range(ord('a'), ord('z') + 1)):
             self.char_lookup[chr(o)] = i
@@ -51,6 +52,10 @@ class ShortTextCodec(object):
             self.alphabet += extra
 
     @property
+    def leftpad(self):
+        return getattr(self, 'leftpad_', False)
+
+    @property
     def nchars(self):
         return len(self.alphabet)
 
@@ -65,11 +70,15 @@ class ShortTextCodec(object):
             raise NonEncodableTextException(reason='tooshort')
         if mutagen:
             s = mutagen(s)
+        padding = [self.char_lookup[self.filler] for _ in range(self.maxlen - len(s))]
         try:
-            return ([self.char_lookup[c] for c in s] +
-                    [self.char_lookup[self.filler] for _ in range(self.maxlen - len(s))])
+            payload = [self.char_lookup[c] for c in s]
         except KeyError:
             raise NonEncodableTextException(reason='illegal_char')
+        if self.leftpad:
+            return padding + payload
+        else:
+            return payload + padding
 
     def decode(self, vec, pretty=False, strict=True):
         # TODO: Whether we should use 'strict' mode depends on whether the model
@@ -87,7 +96,7 @@ class ShortTextCodec(object):
                 char_index = np.argmax(subarr)
                 char = self.alphabet[char_index]
                 if pretty and char == self.FILLER:
-                    char = ' '
+                    char = ''
             chars.append(char)
         return ''.join(chars)
 
@@ -108,6 +117,9 @@ class ShortTextCodec(object):
         if i == len(s):
             return s + roll(self.FILLER + ' ')
         if i == len(s)-1:
+            replacement = roll(' ' + s[-1])
+            if replacement == self.FILLER:
+                return s[:-1]
             return s[:-1] + roll(' ' + s[-1])
         else:
             return s[:i] + roll(s[i] + self.FILLER) + s[i+1:]

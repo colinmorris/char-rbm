@@ -25,7 +25,7 @@ def stringify_param(name, value):
 def pickle_name(args, parser):
     fname = args.input_fname.split('.')[0].split('/')[-1]
     fname += '_'
-    for arg in ['tag', 'batch_size', 'n_hidden', 'softmax', 'learning_rate_backoff', 'preserve_case', 'epochs', 'learning_rate', 'weight_cost']:
+    for arg in ['tag', 'batch_size', 'n_hidden', 'softmax', 'learning_rate_backoff', 'preserve_case', 'epochs', 'learning_rate', 'weight_cost', 'left']:
         value = getattr(args, arg)
         if value != parser.get_default(arg):
             fname += '_' + stringify_param(arg, value)
@@ -67,6 +67,7 @@ if __name__ == '__main__':
     parser.add_argument('--lr-backoff', dest='learning_rate_backoff', action='store_true',
                         help='Gradually reduce the learning rate at each epoch')
     parser.add_argument('-e', '--epochs', dest='epochs', default=5, type=int, help="Number of times to cycle through the training data")
+    parser.add_argument('--left', action='store_true', help='Pad strings shorter than maxlen from the left rather than the right.')
     parser.add_argument('-m', '--model', dest='model', default=None,
                         help="Start from a previously trained model. Options affecting network topology will be ignored.")
     parser.add_argument('--tag', dest='tag', default='',
@@ -94,7 +95,7 @@ if __name__ == '__main__':
         codec = rbm.codec
     else:
         codec = ShortTextCodec(args.extra_chars, args.max_text_length, 
-            args.min_text_length, args.preserve_case)
+            args.min_text_length, args.preserve_case, args.left)
         model_kwargs = {'codec': codec,
                         'n_components': args.n_hidden,
                         'learning_rate': args.learning_rate,
