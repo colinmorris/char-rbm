@@ -13,8 +13,17 @@ FIELDS = (['nchars', 'minlen', 'maxlen', 'nhidden', 'batch_size', 'epochs', 'wei
             + ['pseudol9']
             + ['{}_{}'.format(metric, mut) for metric in ('LR', 'Err',) 
                 for mut in ('nudge', 'sil', 'noise')]
-            + ['recon_error', 'filler', 'name']
+            + ['recon_error', 'filler', 'name', 'grade']
             )
+
+FORCE_MINLEN = False
+
+SUBDIR_TO_SCORE = {
+    'bad': 1,
+    'okay': 2,
+    'good': 3,
+    'great': 4,
+    }
 
 @common.timeit
 def eval_model(model, trainfile, n):
@@ -25,8 +34,14 @@ def eval_model(model, trainfile, n):
     # strings that are a little easier or harder. Quick experiment performed to clamp minlen
     # and maxlen to a shared middle ground for all models. Didn't really affect ranking.
     codec = model.codec
+    if FORCE_MINLEN:
+        old_minlen = getattr(codec, 'minlen', None)
+        codec.minlen = FORCE_MINLEN
+        row['minlen'] = '{} ({})'.format(old_minlen, codec.minlen)
+    else:
+        row['minlen'] = getattr(codec, 'minlen', None)
+
     row['nchars'] = codec.nchars
-    row['minlen'] = getattr(codec, 'minlen', None)
     row['maxlen'] = codec.maxlen
     row['nhidden'] = model.intercept_hidden_.shape[0]
     row['filler'] = codec.filler
@@ -34,6 +49,7 @@ def eval_model(model, trainfile, n):
     # TODO: Not accurate for incrementally trained models
     row['epochs'] = model.n_iter
     row['weight_cost'] = getattr(model, 'weight_cost', 'NA')
+    row['grade'] = getattr(model, 'grade', '?')
 
 
     # The untainted vectorizations
@@ -86,6 +102,7 @@ def eval_model(model, trainfile, n):
     #row['mix_200'] = 0.0 #sklearn.metrics.pairwise.paired_distances(goodisher, goodish).mean()
     for k in row:
         if isinstance(row[k], float):
+            # Why doesn't this work?
             if 0 < abs(row[k]) < 10**(-3):
                 fmt_string = '{:.1E}'
             else:
@@ -121,10 +138,25 @@ if __name__ == '__main__':
 
     models = []
     for fname in args.models:
-        f = open(fname)
-        models.append(pickle.load(f))
-        models[-1].name = os.path.basename(fname)
-        f.close()
+        if os.path.isdir(fname):
+            print "Received directory. Assuming this contains subdirs /bad, /okay, /good, /great with pickles"
+            for dirname, _, fnames in os.walk(fname):
+                for fname in fnames:
+                    path = os.path.join(dirname, fname)
+                    f = open(path)
+                    model = pickle.load(f)
+                    f.close()
+                    model.name = os.path.basename(fname)
+                    leafdir = dirname.split(os.path.sep)[-1]
+                    model.grade = SUBDIR_TO_SCORE[leafdir]
+                    models.append(model)
+                
+
+        else:
+            f = open(fname)
+            models.append(pickle.load(f))
+            models[-1].name = os.path.basename(fname)
+            f.close()
 
     # We could try to be efficient and only load the training data once for all models
     # But then we would need to require that all models passed in use equivalent codecs

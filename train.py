@@ -4,6 +4,7 @@ import pickle
 from sklearn.cross_validation import train_test_split
 
 import common
+common.DEBUG_TIMING = True
 from short_text_codec import ShortTextCodec
 from rbm_softmax import CharBernoulliRBM, CharBernoulliRBMSoftmax
 
