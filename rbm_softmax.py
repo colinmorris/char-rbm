@@ -448,7 +448,7 @@ class BernoulliRBM(BaseEstimator, TransformerMixin):
         pseudo = self.score_samples(train)
         self.record('pseudo-likelihood', pseudo.mean())
         print re.sub('\n *', '\n', """[{}] Iteration {}/{}\tt = {:.2f}s
-                Pseudo-log-likelihood sum: {:.2f}\tAverage per instance: {:.2f}""".format
+                Pseudo-log-likelihood sum: {:.2f}\tAverage per instance: {:.2f}{}""".format
                      (type(self).__name__, epoch, self.n_iter, duration,
                       pseudo.sum(), pseudo.mean(), validation_debug,
                       ))

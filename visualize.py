@@ -11,6 +11,111 @@ import numpy as np
 
 import common
 
+RECEPTIVE_MAX_CHARS_PER_INDEX = 5
+RECEPTIVE_WEIGHT_PERCENTILE = 90
+
+def trchar(char):
+    if char == ' ':
+        return '_'
+    return char
+
+
+def hidden_unit_table(model, hidden_index, weight_thresh, max_opacity):
+    maxlen = model.codec.maxlen
+    nchars = model.codec.nchars
+    s = '<table>'
+    pro_chars = []
+    con_chars = []
+
+    pos_color = '100,250,100'
+    neg_color = '250,100,100'
+
+    def style(w):
+        if w < 0:
+            w = -1 * w
+            c = neg_color
+        else:
+            c = pos_color
+        delta = max_opacity - weight_thresh
+        opacity = min(1.0, (w - weight_thresh)/delta)
+        return 'style="background-color: rgba({}, {}"'.format(c, opacity)
+
+    for string_index in range(maxlen):
+        weights = zip(range(nchars), model.components_[hidden_index][string_index*nchars:(string_index+1)*nchars])
+        weights.sort(key=lambda w: w[1], reverse=True)
+        pro = []
+        con = []
+        for i in range(RECEPTIVE_MAX_CHARS_PER_INDEX):
+            charindex, w = weights[i]
+            if w >= weight_thresh:
+                # TODO: weight css
+                pro.append((w, trchar(model.codec.alphabet[charindex])))
+            else:
+                break
+
+        for i in range(RECEPTIVE_MAX_CHARS_PER_INDEX):
+            charindex, w = weights[-(i+1)]
+            if w*-1 >= weight_thresh:
+                # TODO: weight css
+                con.append((w,trchar(model.codec.alphabet[charindex])))
+            else:
+                break
+
+        pro_chars.append(pro)
+        con_chars.append(con)
+
+    for i in range(RECEPTIVE_MAX_CHARS_PER_INDEX):
+        s += '<tr>'
+        for pc in pro_chars:
+            if len(pc) >= (i+1):
+                w, c = pc[i]
+                s += '<td {}>{}</td>'.format(style(w), c)
+            else:
+                s += '<td></td>'
+        s += '</tr>'
+
+    s += '<tr class="buffer"></tr>'
+
+    for i in range(RECEPTIVE_MAX_CHARS_PER_INDEX):
+        s += '<tr>'
+        actual_index = RECEPTIVE_MAX_CHARS_PER_INDEX - 1 - i
+        for cc in con_chars:
+            if len(cc) > actual_index:
+                w, c = cc[actual_index]
+                s += '<td {}>{}</td>'.format(style(w), c)
+            else:
+                s += '<td></td>'
+        s += '</tr>'
+    s += '</table>'
+    return s
+
+def receptive_fields2(model, out="recep.html"):
+    f = open(out, 'w')
+    weight_thresh = np.percentile(model.components_, RECEPTIVE_WEIGHT_PERCENTILE)
+    max_opacity = np.percentile(model.components_, 100 - 0.1*(100 - RECEPTIVE_WEIGHT_PERCENTILE))
+    f.write('''<html>
+    <head><style>
+        td {
+            border-style: solid;
+            border-width: thin;
+            text-align: center;
+            font-family: mono;
+            width: 20px;
+            height: 20px;
+        }
+    </style></head><body>
+    ''')
+    f.write('<h1>Hidden weights for model {}</h1>'.format(model.name))
+    for hidden_index in range(model.components_.shape[0]):
+        f.write("<h2>Hidden unit {}</h2>".format(hidden_index+1))
+        table = hidden_unit_table(model, hidden_index, weight_thresh, max_opacity)
+        f.write(table)
+        f.write("<hr/>")
+    f.write('</body></html>')
+    f.close()
+    print "Wrote tables to {}".format(out)
+        
+        
 
 def receptive_fields(model, out="recep.html"):
     f = open(out, 'w')
@@ -130,6 +235,7 @@ if __name__ == '__main__':
     model.name = os.path.basename(model_fname)
 
     tag = model_fname[:model_fname.rfind(".")]
-    receptive_fields(model, tag + '_receptive_fields.html')
+    receptive_fields2(model, tag + '_receptive_fields.html')
+    # receptive_fields(model, tag + '_receptive_fields.html')
 
-    visualize_hidden_activations(model, sys.argv[2], tag + '_activations.html')
+    # visualize_hidden_activations(model, sys.argv[2], tag + '_activations.html')

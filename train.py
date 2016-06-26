@@ -5,7 +5,7 @@ from sklearn.cross_validation import train_test_split
 
 import common
 common.DEBUG_TIMING = True
-from short_text_codec import ShortTextCodec
+from short_text_codec import ShortTextCodec, BinomialShortTextCodec
 from rbm_softmax import CharBernoulliRBM, CharBernoulliRBMSoftmax
 
 def stringify_param(name, value):
@@ -50,6 +50,7 @@ if __name__ == '__main__':
                         help='Don\'t use softmax visible units')
     parser.add_argument('--preserve-case', dest='preserve_case', action='store_true',
                         help="Preserve case, rather than lowercasing all input strings. Increases size of visible layer substantially.")
+    parser.add_argument('--binomial', action='store_true', help='Use the binomial text codec (for comma-separated two-part names)')
     parser.add_argument('-b', '--batch-size', dest='batch_size', type=int, default=10,
                               help='Size of a (mini)batch. This also controls # of fantasy particles.')
     parser.add_argument('--maxlen', dest='max_text_length', type=int, default=20,
@@ -63,7 +64,7 @@ if __name__ == '__main__':
     parser.add_argument('--hid', '--hidden-units', dest='n_hidden', default=180, type=int,
                         help='Number of hidden units')
     parser.add_argument('-l', '--learning-rate', dest='learning_rate', default=0.1, type=float, help="Learning rate.")
-    parser.add_argument('--weight-cost', dest='weight_cost', default=0, type=float,
+    parser.add_argument('--weight-cost', dest='weight_cost', default=0.0001, type=float,
                         help='Multiplied by derivative of L2 norm on weights. Practical Guide recommends 0.0001 to start')
     parser.add_argument('--lr-backoff', dest='learning_rate_backoff', action='store_true',
                         help='Gradually reduce the learning rate at each epoch')
@@ -95,7 +96,8 @@ if __name__ == '__main__':
         rbm.weight_cost = args.weight_cost
         codec = rbm.codec
     else:
-        codec = ShortTextCodec(args.extra_chars, args.max_text_length, 
+        codec_kls = BinomialShortTextCodec if args.binomial else ShortTextCodec
+        codec = codec_kls(args.extra_chars, args.max_text_length, 
             args.min_text_length, args.preserve_case, args.left)
         model_kwargs = {'codec': codec,
                         'n_components': args.n_hidden,

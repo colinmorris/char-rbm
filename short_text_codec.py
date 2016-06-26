@@ -63,14 +63,10 @@ class ShortTextCodec(object):
     def non_special_char_alphabet(self):
         return ''.join(c for c in self.alphabet if (c != ' ' and c != self.FILLER)) 
 
-    def encode(self, s, mutagen=None):
-        if len(s) > self.maxlen: 
+    def _encode(self, s, padlen):
+        if len(s) > padlen:
             raise NonEncodableTextException(reason='toolong')
-        elif (hasattr(self, 'minlen') and len(s) < self.minlen):
-            raise NonEncodableTextException(reason='tooshort')
-        if mutagen:
-            s = mutagen(s)
-        padding = [self.char_lookup[self.filler] for _ in range(self.maxlen - len(s))]
+        padding = [self.char_lookup[self.filler] for _ in range(padlen - len(s))]
         try:
             payload = [self.char_lookup[c] for c in s]
         except KeyError:
@@ -79,6 +75,16 @@ class ShortTextCodec(object):
             return padding + payload
         else:
             return payload + padding
+
+
+    def encode(self, s, mutagen=None):
+        if len(s) > self.maxlen: 
+            raise NonEncodableTextException(reason='toolong')
+        elif (hasattr(self, 'minlen') and len(s) < self.minlen):
+            raise NonEncodableTextException(reason='tooshort')
+        if mutagen:
+            s = mutagen(s)
+        return self._encode(s, self.maxlen)
 
     def decode(self, vec, pretty=False, strict=True):
         # TODO: Whether we should use 'strict' mode depends on whether the model
@@ -89,6 +95,9 @@ class ShortTextCodec(object):
         assert vec.shape == (self.nchars * self.maxlen,)
         chars = []
         for position_index in range(self.maxlen):
+            # Hack - insert a tab between name parts in binomial mode
+            if isinstance(self, BinomialShortTextCodec) and pretty and position_index == self.maxlen/2:
+                chars.append('\t')
             subarr = vec[position_index * self.nchars:(position_index + 1) * self.nchars]
             if np.count_nonzero(subarr) != 1 and strict:
                 char = self.MYSTERY
@@ -96,7 +105,8 @@ class ShortTextCodec(object):
                 char_index = np.argmax(subarr)
                 char = self.alphabet[char_index]
                 if pretty and char == self.FILLER:
-                    char = ''
+                    # Hack
+                    char = ' ' if isinstance(self, BinomialShortTextCodec) else ''
             chars.append(char)
         return ''.join(chars)
 
@@ -136,3 +146,38 @@ class ShortTextCodec(object):
         
     def mutagen_noise(self, s):
         return ''.join(random.choice(self.alphabet) for _ in range(self.maxlen))
+
+class BinomialShortTextCodec(ShortTextCodec):
+    """Encodes two-part names (e.g. "John Smith"), padding each part separately
+    to the same length. (Presumed to  help learning.)
+    """
+
+    def __init__(self, *args, **kwargs):
+        super(BinomialShortTextCodec, self).__init__(*args, **kwargs)
+        self.separator = ','
+        # Hack: require maxlen to be even, and give each part of the name
+        # an equal share
+        assert self.maxlen % 2 == 0, "Maxlen must be even for binomial codec"
+
+    def encode(self, s, mutagen=None):
+        namelen = self.maxlen / 2
+        if self.separator not in s:
+            first = s
+            last = ''
+        else:
+            try:
+                last, first = s.split(self.separator)
+            except ValueError:
+                raise NonEncodableTextException(reason='too many separators')
+        last = last.strip()
+        first = first.strip()
+        if mutagen:
+            first = mutagen(first)
+            last = mutagen(last)
+        return self._encode(first, namelen) + self._encode(last, namelen)
+
+    # We don't really need to override decode(). It should do basically the right
+    # thing (modulo some funny spacing)
+
+    # TODO: Probably *do* need to override some or all mutagen methods. Leaving
+    # them for now since they're only necessary for evaluation.

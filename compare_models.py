@@ -162,7 +162,10 @@ if __name__ == '__main__':
     # But then we would need to require that all models passed in use equivalent codecs
     # Or do something clever to only load n times for n distinct codecs
     # Let's just do the dumb thing for now
-    outname = 'model_comparison_{}.csv'.format(args.tag)
+    if not os.path.exists('model_comparisons/')
+        print "Creating model_comparisons dir"
+        os.mkdir("model_comparisons")
+    outname = 'model_comparisons/model_comparison_{}.csv'.format(args.tag)
     append = args.append
     if append and not os.path.exists(outname):
         print "WARNING: received append option, but found no existing file {}".format(outname)
