@@ -148,17 +148,11 @@ class BernoulliRBM(BaseEstimator, TransformerMixin):
         p = self._mean_hiddens(v, temperature)
         return (self.rng_.random_sample(size=p.shape) < p)
 
-    def sample_max(self, probs):
-        raise NotImplementedError
-    
-    def _sample_visibles(self, h, temperature=1.0, sample_max=False):
+    def _sample_visibles(self, h, temperature=1.0):
         """Sample from the distribution P(v|h).
 
         h : array-like, shape (n_samples, n_components)
             Values of the hidden layer to sample from.
-
-        sample_max : bool
-            Does nothing.
 
         Returns
         -------
@@ -168,8 +162,6 @@ class BernoulliRBM(BaseEstimator, TransformerMixin):
         p = np.dot(h, self.components_/temperature)
         p += self.intercept_visible_/temperature
         expit(p, out=p)
-        if sample_max:
-            return self.sample_max(p)
         return (self.rng_.random_sample(size=p.shape) < p)
 
     def _free_energy(self, v):
@@ -187,15 +179,11 @@ class BernoulliRBM(BaseEstimator, TransformerMixin):
                 - np.logaddexp(0, safe_sparse_dot(v, self.components_.T)
                                + self.intercept_hidden_).sum(axis=1))
 
-    def gibbs(self, v, temperature=1.0, sample_max=False):
+    def gibbs(self, v, temperature=1.0):
         """Perform one Gibbs sampling step.
 
         v : array-like, shape (n_samples, n_features)
             Values of the visible layer to start from.
-
-        sample_max : bool
-            If this RBM uses softmax visible units, then take the unit with
-            the highest probability per group, rather than randomly sampling.
 
         Returns
         -------
@@ -204,18 +192,17 @@ class BernoulliRBM(BaseEstimator, TransformerMixin):
         """
         check_is_fitted(self, "components_")
         h_ = self._sample_hiddens(v, temperature)
-        v_ = self._sample_visibles(h_, temperature, sample_max)
+        v_ = self._sample_visibles(h_, temperature)
 
         return v_
 
-    def repeated_gibbs(self, v, niters, sample_max=True):
+    def repeated_gibbs(self, v, niters):
         """Perform n rounds of alternating Gibbs sampling starting from the
-        given visible vectors. If sample_max is True, then sample the most
-        probable visible units on the *last* round of sampling.
+        given visible vectors.
         """
         for i in range(niters):
             h = self._sample_hiddens(v)
-            v = self._sample_visibles(h, temperature=1.0, sample_max=sample_max and i == niters-1)
+            v = self._sample_visibles(h, temperature=1.0)
         return v
 
     def partial_fit(self, X, y=None):
@@ -445,7 +432,8 @@ class BernoulliRBM(BaseEstimator, TransformerMixin):
             self.record('overfit', (v_energy, t_energy))
 
         # TODO: This is pretty expensive. Figure out why? Or just do less often.
-        pseudo = self.score_samples(train)
+        # Also, can use crippling amounts of memory for large datasets. Hack...
+        pseudo = self.score_samples(train[:10**5])
         self.record('pseudo-likelihood', pseudo.mean())
         print re.sub('\n *', '\n', """[{}] Iteration {}/{}\tt = {:.2f}s
                 Pseudo-log-likelihood sum: {:.2f}\tAverage per instance: {:.2f}{}""".format
@@ -474,19 +462,8 @@ class CharBernoulliRBM(BernoulliRBM):
     def wellness_check(self, epoch, duration, train, validation):
         BernoulliRBM.wellness_check(self, epoch, duration, train, validation)
         fantasy_samples = '|'.join([self.codec.decode(vec) for vec in
-                                    self._sample_visibles(self.h_samples_[:3], sample_max=True)])
+                                    self._sample_visibles(self.h_samples_[:3], temperature=0.1)])
         print "Fantasy samples: {}".format(fantasy_samples)
-
-    def sample_max(self, probs):
-        shape = (probs.shape[0],) + self.codec.shape()
-        n, maxlen, nchars = shape
-        if probs.shape != shape:
-            probs = np.reshape(probs, shape)
-        one_indices = np.argmax(probs, axis=2).reshape((n, maxlen, 1))
-        sample = np.zeros(shape)
-        i,j,k = np.indices(shape)
-        sample[i,j,one_indices] = 1
-        return sample.reshape(n, maxlen*nchars)
 
     def corrupt(self, v):
         n_softmax, n_opts = self.softmax_shape
@@ -515,17 +492,13 @@ class CharBernoulliRBM(BernoulliRBM):
 
 class CharBernoulliRBMSoftmax(CharBernoulliRBM):
 
-    def _sample_visibles(self, h, temperature=1.0, sample_max=False):
+    def _sample_visibles(self, h, temperature=1.0):
         """Sample from the distribution P(v|h). This obeys the softmax constraint
         on visible units. i.e. sum(v) == softmax_shape[0] for any visible 
         configuration v.
 
         h : array-like, shape (n_samples, n_components)
             Values of the hidden layer to sample from.
-
-        sample_max : bool
-            If True, then for each softmax unit, take the value with the highest
-            probability, rather than sampling randomly. 
 
         Returns
         -------
@@ -536,8 +509,6 @@ class CharBernoulliRBMSoftmax(CharBernoulliRBM):
         p += self.intercept_visible_/temperature
         nsamples, nfeats = p.shape
         reshaped = np.reshape(p, (nsamples,) + self.softmax_shape)
-        if sample_max:
-            return self.sample_max(utils.softmax(reshaped))
         return utils.softmax_and_sample(reshaped).reshape((nsamples, nfeats))
 
     

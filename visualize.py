@@ -198,7 +198,7 @@ def visualize_hidden_activations(model, example_fname, out="activations.html"):
     vecs = common.vectors_from_txtfile(example_fname, model.codec, limit=n) 
     for n_gibbs in [0, 5, 1000]:
         if n_gibbs > 0:
-            vecs = model.repeated_gibbs(vecs, n_gibbs, sample_max=False)
+            vecs = model.repeated_gibbs(vecs, n_gibbs)
         # TODO: Visualize hidden probabilities to avoid sampling noise? Should at least offer option
         hiddens = model._sample_hiddens(vecs)
         y, x = np.nonzero(hiddens)

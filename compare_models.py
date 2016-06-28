@@ -95,10 +95,10 @@ def eval_model(model, trainfile, n):
         
     goodish = model.gibbs(good)
     row['recon_error'] = sklearn.metrics.pairwise.paired_distances(good, goodish).mean()
-    #goodisher = model.repeated_gibbs(good, 20, sample_max=False)
+    #goodisher = model.repeated_gibbs(good, 20)
     #row['mix_20'] = sklearn.metrics.pairwise.paired_distances(good, goodisher).mean()
     # TODO: This is too slow. Like 20 minutes per model.
-    #goodish = model.repeated_gibbs(goodisher, 200, sample_max=False)
+    #goodish = model.repeated_gibbs(goodisher, 200) 
     #row['mix_200'] = 0.0 #sklearn.metrics.pairwise.paired_distances(goodisher, goodish).mean()
     for k in row:
         if isinstance(row[k], float):

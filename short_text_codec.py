@@ -51,6 +51,9 @@ class ShortTextCodec(object):
             self.char_lookup[extra] = i + offset
             self.alphabet += extra
 
+    def debug_description(self):
+        return ' '.join('{}={}'.format(attr, getattr(self, attr, None)) for attr in ['maxlen', 'minlen', 'leftpad', 'alphabet', 'nchars'])
+
     @property
     def leftpad(self):
         return getattr(self, 'leftpad_', False)
@@ -85,6 +88,10 @@ class ShortTextCodec(object):
         if mutagen:
             s = mutagen(s)
         return self._encode(s, self.maxlen)
+
+    def encode_onehot(self, s):
+        indices = self.encode(s)
+        return np.eye(self.nchars)[indices].ravel()
 
     def decode(self, vec, pretty=False, strict=True):
         # TODO: Whether we should use 'strict' mode depends on whether the model
