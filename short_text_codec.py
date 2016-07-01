@@ -52,7 +52,7 @@ class ShortTextCodec(object):
             self.alphabet += extra
 
     def debug_description(self):
-        return ' '.join('{}={}'.format(attr, getattr(self, attr, None)) for attr in ['maxlen', 'minlen', 'leftpad', 'alphabet', 'nchars'])
+        return ' '.join('{}={}'.format(attr, repr(getattr(self, attr, None))) for attr in ['maxlen', 'minlen', 'leftpad', 'alphabet', 'nchars'])
 
     @property
     def leftpad(self):

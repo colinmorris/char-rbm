@@ -29,6 +29,13 @@ from sklearn.utils.validation import check_is_fitted
 import utils
 import common
 
+# Experiment: when sampling with high temperature (>1), use the softmax probabilities
+# of the biases as the prior rather than a uniform distribution. Based on the observation
+# that annealing starting from a high temperature often resulted in samples that were
+# highly biased toward long strings (because a uniform distribution over the visible 
+# units will tend to produce strings of the maximum length).
+# This kind of helped but wasn't amazing. Possibly I just needed a longer/gentler annealing schedule?
+BIASED_PRIOR = 0
 
 class BernoulliRBM(BaseEstimator, TransformerMixin):
     """Bernoulli Restricted Boltzmann Machine (RBM).
@@ -131,7 +138,7 @@ class BernoulliRBM(BaseEstimator, TransformerMixin):
             Corresponding mean field values for the hidden layer.
         """
         p = safe_sparse_dot(v, self.components_.T/temperature)
-        p += self.intercept_hidden_/temperature
+        p += self.intercept_hidden_/(min(1.0, temperature) if BIASED_PRIOR else temperature)
         return expit(p, out=p)
 
     def _sample_hiddens(self, v, temperature=1.0):
@@ -160,7 +167,7 @@ class BernoulliRBM(BaseEstimator, TransformerMixin):
             Values of the visible layer.
         """
         p = np.dot(h, self.components_/temperature)
-        p += self.intercept_visible_/temperature
+        p += self.intercept_visible_/(min(1.0, temperature) if BIASED_PRIOR else temperature)
         expit(p, out=p)
         return (self.rng_.random_sample(size=p.shape) < p)
 
@@ -192,7 +199,7 @@ class BernoulliRBM(BaseEstimator, TransformerMixin):
         """
         check_is_fitted(self, "components_")
         h_ = self._sample_hiddens(v, temperature)
-        v_ = self._sample_visibles(h_, temperature)
+        v_ = self._sample_visibles(h_, temperature) 
 
         return v_
 
@@ -506,7 +513,7 @@ class CharBernoulliRBMSoftmax(CharBernoulliRBM):
             Values of the visible layer.
         """
         p = np.dot(h, self.components_/temperature)
-        p += self.intercept_visible_/temperature
+        p += self.intercept_visible_/(min(1.0, temperature) if BIASED_PRIOR else temperature)
         nsamples, nfeats = p.shape
         reshaped = np.reshape(p, (nsamples,) + self.softmax_shape)
         return utils.softmax_and_sample(reshaped).reshape((nsamples, nfeats))

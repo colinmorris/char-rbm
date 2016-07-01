@@ -10,10 +10,45 @@ from short_text_codec import ShortTextCodec
 
 MAX_PROG_SAMPLE_INTERVAL = 10000
 
-LINEAR_ANNEAL = 1
+# If true, then subtract a constant between iterations when annealing, rather than dividing by a constant.
+# Literature seems divided on the best way to do this? Anecdotally, seem to get better results with exp
+# decay most of the time, but haven't looked very carefully.
+LINEAR_ANNEAL = 0
+
+BIG_NUMBER = 3.0
+
+class shrink_model(object):
+
+    def __init__(self, model, min_length, max_length):
+        assert 1 <= max_length <= model.codec.maxlen
+        assert 0 <= min_length <= model.codec.maxlen
+        self.model = model
+        self.min_length = min_length
+        self.max_length = max_length
+
+    def __enter__(self):
+        codec = self.model.codec
+        model = self.model
+        padidx = codec.char_lookup[codec.filler]
+        self.prev_biases = [model.intercept_visible_[codec.nchars*posn+padidx] for posn in range(codec.maxlen)]
+        # Force padding character off for all indices up to min length
+        for posn in range(self.min_length):
+            model.intercept_visible_[codec.nchars*posn + padidx] += -1*BIG_NUMBER
+
+        # Force padding character *on* for indices past max length
+        for posn in range(self.max_length, codec.maxlen):
+            model.intercept_visible_[codec.nchars*posn + padidx] += BIG_NUMBER
+
+    def __exit__(self, *args):
+        padidx = self.model.codec.char_lookup[self.model.codec.filler]
+        for posn, bias in enumerate(self.prev_biases):
+            self.model.intercept_visible_[self.model.codec.nchars*posn + padidx] = bias
+            
+        
 
 class VisInit(enum.Enum):
     """Ways of initializing visible units before repeated gibbs sampling."""
+    # All zeros. Should be basically equivalent to deferring to the *hidden* biases.
     zeros = 1
     # Treat visible biases as softmax
     biases = 2
@@ -82,18 +117,37 @@ def starting_visible_configs(init_method, n, model, training_examples_fname=None
 
 
 def print_sample_callback(sample_strings, i, energy=None):
-    print "\t----i={}----".format(i)
     if energy is not None:
-        print "\n".join('{}\t{:.4f}'.format(t[0], t[1]) for t in zip(sample_strings, energy))
+        print "\n".join('{}\t{:.2f}'.format(t[0], t[1]) for t in zip(sample_strings, energy))
     else:
         print "\n".join(sample_strings)
+    print
 
 @common.timeit
 def sample_model(model, n, iters, sample_iter_indices, 
                  start_temp=1.0, final_temp=1.0,
-                 callback=print_sample_callback, init_method=VisInit.biases, training_examples=None, sample_energy=False):
+                 callback=print_sample_callback, init_method=VisInit.biases, training_examples=None, 
+                 sample_energy=False, starting_vis=None, min_length=0, max_length=0,
+                 ):
+    if callback is None:
+        callback = lambda: None 
+    if starting_vis is not None:
+        vis = starting_vis
+    else:
+        vis = starting_visible_configs(init_method, n, model, training_examples)
 
-    vis = starting_visible_configs(init_method, n, model, training_examples)
+    args = [model, vis, iters, sample_iter_indices, start_temp, final_temp, callback, sample_energy]
+    if min_length or max_length:
+        if max_length == 0:
+            max_length = model.codec.maxlen
+        with shrink_model(model, min_length, max_length):
+            return _sample_model(*args)
+    else:
+        return _sample_model(*args)
+
+def _sample_model(model, vis, iters, sample_iter_indices, start_temp, final_temp, callback,
+                 sample_energy):
+
     temp = start_temp
     temp_decay = (final_temp/start_temp)**(1/iters)
     temp_delta = (final_temp-start_temp)/iters
@@ -111,13 +165,11 @@ def sample_model(model, n, iters, sample_iter_indices,
             if next_sample_metaindex == len(sample_iter_indices):
                 break
         vis = model.gibbs(vis, temp)
-        # XXX: hacks, experimenting
         if LINEAR_ANNEAL:
             temp += temp_delta
-        elif 0:
+        else:
             temp *= temp_decay
-        elif i == (iters*7)//10:
-            temp = temp / 3
+    return vis
 
 
 if __name__ == '__main__':

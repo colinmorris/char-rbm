@@ -10,9 +10,13 @@ import bokeh.io
 import numpy as np
 
 import common
+import sampling
 
 RECEPTIVE_MAX_CHARS_PER_INDEX = 5
 RECEPTIVE_WEIGHT_PERCENTILE = 90
+
+N_MOST_WANTED = 10
+MOST_WANTED_MIN_PROB = .65
 
 def trchar(char):
     if char == ' ':
@@ -20,10 +24,24 @@ def trchar(char):
     return char
 
 
+def most_wanted(hidx, samples, mean_hiddens):
+    top_indices = mean_hiddens[:,hidx].argsort()[-N_MOST_WANTED:][::-1]
+    s = '<div class="mostwanted col-xs-4"><ol>'
+    for idx in top_indices:
+        prob = mean_hiddens[idx,hidx]
+        if prob < MOST_WANTED_MIN_PROB:
+            if idx == top_indices[0]:
+                print "WARNING: no activations above threshold for hidden unit with index {}".format(hidx)
+            break
+        inline = ' style="opacity: {:.2f}"'.format(prob**4) if prob <= .97 else ''
+        s += '<li{}>{} <span>({:.3f})</span></li>'.format(inline, samples[idx], prob)
+    s += '</ol></div>'
+    return s
+
 def hidden_unit_table(model, hidden_index, weight_thresh, max_opacity):
     maxlen = model.codec.maxlen
     nchars = model.codec.nchars
-    s = '<table>'
+    s = '<div class="activations col-xs-8"><table>'
     pro_chars = []
     con_chars = []
 
@@ -38,7 +56,7 @@ def hidden_unit_table(model, hidden_index, weight_thresh, max_opacity):
             c = pos_color
         delta = max_opacity - weight_thresh
         opacity = min(1.0, (w - weight_thresh)/delta)
-        return 'style="background-color: rgba({}, {}"'.format(c, opacity)
+        return 'style="background-color: rgba({}, {:.2f}"'.format(c, opacity)
 
     for string_index in range(maxlen):
         weights = zip(range(nchars), model.components_[hidden_index][string_index*nchars:(string_index+1)*nchars])
@@ -86,10 +104,12 @@ def hidden_unit_table(model, hidden_index, weight_thresh, max_opacity):
             else:
                 s += '<td></td>'
         s += '</tr>'
-    s += '</table>'
+    s += '</table></div>'
     return s
 
-def receptive_fields2(model, out="recep.html"):
+def receptive_fields2(model, samples, out="recep.html"):
+    mean_hiddens = model._mean_hiddens(samples)
+    sample_strings = [model.codec.decode(s, pretty=True) for s in samples]
     f = open(out, 'w')
     weight_thresh = np.percentile(model.components_, RECEPTIVE_WEIGHT_PERCENTILE)
     max_opacity = np.percentile(model.components_, 100 - 0.1*(100 - RECEPTIVE_WEIGHT_PERCENTILE))
@@ -100,18 +120,28 @@ def receptive_fields2(model, out="recep.html"):
             border-width: thin;
             text-align: center;
             font-family: mono;
-            width: 20px;
-            height: 20px;
+            width: 2em;
+            height: 2em;
         }
-    </style></head><body>
+        ol {
+            font-size: large;
+        }
+        li>span {
+            font-size: smaller;
+            float: right;
+        }
+    </style>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" integrity="sha384-1q8mTJOASx8j1Au+a5WDVnPi2lkFfwwEAa8hDDdjZlpLegxhjVME1fgjWPGmkzs7" crossorigin="anonymous">
+    </head><body><div class="container">
     ''')
     f.write('<h1>Hidden weights for model {}</h1>'.format(model.name))
     for hidden_index in range(model.components_.shape[0]):
-        f.write("<h2>Hidden unit {}</h2>".format(hidden_index+1))
+        f.write('<div class="row unit"><h2>Hidden unit {}</h2>'.format(hidden_index+1))
         table = hidden_unit_table(model, hidden_index, weight_thresh, max_opacity)
-        f.write(table)
-        f.write("<hr/>")
-    f.write('</body></html>')
+        top_samples = most_wanted(hidden_index, sample_strings, mean_hiddens)
+        f.write(table + top_samples)
+        f.write("</div>")
+    f.write('</div></body></html>')
     f.close()
     print "Wrote tables to {}".format(out)
         
@@ -235,7 +265,17 @@ if __name__ == '__main__':
     model.name = os.path.basename(model_fname)
 
     tag = model_fname[:model_fname.rfind(".")]
-    receptive_fields2(model, tag + '_receptive_fields.html')
+    
+    nvecs = 5000
+    print "Loading vectors"
+    vecs = common.vectors_from_txtfile(sys.argv[2], model.codec, limit=nvecs)
+    print "Performing gibbs sampling"
+    vis = sampling.sample_model(model, nvecs, 100, [499], 1.0, 0.2, None,
+        starting_vis = vecs)
+    
+    print "Creating visualization"
+    receptive_fields2(model, vis, tag + '_receptive_fields.html')
+    
     # receptive_fields(model, tag + '_receptive_fields.html')
 
     # visualize_hidden_activations(model, sys.argv[2], tag + '_activations.html')

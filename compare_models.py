@@ -7,6 +7,8 @@ import os
 import sklearn.metrics.pairwise
 from sklearn.utils.extmath import log_logistic
 
+from short_text_codec import BinomialShortTextCodec
+
 common.DEBUG_TIMING = True
 
 FIELDS = (['nchars', 'minlen', 'maxlen', 'nhidden', 'batch_size', 'epochs', 'weight_cost',]
@@ -62,6 +64,10 @@ def eval_model(model, trainfile, n):
                             ]:
         bad = common.vectors_from_txtfile(trainfile, codec, n, mutagen)
         bad_energy = model._free_energy(bad)
+
+        # TODO: too lazy to implement
+        if isinstance(model.codec, BinomialShortTextCodec):
+            break
 
         # log-likelihood ratio
         # This is precisely log(P_model(good)/P_model(bad))
@@ -141,14 +147,19 @@ if __name__ == '__main__':
         if os.path.isdir(fname):
             print "Received directory. Assuming this contains subdirs /bad, /okay, /good, /great with pickles"
             for dirname, _, fnames in os.walk(fname):
+                leafdir = dirname.split(os.path.sep)[-1]
+                try:
+                    grade = SUBDIR_TO_SCORE[leafdir]
+                except KeyError:
+                    print "Ignoring unrecognized subdir {}".format(dirname)
+                    continue
                 for fname in fnames:
                     path = os.path.join(dirname, fname)
                     f = open(path)
                     model = pickle.load(f)
                     f.close()
                     model.name = os.path.basename(fname)
-                    leafdir = dirname.split(os.path.sep)[-1]
-                    model.grade = SUBDIR_TO_SCORE[leafdir]
+                    model.grade = grade
                     models.append(model)
                 
 
@@ -162,7 +173,7 @@ if __name__ == '__main__':
     # But then we would need to require that all models passed in use equivalent codecs
     # Or do something clever to only load n times for n distinct codecs
     # Let's just do the dumb thing for now
-    if not os.path.exists('model_comparisons/')
+    if not os.path.exists('model_comparisons/'):
         print "Creating model_comparisons dir"
         os.mkdir("model_comparisons")
     outname = 'model_comparisons/model_comparison_{}.csv'.format(args.tag)
