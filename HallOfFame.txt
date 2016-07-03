@@ -1,0 +1,239 @@
+Some of my favourite generated texts from each domain
+
+(Not necessarily the "best")
+
+All domains capitalized as a post-processing step, except GitHub repo names, where case exactly matches the output of the model. (Some examples come from case-sensitive models, and some don't).
+
+# Github repository names
+
+    pythonk-jnndbox
+    coolin
+    html-campunctor
+    helloworld.com
+    System-System
+    Mocker-System
+    instaCloud
+    odysinlove
+    thy-parser
+    Simpective
+    shink_show
+    not_sample
+    blambelbot
+    simple-singlation
+    node-gestation
+    python-licker
+    chack-jack
+    mobile-masher
+    ansible-drookdol
+    SuperAnalytics
+    scriptive.js
+    jsharp-contest
+    supervaluation
+    FacebalProject
+    TickChallenge
+    Google-Master
+    SHirtCollection
+    WebGone
+    html-pager
+    JustQuery
+    baggleslide
+    hello-bool
+    ClickBrandroid
+    Genera-Alization
+    ansible-blabserver
+    dataserverclient
+    bachbone.github.io
+    2048-ing-master
+    jankbone.github.io
+    google-pog
+    glop.js
+    GroutMateAnalyzer
+    mini-mangl
+    tiny-python
+    django-bug-taster
+    FineDateConverter
+    HappyJava
+    jonky-howler
+    office-um-stuff
+    My-StaleApp-Code
+    PinglePlungerDemo
+    java-mages.js
+    Fizzy-javaScripts
+    Databall-Client
+    word-cement
+    ew-some-app
+
+# Human names
+
+    Othelia
+    Gargitta
+    Vatarika
+    Eustacia
+    Gussy
+    Fauna
+    Chitter
+    Storka
+    Lanray
+    Horse
+    Lazer
+    Heavee
+    Namey
+    Dicello
+    Porke
+    Geesy
+    Aracne
+
+# US Geo Places
+
+    Fooler Cemetery
+    Little Subdivision
+    Little Landing Ponk
+    Bandforky Cemetery
+    Little Field Sirport
+    Lalder Riddle School
+    Stony Spring Grail
+    Grater Mill Cemetery
+    Little Middle School
+    Little Cake Mountain
+    City Of Poet Park
+    Cold Bars
+    Town Of Purtbong
+    Nohbsville Cemetery
+    Grape Mountain Dam
+    Power Mountain Dam
+    Pickfix Spring
+    Grewbradge Academy
+    Beld Rock Cematery [sic]
+    Sad Gene Center
+    Breer Rosestation
+    Dunker High School
+    Mount Mountain
+    Crackspork
+    Big Woods
+    Wicking Swamp
+    Rovery Ditch
+    Bear Fork
+    Kicksville
+    Walaghallow
+    Flart
+    Blackand Gulch
+    Black Pond
+    Black Mind
+    Arcortontion Halls
+    Crock Lake
+    Clack Pointy
+    Cracstberg
+    West Lore Tat School
+    Bustington
+    Old Mackool
+    Mock School
+    Old Man
+    City of Pork
+    The Manville
+    The Lanekyon
+    Butters Pork
+    Rock Pook Reservoir
+    Pongsricles
+    John Lunch Station
+    Sanerland
+    Portibroon Cemetery
+    Mayo Creek
+    This Hollow
+    Mockian Mind Camp
+    Lama Lake
+    Burning Groul
+    Greenes Hollow
+    Greener Hollow
+    Cheap Brook
+    The Pup Inn
+    The Way Inn
+    Little Er Water Lakeo
+    Star Pink Trail
+    Woodwood Dam Ranch
+    Saint Devill Hall
+    Merrigan Man Park
+    Licklers Corners
+    Gibber Springs Trail
+    Green Clateen Trail
+    Old Canyonstation
+    West Mountain Bitch
+    Days Inn Oil Field
+    Little Canyera Lake
+    Saint Modanus School
+    Niche Campground
+    Greefwald State Park
+    Upper Lakey Lake Dam
+    Bruinga Cheater Hall
+    Harmon Windmill Farm
+    Little Lake Lake Dam
+    Town of Ball Park
+    Little Sad Creek
+    East Butch
+    Red Filldility Hall
+    Teen Valley School
+    Filler Valley School
+    Rucky Rock Summit
+    Arson Field
+    West Spine Meadow
+    Wars Memorial Park
+    Lame Pond
+    Land
+    Wonton Post Office
+    Little Grook Church
+    Mount Bland Cemetery
+    Little Diverse Lake
+    City of Inainitorium
+    Baldman School
+    Well Dam
+    Hily Hill Museum
+    Lake Waterhole
+    Little Granora Bar
+    Hilford Hills
+    City of Inglandibble
+    Buckerback Spring
+    The Water Lake
+    Zine
+
+# Games
+
+    Monopoly: The Fatey Fatnidionn
+    Zombicide Survivoe: Leterals
+    Corse The Ware Time Soare Game
+    Age of Steam Expansion: Habley
+    Battleteca: the Garztangoes
+    Renlend: the Walke Caid Game
+    Fakat of Fares
+    Loondabon
+    Jux S-em Race!
+
+    Spack Stitch
+    Battle of Ber
+    Battle of the Game
+    Bat of the Bing
+    The Bily Card Game
+    Monopoly: Game
+    King of the Ders
+    The Worlans Game
+    Word Wal
+    Cattle
+    Dragon
+    The Bing Card Game
+    Black Wars
+    Spart the Kert
+    Drago
+    Super Wars
+    Monster Mate
+    Trie the Game
+    Ding Turd Game
+    Word War
+    Gold for the Game
+    The Mare Game
+    Crap
+    The Colley Card Game
+    Ban
+    Goll of the Derd
+    Anima Tactics: Kerla
+    Quez
+    The Chal Chan Game
+    Game of Board Game
+    Menchkin
