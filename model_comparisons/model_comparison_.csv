@@ -1,0 +1,1 @@
+nchars	minlen	maxlen	nhidden	batch_size	epochs	weight_cost	pseudol9	LR_nudge	LR_sil	LR_noise	Err_nudge	Err_sil	Err_noise	recon_error	filler	name	grade

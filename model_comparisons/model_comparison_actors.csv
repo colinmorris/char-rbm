@@ -1,0 +1,6 @@
+nchars	minlen	maxlen	nhidden	batch_size	epochs	weight_cost	pseudol9	LR_nudge	LR_sil	LR_noise	Err_nudge	Err_sil	Err_noise	recon_error	filler	name	grade
+30	0	20	180	10	10	1.0E-04	-2.21							2.827	$	actors__lrb_e10_lr5E-02.pickle	?
+30	0	20	200	10	15	1.0E-04	-2.921							3.454	$	actors__nh200_e15.pickle	?
+30	0	20	300	10	10	1.0E-04	-2.63							3.254	$	actors__nh300_e10.pickle	?
+30	0	20	180	20	20	1.0E-04	-2.076							2.924	$	actors_cleaned_rand__bs20_lrb_e20.pickle	?
+30	0	20	120	20	5	1.0E-04	-2.597							3.366	$	actors_cleaned_rand__bs20_nh120_lrb.pickle	?

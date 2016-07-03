@@ -1,0 +1,11 @@
+nchars	minlen	maxlen	nhidden	batch_size	epochs	weight_cost	pseudol9	LR_nudge	LR_sil	LR_noise	Err_nudge	Err_sil	Err_noise	recon_error	filler	name	grade
+44	0	20	250	10	10	1.0E-04	-2.411	4.367	33.92	82.67	35.4	9.22	0	3.803	$	games__doub_e10.pickle	4
+44	0	20	250	10	10	1.0E-04	-2.328	4.191	32.43	73.91	36.41	12.55	0	3.801	$	games__doub_e10_lr1E-02.pickle	4
+44	0	20	250	40	80	0	-2.283	3.986	31.29	67.93	38.88	10.12	0	3.859	$	games__bs40_nh250_lrb_e80.pickle	4
+44	0	20	250	10	10	1.0E-04	-2.349	3.991	31.78	69.5	35.67	10.71	0	3.842	$	games__doub_e10_lr1E-03.pickle	4
+42	NA	30	200	10	10	NA	-3.287	4.112	40.75	125.5	39.51	10.86	0	4.296	<sp>	games__10_200_0.100.pickle	2
+44	0	20	250	40	30	0	-2.809	3.329	28.84	70.88	39.69	12.56	0	4.21	$	games__bs40_nh250_lrb_e30.pickle	2
+42	NA	30	300	10	10	NA	-3.412	4.433	43.59	141.3	42.71	17.05	0	4.195	<sp>	games__10_300_0.100.pickle	2
+33	8	15	300	10	15	NA	-2.92	3.393	25.63	46.16	35.09	2.28	0.01	3.776	$	games__lrb_15_300_0.100.pickle	3
+44	0	20	250	40	80	0	-3.497	2.729	25.05	68.65	40.34	16.46	0	4.467	$	games__bs40_nh250_lrb_e80_lr1E-02.pickle	1
+44	0	20	250	40	30	0	-4.152	2.315	21.9	65.11	41.93	19.18	0	4.676	$	games__bs40_nh250_lrb_e30_lr1E-02.pickle	1

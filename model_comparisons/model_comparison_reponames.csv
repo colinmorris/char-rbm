@@ -1,0 +1,12 @@
+nchars	minlen	maxlen	nhidden	batch_size	epochs	weight_cost	pseudol9	LR_nudge	LR_sil	LR_noise	Err_nudge	Err_sil	Err_noise	recon_error	filler	name	grade
+66	6	17	350	10	20	NA	-1.574	7.063	36.51	74.86	5.64	0.13	0	2.909	$	reponames__lrb_case_20_350_0.100.pickle	4
+66	9	14	350	10	10	NA	-1.385	7.007	35.69	55.39	5.16	0.1	0	2.53	$	reponames__lrb_case_10_350_0.100.pickle	4
+66	0	18	200	50	5	1.0E-04	-1.635	5.484	33.31	75.61	7.07	0.29	0	2.929	$	reponames__finetune_bs50_lr1E-02_wc1E-04.pickle	4
+66	0	18	200	50	10	1.0E-04	-1.845	5.402	32.69	75.44	7.09	0.28	0	2.965	$	reponames__bs50_nh200_lrb_pc_e10_wc1E-04.pickle	4
+66	6	17	350	20	20	1.0E-04	-1.572	6.486	33.74	69.77	5.77	0.1	0	2.805	$	reponames__trip350_bs20_lrb_e20_lr5E-02.pickle	4
+66	0	18	200	50	10	0.001	-1.796	5.221	31.65	74.21	7.17	0.39	0	2.907	$	reponames__finetune2_bs50_lrb_e10_lr5E-02_wc1E-03.pickle	4
+66	6	17	350	30	20	1.0E-04	-1.518	6.594	34.06	69.95	5.27	0.11	0	2.766	$	reponames__quad_bs30_lrb_e20_lr1E-03.pickle	4
+66	0	18	200	10	10	1.0E-04	-1.962	4.969	31.8	74.54	7.16	0.37	0	2.98	$	reponames__nh200_lrb_pc_e10_lr1E-02_wc1E-04.pickle	3
+66	0	18	250	50	10	1.0E-04	-2.284	3.867	26.88	67.33	8.96	0.48	0	3.59	$	reponames__bs50_nh250_lrb_pc_e10_lr1E-02_wc1E-04.pickle	3
+66	0	18	200	50	10	1.0E-04	-2.336	3.88	26.65	66.54	8.38	0.49	0	3.66	$	reponames__bs50_nh200_lrb_pc_e10_lr1E-02_wc1E-04.pickle	3
+41	NA	15	180	10	5	NA	-2.416	4.427	22.65	57.21	10.44	0.89	0	3.101	$	reponames__lrb_5_180_0.100.pickle	3

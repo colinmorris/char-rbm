@@ -1,0 +1,5 @@
+nchars	minlen	maxlen	nhidden	batch_size	epochs	weight_cost	pseudol9	LR_nudge	LR_sil	LR_noise	Err_nudge	Err_sil	Err_noise	recon_error	filler	name	grade
+29	0	12	60	10	5	1.0E-04	-0.9231	6.834	22.87	62.89	21.36	4.88	0	1.533	$	actors_first__nh60_lrb.pickle	?
+30	0	12	180	10	15	1.0E-04	-1.153	7.782	23.13	69.41	5.57	6.43	0	1.273	$	actors_first_canon__lrb_e15.pickle	?
+29	0	12	180	10	15	1.0E-04	-0.7202	7.884	24.35	75.71	18.45	4.86	0	1.015	$	actors_first__lrb_e15_lr5E-02.pickle	?
+28	0	12	180	10	5	1.0E-04	-0.8667	7.472	21.93	72.24	21.77	6.52	0	1.125	$	actors_first__lrb.pickle	?
