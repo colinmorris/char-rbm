@@ -1,8 +1,15 @@
 import argparse
 import pickle
 import sys
+from short_text_codec import BinomialShortTextCodec
 
 def energizer(model, s):
+    if isinstance(model.codec, BinomialShortTextCodec):
+        parts = s.split(' ')
+        first = parts[0]
+        last = parts[1] if len(parts) == 2 else ''
+        assert len(parts) <= 2, "wtf is this?"
+        s = last + model.codec.separator + first
     vec = [model.codec.encode_onehot(s)]
     nrg = model._free_energy(vec)
     assert nrg.shape == (1,)
@@ -20,7 +27,7 @@ with open(args.model_file) as f:
 for s in args.string:
    print "E({}) = {:.2f}".format(repr(s), energizer(model, s))
 
-if args.interactive:
+if args.interactive or len(args.string) == 0:
     print "Get energies of some strings interactively! q to quit"
     while 1:
         s = raw_input("Get energy of: ")

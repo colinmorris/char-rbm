@@ -167,6 +167,8 @@ class BinomialShortTextCodec(ShortTextCodec):
         assert self.maxlen % 2 == 0, "Maxlen must be even for binomial codec"
 
     def encode(self, s, mutagen=None):
+        """Encode a name assumed to have the format "last, first" (whitespace insensitive)
+        """
         namelen = self.maxlen / 2
         if self.separator not in s:
             first = s
