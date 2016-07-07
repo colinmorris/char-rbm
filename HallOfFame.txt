@@ -62,6 +62,9 @@ All domains capitalized as a post-processing step, except GitHub repo names, whe
     Databall-Client
     word-cement
     ew-some-app
+    commandroid
+    compandroid
+    mech-liver
 
 # Human names
 
