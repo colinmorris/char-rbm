@@ -2,11 +2,10 @@ from __future__ import division
 import argparse
 import pickle
 import numpy as np
-import utils
 import enum
 
-import common
-from short_text_codec import ShortTextCodec
+import Utils
+from ShortTextCodec import ShortTextCodec
 
 MAX_PROG_SAMPLE_INTERVAL = 10000
 
@@ -76,7 +75,7 @@ def starting_visible_configs(init_method, n, model, training_examples_fname=None
     maxlen, nchars = model.codec.maxlen, model.codec.nchars
     if init_method == VisInit.biases:
         sm = np.tile(model.intercept_visible_, [n, 1]).reshape( (-1,) + model.codec.shape() )
-        return utils.softmax_and_sample(sm).reshape(vis_shape)
+        return Utils.softmax_and_sample(sm).reshape(vis_shape)
     elif init_method == VisInit.zeros:
         return np.zeros(vis_shape)
     elif init_method == VisInit.uniform:
@@ -95,7 +94,7 @@ def starting_visible_configs(init_method, n, model, training_examples_fname=None
     elif init_method == VisInit.train or init_method == VisInit.silhouettes:
         assert training_examples_fname is not None, "No training examples provided to initialize with"
         mutagen = model.codec.mutagen_silhouettes if init_method == VisInit.silhouettes else None
-        examples = common.vectors_from_txtfile(training_examples_fname, model.codec, limit=n, mutagen=mutagen)
+        examples = Utils.vectors_from_txtfile(training_examples_fname, model.codec, limit=n, mutagen=mutagen)
         return examples
     elif init_method == VisInit.chunks or init_method == VisInit.uniform_chars:
         # This works, but probably isn't idiomatic numpy.
@@ -123,7 +122,7 @@ def print_sample_callback(sample_strings, i, energy=None):
         print "\n".join(sample_strings)
     print
 
-@common.timeit
+@Utils.timeit
 def sample_model(model, n, iters, sample_iter_indices, 
                  start_temp=1.0, final_temp=1.0,
                  callback=print_sample_callback, init_method=VisInit.biases, training_examples=None, 

@@ -26,8 +26,7 @@ from sklearn.utils.extmath import safe_sparse_dot, log_logistic
 from sklearn.utils.fixes import expit             # logistic function
 from sklearn.utils.validation import check_is_fitted
 
-import utils
-import common
+import Utils
 
 # Experiment: when sampling with high temperature (>1), use the softmax probabilities
 # of the biases as the prior rather than a uniform distribution. Based on the observation
@@ -294,7 +293,7 @@ class BernoulliRBM(BaseEstimator, TransformerMixin):
     def uncorrupt(self, visibles, state):
         pass
 
-    @common.timeit
+    @Utils.timeit
     def score_samples(self, X):
         """Compute the pseudo-likelihood of X.
 
@@ -346,7 +345,7 @@ class BernoulliRBM(BaseEstimator, TransformerMixin):
         # Let's do ratio of log probabilities instead
         return (bad_energy - good_energy).mean()
 
-    @common.timeit
+    @Utils.timeit
     def score_validation_data(self, train, validation):
         """Return the energy difference between the given validation data, and a
         subset of the training data. This is useful for monitoring overfitting.
@@ -516,6 +515,6 @@ class CharBernoulliRBMSoftmax(CharBernoulliRBM):
         p += self.intercept_visible_/(min(1.0, temperature) if BIASED_PRIOR else temperature)
         nsamples, nfeats = p.shape
         reshaped = np.reshape(p, (nsamples,) + self.softmax_shape)
-        return utils.softmax_and_sample(reshaped).reshape((nsamples, nfeats))
+        return Utils.softmax_and_sample(reshaped).reshape((nsamples, nfeats))
 
     

@@ -1,4 +1,4 @@
-import sampling
+import Sampling
 import sys
 import pickle
 import argparse
@@ -85,15 +85,15 @@ if __name__ == '__main__':
         elif args.dedupe:
             cb = dedupe_cb
         else:
-            cb = sampling.print_sample_callback
+            cb = Sampling.print_sample_callback
 
         kwargs = dict(start_temp=args.start_temp, final_temp=args.end_temp, sample_energy=args.energy, 
                     callback=cb)
         if args.sil:
-            kwargs['init_method'] = sampling.VisInit.silhouettes
+            kwargs['init_method'] = Sampling.VisInit.silhouettes
             kwargs['training_examples'] = args.sil
         
-        vis = sampling.sample_model(model, args.n_samples, args.iters, sample_indices, **kwargs)
+        vis = Sampling.sample_model(model, args.n_samples, args.iters, sample_indices, **kwargs)
 
         if args.columns:
             print_columns(model.codec.maxlen)

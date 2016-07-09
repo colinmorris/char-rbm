@@ -3,10 +3,10 @@ import pickle
 
 from sklearn.cross_validation import train_test_split
 
-import common
-common.DEBUG_TIMING = True
-from short_text_codec import ShortTextCodec, BinomialShortTextCodec
-from rbm_softmax import CharBernoulliRBM, CharBernoulliRBMSoftmax
+import Utils
+Utils.DEBUG_TIMING = True
+from ShortTextCodec import ShortTextCodec, BinomialShortTextCodec
+from RBM import CharBernoulliRBM, CharBernoulliRBMSoftmax
 
 def stringify_param(name, value):
     if name == 'tag':
@@ -111,7 +111,7 @@ if __name__ == '__main__':
         kls = CharBernoulliRBMSoftmax if args.softmax else CharBernoulliRBM
         rbm = kls(**model_kwargs)
 
-    vecs = common.vectors_from_txtfile(args.input_fname, codec)
+    vecs = Utils.vectors_from_txtfile(args.input_fname, codec)
     train, validation = train_test_split(vecs, test_size=args.test_ratio)
     print "Training data shape : " + str(train.shape)
 

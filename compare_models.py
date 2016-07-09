@@ -1,7 +1,7 @@
 import argparse
 import sys
 import pickle
-import common
+import Utils
 import csv
 import os
 import sklearn.metrics.pairwise
@@ -9,7 +9,7 @@ from sklearn.utils.extmath import log_logistic
 
 from short_text_codec import BinomialShortTextCodec
 
-common.DEBUG_TIMING = True
+Utils.DEBUG_TIMING = True
 
 FIELDS = (['nchars', 'minlen', 'maxlen', 'nhidden', 'batch_size', 'epochs', 'weight_cost',]
             + ['pseudol9']
@@ -27,7 +27,7 @@ SUBDIR_TO_SCORE = {
     'great': 4,
     }
 
-@common.timeit
+@Utils.timeit
 def eval_model(model, trainfile, n):
     row  = {'name': model.name}
     # Comparing models with different codec params seems problematic when they change the 
@@ -55,14 +55,14 @@ def eval_model(model, trainfile, n):
 
 
     # The untainted vectorizations
-    good = common.vectors_from_txtfile(trainfile, codec, n)
+    good = Utils.vectors_from_txtfile(trainfile, codec, n)
     good_energy = model._free_energy(good)
     row['pseudol9'] = model.score_samples(good).mean()
     for name, mutagen in [ ('nudge', codec.mutagen_nudge), 
                             ('sil', codec.mutagen_silhouettes),
                             ('noise', codec.mutagen_noise),
                             ]:
-        bad = common.vectors_from_txtfile(trainfile, codec, n, mutagen)
+        bad = Utils.vectors_from_txtfile(trainfile, codec, n, mutagen)
         bad_energy = model._free_energy(bad)
 
         # TODO: too lazy to implement
