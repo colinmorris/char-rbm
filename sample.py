@@ -46,11 +46,13 @@ if __name__ == '__main__':
                                      formatter_class=argparse.ArgumentDefaultsHelpFormatter)
     parser.add_argument('model_fname', metavar='model.pickle', nargs='+',
                         help='One or more pickled RBM models')
-    parser.add_argument('every', type=int, default=100, help='How often to sample')
+    parser.add_argument('--every', type=int, default=-1, help='How often to sample.' +
+                        ' If -1 (default) only sample after the last iteration.')
     parser.add_argument('-n', '--n-samples', dest='n_samples', type=int, default=30,
                               help='How many samples to draw')
     parser.add_argument('-f', '--first', dest='first', type=int, default=-1,
-                              help='Which iteration to draw the first sample at (default: i=every)')
+                              help='Which iteration to draw the first sample at ' +
+                              '(if --every is provided and this is not, defaults to --every)')
     parser.add_argument('-i', '--iters', dest='iters', type=int, default=10**3,
                               help='How many rounds of Gibbs sampling to perform')
     parser.add_argument('--energy', action='store_true', help='Along with each sample generated, print its free energy')
@@ -70,10 +72,14 @@ if __name__ == '__main__':
         model = pickle.load(f)
         f.close()
 
-        first = args.every if args.first == -1 else args.first
-        sample_indices = range(first, args.iters, args.every)
-        if sample_indices[-1] != args.iters - 1:
-            sample_indices.append(args.iters-1)
+        if args.every == -1:
+            sample_indices = [args.iters-1]
+        else:
+            first = args.every if args.first == -1 else args.first
+            sample_indices = range(first, args.iters, args.every)
+            if sample_indices[-1] != args.iters - 1:
+                sample_indices.append(args.iters-1)
+        
         if args.columns:
             cb = horizontal_cb
         elif args.dedupe:
