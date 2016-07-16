@@ -56,8 +56,8 @@ if __name__ == '__main__':
     parser.add_argument('-i', '--iters', dest='iters', type=int, default=10**3,
                               help='How many rounds of Gibbs sampling to perform')
     parser.add_argument('--energy', action='store_true', help='Along with each sample generated, print its free energy')
-    parser.add_argument('-s', '--start-temp', dest='start_temp', type=float, default=1.0)
-    parser.add_argument('-e', '--end-temp', dest='end_temp', type=float, default=1.0)
+    parser.add_argument('-s', '--start-temp', dest='start_temp', type=float, default=1.0, help="Temperature for first iteration")
+    parser.add_argument('-e', '--end-temp', dest='end_temp', type=float, default=1.0, help="Temperature at last iteration")
     parser.add_argument('--no-col', dest='columns', action='store_false')
     parser.add_argument('--dedupe', action='store_true')
     parser.add_argument('--sil', help='data file for silhouettes')

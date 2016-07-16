@@ -439,7 +439,7 @@ class BernoulliRBM(BaseEstimator, TransformerMixin):
 
         # TODO: This is pretty expensive. Figure out why? Or just do less often.
         # Also, can use crippling amounts of memory for large datasets. Hack...
-        pseudo = self.score_samples(train[:10**5])
+        pseudo = self.score_samples(train[:min(train.shape[0], 10**5)])
         self.record('pseudo-likelihood', pseudo.mean())
         print re.sub('\n *', '\n', """[{}] Iteration {}/{}\tt = {:.2f}s
                 Pseudo-log-likelihood sum: {:.2f}\tAverage per instance: {:.2f}{}""".format
