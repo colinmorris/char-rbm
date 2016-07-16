@@ -4,7 +4,6 @@ import pickle
 from sklearn.cross_validation import train_test_split
 
 import Utils
-Utils.DEBUG_TIMING = True
 from ShortTextCodec import ShortTextCodec, BinomialShortTextCodec
 from RBM import CharBernoulliRBM, CharBernoulliRBMSoftmax
 
