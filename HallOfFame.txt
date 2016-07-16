@@ -6,14 +6,10 @@ All domains capitalized as a post-processing step, except GitHub repo names, whe
 
 # Github repository names
 
-    pythonk-jnndbox
-    coolin
     html-campunctor
-    helloworld.com
     System-System
     Mocker-System
     instaCloud
-    odysinlove
     thy-parser
     Simpective
     shink_show
@@ -27,7 +23,6 @@ All domains capitalized as a post-processing step, except GitHub repo names, whe
     ansible-drookdol
     SuperAnalytics
     scriptive.js
-    jsharp-contest
     supervaluation
     FacebalProject
     TickChallenge
@@ -52,7 +47,6 @@ All domains capitalized as a post-processing step, except GitHub repo names, whe
     tiny-python
     django-bug-taster
     FineDateConverter
-    HappyJava
     jonky-howler
     office-um-stuff
     My-StaleApp-Code
@@ -62,8 +56,6 @@ All domains capitalized as a post-processing step, except GitHub repo names, whe
     Databall-Client
     word-cement
     ew-some-app
-    commandroid
-    compandroid
     mech-liver
     faceboogler
 
