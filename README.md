@@ -2,6 +2,10 @@
 
 Character-level RBMs for short text. For more information, check out [my blog post](https://colinmorris.github.io/blog/dreaming-rbms).
 
+# Requirements
+
+scikit-learn and its dependencies (numpy, scipy) is the big one. Also enum34. `pip install -r requirements.txt` might be all you need to do.
+
 # How-to
 
 The two important scripts are:
@@ -13,11 +17,38 @@ The two important scripts are:
 
 More details on the arguments to these scripts can be seen by running them with '-h'.
 
-README-datasets.md has pointers to some suitable datasets. If you want something small to play with, the first names dataset is tiny (in the vertical and horizontal direction), so you can train a pretty reasonable model on it in, say, 30 minutes (setting --maxlen to something small like 10).
+README-datasets.md has pointers to some suitable datasets. 
 
-# Requirements
+# Example
 
-scikit-learn and its dependencies (numpy, scipy) is the big one. Also enum34. `pip install -r requirements.txt` might be all you need to do.
+To train a small model on first names:
+
+    wget http://www.cs.cmu.edu/afs/cs/project/ai-repository/ai/areas/nlp/corpora/names/other/names.txt
+    python train.py --maxlen 10 --extra-chars '' --hid 100 names.txt
+    python sample.py names__nh100.pickle
+    
+This should give you some output like...
+
+    wietzer     
+    sarnimono   
+    buttheo     
+    ressinosoo  
+    bernington
+
+# Interpreting train.py output
+
+During training, you'll see debug output like...
+
+    [CharBernoulliRBMSoftmax] Iteration 3/5 t = 14.46s
+    Pseudo-log-likelihood sum: -115047.96   Average per instance: -2.13
+    E(vali):        -14.00  E(train):       -14.07  difference: 0.07
+    Fantasy samples: moll$$$$$$|anderd$$$$|gronbel$$$
+
+Without going into too much detail, the pseudo-log-likelihood (-2.13 above), is a pretty decent estimation of how well the model is currently fitting the training data. The lower the better.
+
+The next line compares the energy assigned to the training data vs. the validation set. The difference (0.07 in this case) gives an idea of how much the model is overfitting. The higher the difference, the worse. A difference of 0 implies no overfitting. 
+
+The final line has string representions of a few of the "fantasy particles" used for the [persistent contrastive divergence](http://www.cs.toronto.edu/~tijmen/pcd/pcd.pdf) training.
 
 # More details
 
