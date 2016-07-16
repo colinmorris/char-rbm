@@ -1,10 +1,13 @@
 # char-boltzmann
 
 Character-level RBMs for short text. For more information, check out [my blog post](https://colinmorris.github.io/blog/dreaming-rbms).
+<<<<<<< HEAD
 
 # Requirements
 
 scikit-learn and its dependencies (numpy, scipy) is the big one. Also enum34. `pip install -r requirements.txt` might be all you need to do.
+=======
+>>>>>>> ecae754d375ffff6b1ab8b86472b917f7a1e89a5
 
 # How-to
 
