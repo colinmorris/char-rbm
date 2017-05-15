@@ -1,0 +1,3553 @@
+Model=usgeo__2fantasy__nh200_lrb_e31_wc1E-04.pickle; iters=15000
+final energy: -93.7
+--------------------------------------------------------------------------------
+lenty wond creek
+lish pank
+little poidir creek
+hawn point
+snone reservoir dam
+haurey jlace tark
+alpix ridge
+little hillow creek
+tulo rink
+halle cemetery
+kate hoth
+grand vallem church
+benn pand
+city of biswofd
+sherka heights
+lmmp eyane
+hany laak
+pebp pake
+bears branch
+togg rind
+labey reservoir dam
+dad creek
+join laod
+little mountain donk
+little holtem creek
+city of wirdes
+kullib mountain
+heeghville reservoir
+domph leservoir dam
+littleswambir creek
+wuhge branch
+horn field
+wea cetate
+mady pounth
+evers post office
+tow poinh
+barce ridge
+towel ardings
+karshy windmilg
+alg trort
+lake memstiel
+haha peatl
+destaa branch
+little bacven creek
+jasa pashar
+l s mamessn
+little moando creek
+dane hait
+santer mountain
+the prrecs
+--ANNEALED (1.0 -> 0.1)--
+final energy: -97.4
+--------------------------------------------------------------------------------
+jacks pond
+upper islands ranch
+east fork lake dam
+little hollow creek
+red creek
+lake wood
+little mountain
+rock park
+camp springson mine
+grad park
+balley point
+lake creek
+camp wood
+lake springson mine
+rock creek
+little beach pay
+lake branchoid dam
+lake park
+lake will
+east farmicke creek
+north valley church
+rock creek park
+the bracger mine
+lake creek
+lake wown
+east mountain creek
+twin lakes park
+rock creek park
+north cookout tower
+big creek
+willer school
+white pranches mine
+lake lake
+black park
+lake creek park
+lake field creek
+lake will
+upper springs lake
+rock creek park
+eagle city hall
+black reservoir dam
+north gravelooy farm
+sween hill creek
+lake hill estates
+lake hallowoid dam
+rock creek
+rock park
+east fieldect creek
+upper chambir creek
+the creek
+
+--ANNEALED (2.0 -> 0.1)--
+final energy: -111.5
+--------------------------------------------------------------------------------
+little creek church
+rouse creek mountain
+little beach pay
+rock creek reservoir
+little bock mountain
+rock creek reservoir
+sander mountain
+little rock mountain
+cheston post office
+newton mountain
+sandy lake
+lowers cemetery
+city of pity library
+woodsville cemetery
+harton mountain
+carton mountain
+rock ville reservoir
+little hollow creek
+cheston post office
+little mountain
+greenville reservoir
+oak creek cemetery
+lake ville cemetery
+rock park
+whitey mountain tank
+saint valley church
+cheston post office
+whitefer county park
+sumper mountain
+little rock mountain
+little hollow creek
+little miney lake
+newton branch
+city of burlding
+roverville cemetery
+grider cemetery
+little rockh lake
+little miney lake
+city of lald lake
+harton mountain
+northville cemetery
+woodsville cemetery
+deaver mountain
+rock creek reservoir
+rock creek reservoir
+northville cemetery
+town of bunt
+rocky lake reservoir
+carton mountain
+greenville reservoir
+
+--ANNEALED (10.0 -> 0.1)--
+final energy: -118.7
+--------------------------------------------------------------------------------
+woodsville cemetery
+tarwood post office
+branton post office
+cennell post office
+camp will
+littlee post office
+greenville reservoir
+rock creek reservoir
+blacks cemetery
+rock creek reservoir
+south croverian park
+town of part church
+town of bunt
+creston ridgery farm
+sander mountain
+cheston post office
+woodsville cemetery
+anchord post office
+roverville reservoir
+eagle creek mountain
+shafley post office
+city of linmond
+rock creek reservoir
+charock post office
+little mountain
+challey post office
+woodsville cemetery
+city of linmond
+shafley post office
+craftey post office
+porning libcery farm
+little cemetery
+littlee post office
+little wone mountain
+balley cemetery
+city of pity library
+woodsville cemetery
+city of part church
+town of drches
+balley cemetery
+city of wanrenk
+littlee post office
+city of lald lake
+charker rockery farm
+town of part church
+little hollow creek
+hoodsville cemetery
+brandon post office
+littlee post office
+lowelly post office
+
+--ANNEALED (2.0 -> 0.01)--
+final energy: -109.7
+--------------------------------------------------------------------------------
+mcgonville cemetery
+pine creek reservoir
+woodsville cemetery
+sumper mountain
+graver mountain
+mckenview cemetery
+little cemetery
+rock creek reservoir
+pine creek reservoir
+gradsville cemetery
+pine creek reservoir
+little hollow creek
+carton mountain tank
+old river cemetery
+santon mountain
+little mountain lake
+seader cemetery
+woods park
+mount valley church
+blackf rove mountain
+little mountain tank
+rock creek reservoir
+woodsville cemetery
+harton cemetery
+harton mountain
+white creek mountain
+little point branch
+little beach pay
+northville cemetery
+quaner mountain
+little mountain tank
+little brock branch
+bracker trailer park
+greenville reservoir
+little rock mountain
+blue ridge reservoir
+rovers cemetery
+town of bunt
+johns windmill
+town of part church
+little mountain tank
+little cemetery
+brandy mountain
+rock creek reservoir
+sumper mountain
+harton cemetery
+pine ridge reservoir
+little hollow creek
+santon mountain
+the creek
+
+--ANNEALED (2.0 -> 0.3)--
+final energy: -114.4
+--------------------------------------------------------------------------------
+little pack mountain
+city of lald lake
+lake wills farm
+woodsville cemetery
+little rock mountain
+little rock mountain
+craston post office
+woodley post office
+little water lake
+city of pity library
+woodsville cemetery
+santon mountain
+city of lald park
+rock creek reservoir
+old creek cemetery
+rock creek reservoir
+littlee post office
+white reservoir dam
+woodsville cemetery
+rock creek reservoir
+little creek church
+town of funt
+city of lald park
+lowelly post office
+now sville cemetery
+marton mountain
+little hill church
+middleson cemetery
+little rock mountain
+creston post office
+eagle reservoir
+black reservoir dam
+little mountain
+little hollow creek
+cheston post office
+redarville cemetery
+chareso post office
+town of bunt
+shafley post office
+woodsville cemetery
+rock creek reservoir
+bell creek
+little hambor creek
+black reservoir dam
+little cemetery
+rock creek reservoir
+woodsville cemetery
+town of bunt
+the river cemetery
+johnson lake dam
+
+Model=usgeo__350doub-low-lr_bs20_lrb_e20_lr1E-03_wc1E-04.pickle; iters=15000
+final energy: -160.2
+--------------------------------------------------------------------------------
+cowiste
+north residence hall
+bord hill school
+santa residence hall
+lenke wolds
+murch farms
+brouk mountain bravk
+brace mountain sreel
+south mountain creek
+tell pole praige
+ganss residence hall
+smith mountain creek
+nidic mountain wall
+were lake pond dam
+wotel mountain lape
+twa falitw
+jencs memorial park
+odloy mountain wall
+stha mountain trail
+francheee school
+mouce ceeetery
+atery hollow
+loe
+moung reservoor dam
+frectwood strmit
+mines residence hall
+lower jownthon lake
+pew mbrether church
+whitehals city hall
+wengo residence hall
+cedab residence hall
+flees mountain creek
+pataz spring
+north mountain rreek
+glax like sgst dam
+pooss residence hall
+pattmasan macis
+little country club
+lingo cemetery
+greamburr centel
+sheid residence hall
+scall memoriat park
+hanks prairie church
+dious residence hall
+blave canyon spring
+bayou rosidence hall
+billomine city hall
+mount risidence hall
+cutems hill
+drees chapel
+--ANNEALED (1.0 -> 0.1)--
+final energy: -161.6
+--------------------------------------------------------------------------------
+saint residence hall
+rock
+north memorial park
+the camanerson lake
+new houseran dam
+bayou canyon
+blacksville
+mount indevelce park
+old springsond lake
+saint memorial park
+rocky pond
+old gatownotoh lake
+the camillpond dam
+big creek island
+saint residence hall
+north alepirnd creek
+blackwood station
+old gateroviros dam
+indian hammins lake
+new hoffe golf club
+lower memorial park
+north residence hall
+mount cemestade park
+lower heights park
+upper townstip hall
+old springsond mine
+mount grove
+mount residence hall
+north mountain creek
+brook country club
+north island
+upper mountain mine
+little galding dam
+stone run
+mount desingoon dam
+lake valley
+lower mountain creek
+white cemetery
+lower medical clinic
+lower welbstoce park
+mount crossing
+wimberton pond dam
+north elterrick pank
+mount mountain
+allo
+new hamentmords lame
+lower thempest  lak
+laker mousthans park
+lake reck pond dam
+the samliros estates
+
+--ANNEALED (2.0 -> 0.1)--
+final energy: -169.8
+--------------------------------------------------------------------------------
+pine hill school
+southrost golf club
+wanden ville school
+saint residence hall
+black trailer park
+little bolle lake
+cotter grove school
+smithwast school
+silver swamp
+little village hall
+south mountain creek
+little nagsons lake
+mount residence hall
+spring iille school
+saint residence hall
+old berlandey lake
+east high school
+greenwood park
+little place hollow
+south mountain park
+little country club
+mountain county park
+ardenwood park
+bayou residence hall
+lower holffards park
+blone falls
+lower mountain creek
+cotterson hall
+south mountain creek
+whitehale hill
+copper cemetery
+silver cemetery
+lower middle school
+little fammink lake
+white mountain lake
+spring ville school
+whitetown hall
+silver house park
+brace townstip hall
+timber cemetery
+northwest school
+little eadow brook
+little country club
+john hill tank dam
+little country club
+little butte well
+little country club
+little cemetery
+little country club
+buckerson school
+
+--ANNEALED (10.0 -> 0.1)--
+final energy: -166.8
+--------------------------------------------------------------------------------
+little bayon well
+little fammink lake
+arason park
+north miller well
+upper charaiad lake
+west cresinence hall
+lower middle school
+north stenet park
+newmer ville school
+north middle school
+little country club
+little salay mine
+little waterte  lak
+black lakergs creek
+coly hill trail
+north elt school
+mountain plantation
+silver stade mine
+upper middle school
+little pland lake
+copper galon school
+middle bolle lake
+wilson country club
+lower middle school
+little selay mine
+white thaalion hall
+red creek landing
+mount residence hall
+motter ville school
+rickerson school
+little hilpond dam
+little halsy mine
+south residence hall
+indian field park
+upper mountain tank
+simberton dam
+springton run
+the boush trail
+whitfield airport
+little harsins lake
+little sinerat creek
+silver creek well
+whitfield academy
+little country club
+easter grove school
+north memorial park
+thomes memorial park
+uniter praisie
+willow dills park
+northwest center
+
+--ANNEALED (2.0 -> 0.01)--
+final energy: -166.2
+--------------------------------------------------------------------------------
+red field school
+comper galon school
+saint residence hall
+green middle school
+woodville pond dam
+lakefield dam
+upper tillagd branch
+saint residence hall
+little batding lake
+lower colligots park
+welson country club
+little manowat lake
+willow housh park
+little country club
+white middle school
+sandick springs park
+little village hall
+black village tank
+mount ieabin lake
+old mant tunnel mine
+chave middle school
+little grosp mine
+willow country club
+little country club
+blue mill trail
+sand lake spring
+lower forkhille park
+lower formhale rreek
+dry creek spring
+south fowntalh creek
+little village hall
+granville city hall
+albarn galon school
+lower middle school
+new holne golf club
+little batding lake
+silver bay
+upper springs creek
+riverside park
+little passon creek
+upper millpond dam
+milver branch
+little baysons lake
+south tonksons creek
+mount mountaans park
+lidden hollow branch
+indian memorial park
+silver mountain
+saint jownstip hall
+iron lake dam
+
+--ANNEALED (2.0 -> 0.3)--
+final energy: -169.5
+--------------------------------------------------------------------------------
+south ranch
+lower middle school
+dry creek ridge
+wandersville school
+indian country club
+copperton creek
+dear rack canyon
+copper village hall
+mount residence hall
+saint residence hall
+little venan school
+yellow valley
+south holfhards park
+little springs pank
+north residence hall
+woodsburg city hall
+white mountain hall
+spring iille school
+little country club
+north residence hall
+greenwood park
+little valley creek
+saint residence hall
+alma city hall
+indian valley
+lower middle school
+wimberton hollow
+north medical center
+copper village hall
+lower middle school
+upper middle school
+wimberton school
+indian forts park
+bayou residence hall
+little water well
+blue mill trail
+lower mountain mine
+little country club
+little bible church
+big housh spring
+little country club
+mount townsaip wall
+little sampy creek
+saint residence hall
+little bille school
+little passon creek
+north swaalion hall
+glovenge tunnel mine
+lewner village hall
+little country club
+
+Model=usgeo__350doub_bs40_lrb_e20_lr5E-03_wc1E-04.pickle; iters=15000
+final energy: -150.2
+--------------------------------------------------------------------------------
+saint reservoir dam
+honde reservoir dams
+south towomile creek
+wouter creek church
+bore thamestade park
+sorth mountain creek
+camks reservoir dams
+black reservoir dam
+camp horsendind mine
+elbis tymarial park
+lake gilserbond dam
+mook creek
+ppper reservoir dam
+mouse reservoir dam
+millow creek quatry
+wolfo reservoor dam
+mathersertal estates
+landy reservoor dam
+pilit
+south mountain creek
+raint reservoir damp
+north mountain creek
+fount reservoir dam
+noble mountain trail
+jetks reservoir dam
+mobuy ridge
+tomss reservoir dam
+stearmield mountain
+blue mountain trail
+upper mountain takes
+tweps mirga
+lower springs branch
+raley mountein rrant
+caysr residence hall
+little deegar creek
+grais reservoir dam
+tayse residence hall
+louth reservoor dam
+d met
+gerke reservoir dam
+kerinm lake dam
+north ferestan creek
+upper playground
+gydde reservoir dam
+beggfing high school
+poiss reservoir dam
+pawel reservoir damp
+nawburburg
+elboy desidence hall
+waila butt
+--ANNEALED (1.0 -> 0.1)--
+final energy: -151.7
+--------------------------------------------------------------------------------
+m s reservoir
+o k crestergoon dam
+north canyon tank
+upper fopmstot lake
+saint jackso galch
+saint playground
+little millpond dam
+south mountain creek
+white hill
+lower mountain tank
+lower mountain trail
+lower shiphto creek
+upper fakestot lake
+saint playground
+little jockeo creek
+pata
+lower island landing
+indian creek farms
+upper reservoir dam
+lower formhule pank
+new foferistou lake
+ala
+willow cemetery dam
+south reservoir dam
+south hollow
+water park
+south mountain creek
+san woveryacht club
+lower pond
+old point swamp
+old bumchalion hall
+pata
+old chamertonn creek
+upper fownhlle creek
+north street park
+pata
+upper reservoor dam
+water park
+the amemarial church
+chase playground
+lake lake
+south playground
+northointhilley park
+south airport
+upper poshllife area
+the fieldville
+old smemorial church
+saint jownship hall
+pata
+lake mucoune museum
+
+--ANNEALED (2.0 -> 0.1)--
+final energy: -158.1
+--------------------------------------------------------------------------------
+upper reservoor dam
+silver creek dam
+little ditawnon lake
+middle creek gulch
+black reservoir dam
+silver creek dam
+the landongal creek
+the choflend bridge
+little parkwa creek
+willon county jail
+upper reservoir dam
+manoca post office
+little trailer park
+silver creek dam
+little treanson lak
+black reservoir dam
+saint reservoir dam
+north wolfiand creek
+econo lodge bay
+juck mountain church
+lake wertheate dam
+black reservoir dam
+mount reservoor dam
+north mountain creek
+little suberat creek
+silver guard station
+south houtbeit park
+upper lakestoon lak
+indian grove church
+indian guard station
+little creek dam
+easter post office
+spring creek dam
+upper shamplake area
+double creek dam
+east horkstone creek
+lake wordengoon dam
+little jockeo creek
+little poentan creek
+indian creek dam
+lowerl grove school
+black river camp
+north forkstow creek
+seven springs branch
+wills reservoir dam
+silver post office
+union baptist church
+bell mountain church
+indian city hall
+south reservoor dam
+
+--ANNEALED (10.0 -> 0.1)--
+final energy: -157.3
+--------------------------------------------------------------------------------
+little creek ranch
+willow creek park
+lower bondewton lake
+damana post office
+willow creek park
+old fortotion creek
+little parkya creek
+spring creek dam
+willow creek estates
+brider county jail
+buffald spring
+little creek estates
+silver creek dam
+big mountbill ranch
+old ferdicito creek
+copper city hall
+south reights school
+little blestate menk
+double ridge park
+black groalion hall
+indian creek estates
+dea mountain station
+north township hall
+black reservoir dam
+south flarhay creek
+old srach cemetery
+the qurquard station
+upper demorial park
+south batth creek
+north valley estates
+silver post office
+blue mountain creek
+churce creek park
+south meadowa creek
+copper post office
+white water windmill
+silver creek dam
+harton county park
+brackerrigge airport
+theamanville station
+days inn hambon lam
+north postioffice
+indian creek farms
+old mantoncal center
+little shelper creek
+lower hollowson lake
+thompson high school
+green springs school
+west wagland station
+mount heigation hall
+
+--ANNEALED (2.0 -> 0.01)--
+final energy: -153.3
+--------------------------------------------------------------------------------
+indian tunnic school
+south odgengoon dam
+upper mawarm station
+silver beacus center
+little wowes canyon
+black mountains lake
+the waychill church
+evons holestade park
+south community park
+upper knoblion lake
+upper reservoor dam
+little canyon spring
+north pointya creek
+south reservoir dam
+mount wettencon mine
+grass reservoir dam
+saint reservoir mine
+upper reservoir dam
+north ssterpond dam
+little balonoon dam
+old dousterdind mine
+old forpation creek
+green baptist church
+south adghtoron lake
+little schools creek
+little pabewanc leke
+bayou datch tank
+bayou haal mountain
+river lakes dam
+willow state park
+econo lodge library
+cormer grove school
+white harks dam
+north ridger station
+little bridge irland
+copper creek dam
+lake charcerter well
+john wasteryond dam
+double canyon mine
+upper reservoir dam
+middle creek park
+streys crossroads
+little treanson lak
+little alezaat creek
+old manthiel church
+little baleroor dam
+carvingdavie center
+silver creek dam
+lower reservoir dam
+berry hemestade park
+
+--ANNEALED (2.0 -> 0.3)--
+final energy: -160.5
+--------------------------------------------------------------------------------
+upper reservoir dam
+thompson high school
+north creek lake
+north varrey estates
+old campport church
+black oud cemetery
+little suirick creek
+north community park
+north valley spring
+mount reservoir dam
+north fork cow creek
+mount reservoir dam
+spring creek dam
+indian ridge park
+lower ridger station
+willon post office
+eastwood high school
+little school creek
+upper reservoor dam
+upper reservoor dam
+mckinney high school
+willow creek estates
+old mountain ranch
+silver creek dam
+white heighty creek
+lowert wildsife area
+south mountain creek
+the camberdy estates
+manoca post office
+brook valley estates
+popper post office
+little coftay creek
+econo lodge pond
+lower medical center
+indian creek estates
+lakes crossroads
+spring creek dam
+south buntrin creek
+lower creek lake
+silver guard station
+eastwood high school
+willow creek landing
+old springs windmill
+silver creek dam
+mount reservoir dam
+villageesta building
+north street park
+pine mountain centel
+north mountain creek
+north forkhile creek
+
+Model=usgeo__bs20_nh250_lrb_e20_lr5E-02_wc1E-04_l.pickle; iters=15000
+final energy: -146.2
+--------------------------------------------------------------------------------
+easbill rescue squad
+village of gityville
+town of gmltevolle
+holloodil point
+town of millyville
+greut mountain trail
+shores pond
+wing pound
+blang lake dam
+voyin
+anbla creek
+eobo
+paciliy
+krint mountains park
+ecirley old village
+village of ceadville
+chadeten city hall
+fuaine domastin park
+bema point
+maule crete point
+hantiey
+saig cannoy hall
+verd swamp
+golfeat mountain
+higu vere bill farm
+little slaver park
+aredvillp pond dam
+village of biosville
+little flaver camp
+rand remorial park
+north fork sep creek
+cpamhers city hall
+village of gitrville
+ten teter point
+village of jicevisle
+bhoknsan cinion wamp
+garmirm hollow
+city of sovonsburn
+badens mamorial park
+cruie point
+tvillawe of melllord
+sgrusclo deich park
+minnoh memorial park
+duld water point
+chtpllen city hall
+brilewgon city park
+glocy paon city hall
+santhay playground
+clende point
+liahon boa airport
+--ANNEALED (1.0 -> 0.1)--
+final energy: -154.0
+--------------------------------------------------------------------------------
+biy point
+greet springs dam
+elle
+core count daymouth
+lam city hall
+lape city hall
+elle
+bet hill
+lape city hall
+lone mountain swamp
+harton
+city of pirksdale
+north memorial park
+pala
+city of bainyville
+city of ghtonsburg
+lame pond
+bes pond
+blan mountain point
+town of scampground
+pala
+little swater park
+pala
+pala
+rave tabernacle
+lape city hall
+pala
+kala
+bes pond
+village of millpond
+city of restonville
+pala
+brack reservoir dam
+lake city park
+city of baidyville
+lake pond dam
+biy point
+lake point
+little creek swamp
+biy point
+elle
+ling point
+city of bainyville
+sing point
+res lake dam
+city of pinindale
+brack mountain tower
+sorth field village
+olen
+olen
+
+--ANNEALED (2.0 -> 0.1)--
+final energy: -161.6
+--------------------------------------------------------------------------------
+north memorial park
+cupper campground
+mallo mountain
+hulley post office
+little city park
+raver mountain
+little branch pond
+little buck mountain
+hulley post office
+cale creek point
+bes pond
+wars memorial park
+brock mountain
+raver mountain
+brock mountain
+raver mountain
+raver mountain
+brock mountain
+north memorial park
+raver mountain
+wonton post office
+wonton post office
+raver playground
+little swater park
+cale creek point
+wonton post office
+raver mountain
+village of citeville
+ravel post office
+raver mountain
+raver mountain
+raver mountain
+hulley post office
+rucker mountain
+cupper campground
+halman
+little sthing camp
+north memorial park
+wast trailer park
+kingley post office
+wonton post office
+raver mountain
+banco mountain
+hulley post office
+hulley post office
+wars memorial park
+pala
+laver hill
+brock mountain
+brock mountain
+
+--ANNEALED (10.0 -> 0.1)--
+final energy: -159.3
+--------------------------------------------------------------------------------
+bey creek trail
+oll creek point
+little watber camp
+raver mountain
+raver mountain
+hulley post office
+wand valley park
+lake point
+hilley post office
+brock mountain
+little watber camp
+brock mountain
+lape city hall
+little beat island
+nouth post office
+north memorial park
+lolan
+raver mountain
+north memorial park
+little country club
+wart memorial park
+cupper campground
+lock creek light
+hulley post office
+andals post office
+halley post office
+brock mountain
+olen
+lake point
+min building
+raver mountain
+lock creek trail
+city of canyon flat
+pala
+char creek point
+cale creek point
+hilley post office
+lake creek
+brack post office
+borten memorial park
+manlonia
+mord church of god
+nes ranch airport
+andals post office
+braver playground
+rid field airport
+town of soring park
+brock mountain
+brock mountain
+raver mountain
+
+--ANNEALED (2.0 -> 0.01)--
+final energy: -159.7
+--------------------------------------------------------------------------------
+brock mountain
+wonton post office
+heloman country club
+green campground
+fort mountain
+wonton post office
+raver mountain
+lake point
+wonton post office
+raver mountain
+north memorial park
+bor park
+cals millpond
+camp hollow
+brock mountain
+north memorial park
+willage city park
+ass millpond
+brock mountain
+wars memorial park
+biy point
+wars memorial park
+arss millpond
+heloman country club
+brock mountain
+wonton post office
+raver mountain
+north memorial park
+little creek point
+lake point
+wand valley park
+north fork city park
+hulley post office
+raver mountain
+law spring park
+north memorial park
+pala
+raver mountain
+mingley post office
+hulley post office
+biy point
+brock mountain
+far heliport
+raver mountain
+bey creek trail
+brock mountain
+town of valley park
+little stham swamp
+north fork city park
+laver mine
+
+--ANNEALED (2.0 -> 0.3)--
+final energy: -162.0
+--------------------------------------------------------------------------------
+cupper campground
+olee
+town of shille park
+winton post office
+brock mountain
+brock mountain
+due point
+willage city park
+township of shi park
+cupper campground
+villey post office
+valley post office
+eack landing strip
+ronker country club
+raver mountain
+hulley post office
+winton post office
+brock mountain
+little country club
+ramer mountain
+hake plaza
+north memonial park
+wenton post office
+rigels post office
+saller post office
+village of bal park
+winton post office
+block mountain
+raver mountain
+donn ban campground
+monton post office
+brock mountain
+oena
+lake city park
+brock mountain
+villey post office
+raver mountain
+villey post office
+brack mountain
+raver mountain
+raver mountain
+north memorial park
+little feater camp
+eigley post office
+little sthing park
+higley post office
+north memorial park
+raker mountain
+brock mountain
+taner country club
+
+Model=usgeo__bs20_nh350_lrb_e20_lr5E-02_wc1E-04.pickle; iters=15000
+final energy: -186.4
+--------------------------------------------------------------------------------
+mantarever mane
+west pebille church
+oli kelxon lake
+l n tonnicue spring
+bust sorinls church
+lonn reservoir dam
+wese baptest church
+east poratle crvek
+lick barirse church
+pyses lake dam
+east maivtel creek
+torkston post office
+nawhersville church
+fust dampiey church
+shinnanson man
+chuan creek
+wenacake post office
+smecp chapel
+olil harisey church
+manabory post office
+pepleraville church
+east partiem creek
+dodon creek
+hanspank post office
+woothayville church
+late reservoir dam
+tipter biple church
+juck bapdint church
+forth millpond dam
+west mardame spring
+weerreck vibrary
+pexca rividence hall
+shor hegse
+saint chapel
+east manhple church
+clastenville church
+philtqer cemetery
+west arreses canyon
+cophernville church
+pedry creek
+lang toma
+colingot post office
+trink branch church
+north toifpond dam
+beesgedire lake
+abrenant
+bul sanriros canyon
+serdensone mine
+wicks millpond dam
+days inn tem bringe
+--ANNEALED (1.0 -> 0.1)--
+final energy: -188.0
+--------------------------------------------------------------------------------
+big stovilup mine
+mountainicolp creek
+chertenville church
+north chapel church
+north lake dam
+red land cemetery
+saint public library
+willingson lake
+lake s ranch airport
+the mountain spring
+west springs church
+big slaville church
+t b ranch
+chupbell station
+old pont office park
+thompson post office
+rock
+upper millpond dam
+camp lake
+charkenvillp mine
+over
+spring park trail
+big spling creek
+camps creek
+the mountain spring
+north islald lake
+the ceqperrys creek
+big swater lake
+poone chapel
+the mountain spring
+formston post office
+the wechmmest onf
+big slaville church
+chertynville canyon
+willingson lake
+bayou rividence hall
+cam outh station
+silver ranch mine
+big canyon lake
+beer springs canyon
+old sranaton mine
+chertenville lake
+west terkams spring
+south camper dam
+west baptist church
+north millpond dam
+parlington branch
+the pannicue spring
+north crafle lake
+west baptist church
+
+--ANNEALED (2.0 -> 0.1)--
+final energy: -209.3
+--------------------------------------------------------------------------------
+thompson post office
+formston post office
+franciny post office
+willer grove church
+mountain high school
+bearston post office
+lakesanville church
+burtersville church
+west baptist church
+west baptist church
+west baptist church
+el quite post office
+allucite post office
+formston post office
+old canyon lake
+blue baptist church
+west baptist church
+willer bille church
+blue baptist church
+burtersville church
+west baptist church
+camp mabille church
+willow creek church
+woodston post office
+formston post office
+chestenville church
+thompson post office
+old manville church
+chestenville church
+willer creek church
+willow creek church
+hofffraville church
+perriton post office
+days inn aup arrint
+west baptist church
+west baptist church
+west baptist church
+greens ranch airport
+keller ranch airport
+willow creek church
+west baptist church
+berrston post office
+fareston post office
+willer bille church
+double reservoir
+indian grove church
+willow creek church
+indian ranch airport
+formston post office
+willow creek church
+
+--ANNEALED (10.0 -> 0.1)--
+final energy: -208.9
+--------------------------------------------------------------------------------
+chersinville school
+big manville church
+west baptist church
+nortlend post office
+west baptist church
+formston post office
+jameston post office
+mountanville church
+willow creek church
+jameston post office
+thompson post office
+west baptist church
+west springs branch
+big slaville church
+perriton post office
+chestenville church
+willow creek church
+thompson post office
+jameston post office
+vilver ranch airport
+bellmand post office
+masqueta post office
+colicanville church
+west baptist church
+old slaville church
+west martile church
+the tlaville church
+willow creek church
+west baptist church
+north traple church
+west baptist church
+vilver ranch airport
+west bartple church
+formston post office
+west baptist church
+camp peville church
+formston post office
+willow creek church
+west babille church
+camp peville church
+tallston post office
+winderburg lake
+west baptist church
+westernville canyon
+west springs canyon
+old slaville church
+formston post office
+chertynville canyon
+willer creek church
+woodmand post office
+
+--ANNEALED (2.0 -> 0.01)--
+final energy: -214.9
+--------------------------------------------------------------------------------
+copper creek church
+days inn aup arrint
+beaver grove school
+west baptist church
+almiston post office
+copper bille church
+mountain post office
+elmmston post office
+thompson post office
+thompson post office
+thompson post office
+clover ranch airport
+willernville church
+west babille church
+perriton post office
+crancher post office
+formston post office
+formston post office
+jameston post office
+chrisanville church
+burtersville church
+el quite post office
+indian creek church
+cherronville spring
+chestenville church
+keller ranch airport
+killer ranch airport
+perriton post office
+mountain high school
+west babille church
+little creek spring
+willow creek church
+big penville canyon
+west baptist church
+mountain high school
+formston post office
+west baptist church
+west baptist church
+thompson post office
+west baptist church
+mountain high school
+formston post office
+masqueta post office
+west baptist church
+berrston post office
+indian grave school
+bellston post office
+east baptist church
+mountain high school
+formston post office
+
+--ANNEALED (2.0 -> 0.3)--
+final energy: -213.0
+--------------------------------------------------------------------------------
+thriston post office
+willow creek church
+blue baptist church
+formston post office
+west baptist church
+whiterburg lake
+willer grove church
+willow creek church
+formston post office
+chertenville church
+killer ranch airport
+keller ranch airport
+indian ranch airport
+cherscaville church
+thompson post office
+mountain high school
+el quite post office
+old slaville church
+west springs canyon
+west baptist church
+chestenville church
+west baptist church
+willow creek church
+mountain aom spring
+west baptist church
+abea baptist church
+thompson post office
+west baptist church
+west baptist church
+formston post office
+formston post office
+woodmand post office
+homber grove church
+camp peville church
+elmmston post office
+formston post office
+anmiston post office
+willow creek church
+mountain post office
+vilver ranch airport
+fareston post office
+west baptist church
+blackton post office
+willow creek church
+jamiston post office
+west baptist church
+bellston post office
+killer ranch airport
+formston post office
+west baptist church
+
+Model=usgeo__bs50_lrb_lr1E-02_wc1E-04.pickle; iters=15000
+final energy: -193.6
+--------------------------------------------------------------------------------
+aites lake
+frioge pank dam
+minine valley church
+camfas dracel school
+bullak oal field
+kedias riter point
+hatres labe dam
+mcnerl reservoir
+benver lake
+jabbet reservoir
+colter cavin park
+brazefuer hembirrint
+wixder point cuurch
+ritale sprint
+ghorey fores airport
+crintr foane airport
+hahisu reserveir
+bescarine cemetery
+rolverler cemetery
+bempoksni creek
+mamvin city hall
+whiterack lake
+hunojo valley achool
+necholise estates
+bulsor lake dam
+lungin lay pond
+aprine lake dam
+backbspon cemetery
+cande virk school
+snoweg lible church
+steningsen canyon
+tlimer lake dam
+brones creek church
+hig honke lake dam
+fast fork kard creek
+whaves middle school
+yoanspare can sarilg
+tremdy river dam
+bilder criek hillew
+spront reservoir
+tiepheprp lake dam
+kresty revervair
+vitkyrson island
+norton lake dam
+wast fork perd creek
+weconfield school
+hucksarre branch
+marbon lake park
+meshan field airport
+alelah chapel school
+--ANNEALED (1.0 -> 0.1)--
+final energy: -202.1
+--------------------------------------------------------------------------------
+lake rock lake dam
+little bir airport
+lake spobiold dam
+ricker lake dam
+little chire station
+spring lake dam
+little creek station
+harron lake dam
+black creek dam
+little bringe creek
+blackson field dam
+simperson lake dam
+little creek school
+barrington mountain
+northwood city hall
+springsville school
+mounthile windmill
+westerson cemetery
+red valley airport
+little county park
+rockville cemetery
+blackrock branch
+little ridge school
+little valley school
+little trailer park
+little river dam
+the ponk island
+little township hall
+little rackey park
+wilder grove church
+little ponding creek
+little forkste dam
+miller middle school
+little bond cemetery
+mount grove church
+valley ridge church
+old waldy cemetery
+little river park
+little point creek
+willin memorial park
+saint avercan church
+little grove church
+little aid branch
+millardson city hall
+little sirre station
+little ponding creek
+middle grove church
+sconvelle cemetery
+an quemair windmill
+little packes dak
+
+--ANNEALED (2.0 -> 0.1)--
+final energy: -203.4
+--------------------------------------------------------------------------------
+vig creek ranch
+spring lake dam
+east hell cemetery
+blackwater creek
+sulver creek school
+charey field airport
+lake holl island
+little gup park
+richland pond dam
+little gup park
+east hell cemetery
+wastville cemetery
+camperton reservoir
+east hill trail
+mccand pond dam
+little brook church
+old creek lake dam
+roy creek cemetery
+indian reservoir
+little city park
+little ant lake
+the valley school
+little poing creek
+harron lake dam
+miller lake park
+canter city hall
+millewood lake dam
+whiter ville church
+little ainay park
+mount found cemetery
+the wallry lake
+little son creek
+charey field airport
+rockville cemetery
+little creek dam
+new burgi creek
+bicker creek school
+blur hill cemetery
+new creek lake
+little river halle
+little ridge park
+big creek lake dam
+calley field airport
+hawes ranch
+charey field airport
+little lake dam
+little pond dam
+carner field airport
+elterview windmill
+little ant lake
+
+--ANNEALED (10.0 -> 0.1)--
+final energy: -202.7
+--------------------------------------------------------------------------------
+pracker lake dam
+little bund mountain
+carver city airport
+fetter lake dam
+lake lake lake dam
+lak sides lake dam
+little lake dam
+willomise reservoir
+little brook
+wister pond dam
+little lake dam
+willinger cemetery
+ricker middle school
+westerson cemetery
+little creek school
+little grove church
+j s wanton lake dam
+jucker lake dam
+blackword island
+bicker creek school
+mondville cemetery
+raverview cemetery
+charey field airport
+mcchonde pond dam
+grensville city hall
+indian reservoir
+quality inn mourtaon
+whitehill hollow
+the field lake dam
+south creek park
+mcckfield lake
+spring point church
+limmerdee lake dam
+harrison high school
+new valle cemetery
+little peak lake
+the pestorn lake
+the fiels lake dam
+strucfield school
+east fork peod creek
+sterison high school
+the jonk inall creek
+whites creek church
+the valle cemetery
+indian river dar
+lower gap
+valley ridge church
+little miney dam
+willow grove church
+rockville cemetery
+
+--ANNEALED (2.0 -> 0.01)--
+final energy: -203.1
+--------------------------------------------------------------------------------
+lenton bay dam
+new hidge la canyon
+wilder grove church
+big creek lake
+rockville cemetery
+little sod creek
+vandengarh school
+wester city hall
+willow grove church
+little ant lake
+copper point park
+mount hollow church
+lake rock lake dam
+little city hall
+little forks park
+white creek church
+village of callon
+harrington park
+littlewood park
+new water campground
+willow grove church
+westersen cemetery
+little city park
+petter lake dam
+rie creek lake dam
+barron oil field
+newton mountain
+little city park
+williw state park
+rockville cemetery
+little mundy park
+red valle cemetery
+riderville park
+townshill broak
+whitewood reservoir
+greenview cemetery
+mount point church
+fig creek reservoir
+little ant lake
+indian run
+east fork lakd creek
+valley ridge church
+fort hill reservoir
+little lake dam
+upper middle school
+indian spring
+lake fork campground
+bicker on branch
+indian river dar
+indian middle school
+
+--ANNEALED (2.0 -> 0.3)--
+final energy: -204.5
+--------------------------------------------------------------------------------
+spring park
+south valley park
+blackville city hall
+little peak lake
+farrington park
+johnsinge cemetery
+little county park
+south creek mountain
+rockville cemetery
+boy creek cemetery
+little creek
+willow lake dam
+bunney mountain
+bunney mountain
+harris creek church
+rockville cemetery
+spring lake dam
+santer lake dam
+vig creek ranch
+harmon lake dam
+barron oil field
+willoview estates
+littleter cemetery
+capper creek
+troner lake dam
+mount creek
+van valley airport
+petter lake dam
+blackville city hall
+the creak campground
+new valle cemetery
+rockville cemetery
+harrington creek
+arthon oil field
+barron lake dam
+little gup park
+east hill brook
+rockville cemetery
+rockville cemetery
+south pond
+wister lake dam
+east hill cemetery
+le berton city hall
+canter city hall
+little brangh creek
+old creek lake dam
+little sad creek
+east hell cemetery
+little brook church
+little gup park
+
+Model=usgeo__doubdoub_bs30_e10_lr5E-03_wc1E-05.pickle; iters=15000
+final energy: -150.5
+--------------------------------------------------------------------------------
+g r sintof lake dam
+pary farr capaltment
+township of rovelaod
+township of raitland
+grebell landing
+city of marderville
+grdver dyere station
+biency hollow
+matken creek station
+lankest crossroads
+town of sod island
+doalen creek station
+foaer reservoir dam
+sang pring overlook
+bold grouns overlook
+morne creak station
+halner lake dam
+township of bareland
+city of ian ineyburn
+little prock landing
+ende ganger island
+asdey minn hospital
+tonn of sobstation
+wele g field airport
+town of gaw bridge
+forons mile heliport
+sranabloy habstation
+mielly cabri station
+city of raghorville
+usperesos substation
+vuntin station
+sis low country club
+bila dountay bridge
+oudala fan millpond
+north for lake dam
+son bringe lake dam
+town of ged island
+aftees pond dam
+sasharog bubstation
+iceardon hospital
+saint gratre station
+city of mareanville
+biglehrd island
+touwtstam island
+gitcon hollow
+hosgr sanitorium
+township of foltland
+rohp camk reservoir
+citr of creek falls
+le cherliy island
+--ANNEALED (1.0 -> 0.1)--
+final energy: -156.0
+--------------------------------------------------------------------------------
+wellint country club
+town of milleville
+laver lake dam
+pole creek reservoir
+savey bubstation
+city of canyonville
+lave windmill
+ton lake dam
+lage building
+lina
+holle station
+little mountain lake
+hilesville
+res lake dam
+soutt wilderness
+little substation
+little creek falls
+city of pount valley
+cays corner
+res lake dam
+harsen hill hospital
+city of ingreservoir
+lake glacier
+chick hill heliport
+coland
+lake glacier
+town of gos bridge
+camala
+lover airport
+lone auditorium
+north fork grairpark
+north mountain lake
+little lake valley
+barth millpond
+town of substation
+town of gon bridge
+township of arland
+little fork river
+pane river bridge
+raver lake dam
+barth building
+kar bay
+raver lake dam
+orie island
+aman
+well gap
+saint medical center
+bett island
+north bubstation
+wild parn overlook
+
+--ANNEALED (2.0 -> 0.1)--
+final energy: -162.1
+--------------------------------------------------------------------------------
+grover island
+wester island
+north fork reservoir
+rover island
+rover island
+grover island
+paup creek heliport
+brack county park
+lack lake windmill
+barco windmill
+ulp creek windmill
+rover island
+sounh creek overlook
+lave windmill
+grewel windmill
+lave windmill
+rover island
+bett island
+grover island
+town ofk reservoir
+barkey reservoir
+brack field airport
+rover island
+burker reservoir
+horks island
+minen memorial park
+burres island
+mantol windmill
+little tricks island
+fie island
+jocks island
+rover island
+north fork reservoir
+pole creek reservoir
+sarden memorial park
+barth windmill
+bercher island
+jocks island
+told poin overlook
+beat island
+lave windmill
+sener springs branch
+shill windmill
+brack field airport
+rover island
+horks island
+town of gow island
+town of for island
+grover island
+wol windmill
+
+--ANNEALED (10.0 -> 0.1)--
+final energy: -162.1
+--------------------------------------------------------------------------------
+town of son island
+north frille station
+bucks branch
+grover island
+rover island
+blor springs bridge
+banco windmill
+balles island
+old brock reservoir
+town of for island
+lake reservoir
+rover island
+lave windmill
+saint creens island
+saint sarver station
+jocks island
+raver lake dam
+town of for island
+brack county jail
+raver lake dam
+rover island
+brack county park
+mount bridge
+lave windmill
+brick reservoir
+welden crerk station
+rover island
+beat island
+rover island
+pole creek reservoir
+north fork reservoir
+rover island
+res lake dam
+wester island
+west mountay island
+little choy island
+little choy island
+laker windmill
+bay branch island
+mount bridge
+beat island
+little creek mine
+town of gos bridge
+north fork reservoir
+rover island
+old brock reservoir
+grewel windmill
+gran island
+grover island
+grover island
+
+--ANNEALED (2.0 -> 0.01)--
+final energy: -161.1
+--------------------------------------------------------------------------------
+big jack windmill
+west arke windmill
+brack subdivision
+west will windmill
+town of son island
+mount island
+saint creek hospital
+horks island
+barry island
+brack subdivision
+barco windmill
+mount hollow
+lave windmill
+city of gon branch
+brack country club
+rover island
+camp island
+township of bstation
+shill windmill
+gran island
+harmanville hospital
+camp island
+mount island
+little wall windmill
+north fork reservoir
+martol windmill
+west winger island
+balles island
+little jop branch
+wild parn overlook
+wild parn overlook
+little brach park
+fie island
+west arke windmill
+little choy island
+jocks island
+mount bridge
+rover island
+juney reservoir dam
+comfort inn pardeson
+little choy island
+town of for island
+carben memorial park
+hampton inn millpond
+wast cither island
+pole creek reservoir
+camfort inn overlook
+little cree island
+tole hill windmill
+lave windmill
+
+--ANNEALED (2.0 -> 0.3)--
+final energy: -163.3
+--------------------------------------------------------------------------------
+bett island
+mount bridge
+frester island
+camp island
+rover island
+barcher island
+raver island
+beat island
+wester island
+lole creek reservoir
+grover island
+lide river bridge
+town of ley bridge
+rover island
+rover island
+mount island
+corks island
+townsore station
+rover island
+mount bridge
+town of for island
+mount island
+laver rack heliport
+rover island
+raver island
+town of for island
+mount island
+mount island
+rover island
+rover island
+town of for island
+backs branch
+camp island
+harley island
+town of for island
+rover island
+barco windmill
+lake island
+rover island
+grover island
+lake landing
+bercher island
+corks island
+town of for island
+north fork reservoir
+sarden memorial park
+grover island
+north fork reservoir
+rover island
+mount island
+
+Model=usgeo__doubl2_bs20_lrb_e30_lr2E-03_wc1E-04.pickle; iters=15000
+final energy: -135.0
+--------------------------------------------------------------------------------
+sterion windmill
+ente pford mountain
+biokyi lake dam
+south prospect
+tonier windmill
+farm
+rialley  own
+pod woddown creek
+city of maverman
+brok mount mountain
+lder irea windmill
+orarak airport
+mrist mountain
+fatttre spring
+gwilsersville
+duakl barry shoal
+north middle school
+balmkills tank
+cromeva spring
+motle adlossus
+ilgantun tamlet
+trecge sarte valley
+selger mine
+qeesty corner
+canchirg ent home
+velhorl pond dam
+ecke raw lake
+harker mine
+qaomderks flat
+little casy mountain
+macherax creek
+wip farrey spring
+pertt bleck school
+emplost farm
+gumghton dam
+horiegto fellubos
+city of srak dam
+gfoud mountain
+giophar creek canyon
+lanely windmill
+mogetson hill
+peagiss hospital
+jap jangatt windmill
+puink jarde ranch
+hprock hill
+kgaldight bridge
+jezes mountain
+wig lave wiydmill
+east cbeez windmill
+hamoiageho ridge
+--ANNEALED (1.0 -> 0.1)--
+final energy: -144.8
+--------------------------------------------------------------------------------
+rock
+rina
+aman
+well spring
+lako
+rena
+rina
+jornstown forest
+ford
+ill ridge
+love windmill
+rock
+car pond dam
+lako
+little hallson river
+little paakmon river
+rock
+well dam
+rat run
+camola
+los crossroads
+big barrin bayou
+aman
+bat park
+lako
+kala
+man building
+rina
+nouth mountains
+lone auditorium
+eedey hospital
+pore lake
+ford
+lina
+nouth ambulance
+bes pond
+city of ffieldsville
+hall
+city of waspeway
+aman
+rina
+borke dam
+ford
+lake islands
+town of campinstown
+town of minesville
+lako
+farm
+low springs tank
+rast
+
+--ANNEALED (2.0 -> 0.1)--
+final energy: -150.2
+--------------------------------------------------------------------------------
+aman
+little high school
+blam high school
+bay spring
+well junction
+mount school
+hall windmill
+ple meadows
+wanton high school
+little high school
+town school
+north middle school
+fia shoals
+ter school
+last view school
+brock mountain
+jor creek spring
+town school
+fouth mountain
+loke high school
+will junction
+cut mountain
+rack valley school
+love windmill
+aster cemetery
+town school
+loke high school
+town school
+low creek school
+lake hospital
+loke high school
+ber school
+ter school
+little high school
+loke high school
+loke high school
+town school
+upper middle school
+loke high school
+loke high school
+aman
+north middle school
+love windmill
+malle cemetery
+loke high school
+brack windmill
+fer school
+raver mountain
+town school
+wast high school
+
+--ANNEALED (10.0 -> 0.1)--
+final energy: -148.8
+--------------------------------------------------------------------------------
+lake campground
+fer school
+well junction
+town school
+hall windmill
+seity hospital
+loke high school
+thill middle school
+bay spring
+brock mountain
+beg street school
+lover school
+bay spring
+little spickson lake
+hity hill school
+town school
+lower middle school
+ter school
+wester school
+eedey hospital
+town school
+west middle school
+lowe school
+fer school
+loke high school
+little high school
+gumb school
+sing point
+key branch
+wig high school
+the brook school
+land church
+lower middle school
+ball park
+town of hopilton
+lamo tank
+ter school
+cap windmill
+mast creek school
+loke high school
+caley school
+rass
+brock mountain
+lave windmill
+wester school
+north middle school
+ber school
+little wood museum
+little hill island
+lox creek school
+
+--ANNEALED (2.0 -> 0.01)--
+final energy: -147.9
+--------------------------------------------------------------------------------
+weller school
+lane river school
+loke spring
+ford
+love windmill
+west middle school
+comford inn pardeson
+grover lookout
+loke high school
+bouth mountain
+grose mountain
+ter school
+rina
+little quary school
+lake heights
+well spring
+rocfield school
+north high school
+north creek school
+camp buttes
+mar mountain
+lock
+lako
+lee lake
+rock
+raver mountain
+fey meadow
+lee lake
+wester school
+north valley school
+bir stown forest
+little creek canal
+ston cemetery
+bo tank
+rina
+lay academy
+mount school
+raver mountain
+lake summit
+west middle school
+brock mountain
+camp school
+well junction
+dig river buttes
+lake cemetery
+fort mountain
+mount resort
+rock
+mander school
+hels creek school
+
+--ANNEALED (2.0 -> 0.3)--
+final energy: -150.8
+--------------------------------------------------------------------------------
+little high school
+loke high school
+fer school
+key canyon
+little hillew school
+love high school
+thill middle school
+little high school
+wey high school
+migley post office
+north high school
+now creek school
+lave windmill
+little high school
+lover high school
+town school
+loke high school
+loke high school
+brock mountain
+malle mountain
+fort church of god
+willer high school
+loke high school
+raver mountain
+town school
+may church
+low creek school
+south brial school
+eview school
+mount school
+blam high school
+fer school
+ter school
+black valley school
+liver post office
+lake point
+fork post office
+north middle school
+laver school
+brock mountain
+loke high school
+west middle school
+went middle school
+brock mountain
+ford
+little high school
+town school
+anbe
+loke high school
+lake high school
+
+Model=usgeo__doubl_bs20_lrb_e30_lr1E-02_wc1E-04.pickle; iters=15000
+final energy: -141.0
+--------------------------------------------------------------------------------
+peremo junction
+villeg canyon
+township of mascore
+hadung cemetery
+adporth peers lakes
+fove dubos crossing
+lole plish raditon
+volmarcoo estates
+eespring canyon
+valllaga point
+layville cemetery
+chomssh garden
+frisglon siding
+cowerro canyon
+sceatow campground
+rovars campground
+gardarich mountains
+soond forr spring
+ocushou academy
+kitamuer falls
+srinnmon gulch
+hovbuck mountaims
+dahn onn rock li ht
+curmicy junction
+mackeiny falls
+hesy oill landing
+face creek oil field
+silse tahe oil field
+ceryak farr lake
+kist cooy oil field
+twoister canyon
+noncugh academy
+seaney canyon
+seins landing
+won planser springs
+little casuham river
+aiderton junction
+erel traich library
+eeverdon estates
+asee batem cemetery
+dene maming cemetery
+nimyferley ditch
+alker ranch manor
+mislefger windmill
+groem spring canyon
+townthip of jondton
+phsqhatchoine point
+cwashory spring
+cust spring
+gureagar cemetery
+--ANNEALED (1.0 -> 0.1)--
+final energy: -150.9
+--------------------------------------------------------------------------------
+lake pond
+lake point
+cams crossing
+wood district
+rina
+city of grada
+fey canyon
+lake meadow
+hallville
+mouth mountains
+little mountains
+fey canyon
+rina
+canton
+city of harbey
+camp estates
+walley estates
+hallville
+grover mountains
+mersin
+conell
+south cemetery
+oll creek light
+lesville
+lake terrace
+city of bordville
+south cemetery
+lacks cemetery
+mouth mountains
+lay ponds
+laha mountains
+pont drain
+hardon estates
+cupper campground
+will cemetery
+canton
+laker cemetery
+lave ditch
+boins landing
+park point
+rina
+brang place
+little creek falls
+comfort inn syerness
+mandes interchange
+bey point
+bey point
+mount hollow
+lake valley
+rover landing
+
+--ANNEALED (2.0 -> 0.1)--
+final energy: -156.3
+--------------------------------------------------------------------------------
+lakes cemetery
+lewold oil field
+bluck cemetery
+caller cemetery
+laker cemetery
+lacks cemetery
+lake windmill
+wand cemetery
+manton post office
+mount creek cemetery
+will cemetery
+will cemetery
+little campground
+will cemetery
+ill ridge
+mount canyon
+south cemetery
+canton
+will cemetery
+oll creek point
+barco crossing
+fort cemetery
+will cemetery
+harner cemetery
+saup creek cemetery
+will cemetery
+harner cemetery
+males cemetery
+fey canyon
+ster cemetery
+ford cemetery
+lacks cemetery
+fey canyon
+camp raspeway
+lacks cemetery
+bluck cemetery
+lover mountains
+lake station
+samper cemetery
+davin cemetery
+little tracker bayou
+ster school
+lakes cemetery
+caller cemetery
+trans cemetery
+lacks cemetery
+camp hollow
+barner cemetery
+harner cemetery
+sarner cemetery
+
+--ANNEALED (10.0 -> 0.1)--
+final energy: -154.4
+--------------------------------------------------------------------------------
+rena
+caller cemetery
+little rivee landing
+south cemetery
+shill windmill
+pring cemetery
+man building
+suupar sumber two
+west creek cemetery
+malle cemetery
+lack falls
+harres cemetery
+asker cemetery
+will cemetery
+woll oil field
+lock spring canyon
+park point
+as cabin
+toars cemetery
+key spring
+caller cemetery
+fey canyon
+camp slough
+fey canyon
+mell canyon
+land spring
+mand cemetery
+lake campground
+west public library
+walley estates
+saup creek cemetery
+malle cemetery
+sarner cemetery
+fey canyon
+malle cemetery
+bockes cemetery
+bluck cemetery
+barner cemetery
+caller cemetery
+sarner cemetery
+lover hill estates
+sle river marina
+lake cemetery
+brick island light
+mount spring
+back house museum
+mount spring
+sarner cemetery
+cams crossing
+brock post office
+
+--ANNEALED (2.0 -> 0.01)--
+final energy: -155.9
+--------------------------------------------------------------------------------
+bell creek
+will canyon
+bluck cemetery
+old river cemetery
+malle cemetery
+sarner cemetery
+parmin cemetery
+fey canyon
+ford cemetery
+south bead canyon
+south cemetery
+sarner cemetery
+mount church of god
+lake canyon
+malle cemetery
+well junction
+mckes cemetery
+ford cemetery
+sarner cemetery
+asker cemetery
+sarner cemetery
+harner cemetery
+oll creek basin
+malle cemetery
+city of mountains
+little fark windmill
+key spring
+ping house
+bed ridge cemetery
+samby cemetery
+lakes cemetery
+bluck cemetery
+malle cemetery
+bold spring canyon
+lake station
+bluck cemetery
+caller cemetery
+mings pond
+lake canyon
+samper cemetery
+cale building
+poine canyon
+mouth mountains
+sarner cemetery
+sarner cemetery
+bey creek
+lake cemetery
+fey canyon
+samper cemetery
+bell spring
+
+--ANNEALED (2.0 -> 0.3)--
+final energy: -157.3
+--------------------------------------------------------------------------------
+cump windmill
+lakes cemetery
+backs cemetery
+cupper campground
+mburt cemetery
+sey canyon
+colane cemetery
+lacks cemetery
+weley cemetery
+will cemetery
+south cemetery
+will cemetery
+caller cemetery
+barner cemetery
+welt cemetery
+males cemetery
+south cemetery
+caller cemetery
+mant butte
+will cemetery
+caller cemetery
+lakes cemetery
+wood district
+marton cemetery
+makes cemetery
+ball cemetery
+lacks cemetery
+south cemetery
+will windmill
+ball post office
+oek spring canyon
+malle cemetery
+canton
+lamen cemetery
+rocker cemetery
+lacks cemetery
+sham cemetery
+brock post office
+well cemetery
+hall windmill
+per spring
+will cemetery
+carber cemetery
+will cemetery
+will cemetery
+well cemetery
+dollin cemetery
+lanner cemetery
+lakes cemetery
+sotte campground
+
+Model=usgeo__finetune33_bs20_lrb_e10_lr1E-03_wc1E-04.pickle; iters=15000
+final energy: -188.3
+--------------------------------------------------------------------------------
+dedry holl school
+cakiinbord tark
+white hols spring
+srean siaw spring
+wmstupeat sourp
+rickings rank park
+little berson creek
+jenton mee trei park
+gran liter wandmill
+duck aras windmill
+hecherwood mpring
+ovalcim playground
+marry creek
+bresspary oin cldsk
+qierowdien farm
+fost gitte roche
+b iertigon park
+jurk jodse cemetery
+west axvee canyon
+wvst fork lake creek
+ord siriees cemetery
+tonny poinurs school
+netton shounh cenver
+garey bark church
+vaknssee saring
+smoah tark school
+north poinston mane
+nenevallen school
+mollam middle school
+stamp hill school
+camalwithor school
+coyes rock cemetery
+village of hullatre
+deerycone creek
+tullist anch spring
+emeot haplitc church
+township of weitota
+greenbula reservoir
+barzilt wates rouio
+nace sover ranch
+grame krak school
+shint vislage school
+gabbs rock creek
+township of jabrirka
+skaln rond park
+jack fork laty parm
+morthall farms
+township of adrety
+dewe hidl school
+brews hill cemetery
+--ANNEALED (1.0 -> 0.1)--
+final energy: -197.9
+--------------------------------------------------------------------------------
+west point landing
+south hollow creek
+old ridge peak
+little memorial park
+green springs chunch
+the creak campground
+township of stachon
+willow creek lake
+lake river lake dam
+west creek church
+bickersan gulch
+east bunche mountain
+little lookout tower
+south baptist church
+slaver middle school
+twensville city hall
+little landin creek
+littleson lake dam
+west brook cemetery
+saint aidiain school
+nertow lake mountain
+lake memoriam church
+little nplake creek
+white pickmill park
+camp mine heights
+raver baptist church
+east fork potr creek
+loward hills school
+mount pawaros school
+eloward ranch park
+salver hillon creek
+little valley canyon
+south tow state park
+north baptist church
+little deverc center
+well mountain church
+mount field airport
+upper hill canyon
+red ringer lake dam
+north farmall park
+littler valley creek
+mount grove school
+little valley school
+south erg lake dam
+spring middle school
+little owvidge lake
+north fock will plek
+upper tarm lake dam
+west campors canyon
+west mountain creek
+
+--ANNEALED (2.0 -> 0.1)--
+final energy: -199.4
+--------------------------------------------------------------------------------
+north lookout tower
+bucking grove church
+east fork pock creek
+north baptist church
+harrock cemetery
+uppersham lake dam
+lake point park
+harringe golf course
+quarly middle school
+village of ridge
+new hill high school
+lake flead dam
+north high school
+east fork boon creek
+little valley church
+shirfield ville
+north fork island
+village creek wake
+upper ham lake dam
+blackville school
+big manton park
+west mountain park
+red rick hollow
+campton playground
+indians country club
+upper siddle school
+north fork park
+big spring city hall
+township of ranvelle
+east fork pock creek
+east fork pock creek
+east atharook creek
+old coren cemetery
+lower lake park
+upper canyon spring
+north park spring
+upper hill canyon
+littlewood branch
+village of callon
+south valley canyon
+south lak oil field
+newton high school
+big band mountain
+north high school
+hampton playground
+white rock pond dam
+woodmant post office
+blackwater lake
+lower iell windmill
+mountrine plaze
+
+--ANNEALED (10.0 -> 0.1)--
+final energy: -198.2
+--------------------------------------------------------------------------------
+millewood lake dam
+south baptist church
+lake reservoir dam
+starkburty spring
+upper pond dam
+enst coven lake dam
+north high school
+township of cowente
+big spring city hall
+upper hollow church
+south ialinn church
+lake watermial park
+north hill pond dam
+days inn canyon
+upperville school
+john hill reservoir
+mount homa church
+old spring trail
+bucking grove church
+village of ridge
+lower peaks branch
+willingh mill creek
+woodsaid hill park
+big dande park
+east fork pock creek
+city of carryy
+little rocks creek
+the creak lake
+buckerback spring
+comfort inn canomine
+little valley church
+lake spisto hollow
+south pond lake
+big spring city hall
+white lake spring
+parry holloon church
+lucks city hall
+upper pohtraf church
+sherrs hill park
+little treek school
+upper poro lake
+northalle church
+rock creek cemetery
+north lake dam
+westington creek
+well mountain church
+stowardge school
+bull creek lake
+stan springs park
+whitehouse park
+
+--ANNEALED (2.0 -> 0.01)--
+final energy: -197.7
+--------------------------------------------------------------------------------
+liking lookout tower
+north campground
+mount baptist church
+lower fords windmill
+comfort inn canomine
+white tank spring
+shand field pond
+bolton middle school
+littlers creek lake
+big fiell branch
+new creek lake
+white lane oil field
+blackwood mountain
+upper rodge lake dam
+willington lake dam
+wood springs church
+north forkill
+north canyon dam
+black rock spring
+little pimpork creek
+whitelly state park
+north rock ridge
+lowe island lake dam
+new hollon church
+east point city hall
+westington cemetery
+harrison high school
+indian middle school
+springtint creek
+little lake canyon
+east fork church
+village of sthoole
+camp ie dovel center
+colley valley ranch
+black holl park
+lower lake soo trail
+lower gap park
+north high school
+raver baptist church
+big hae town hall
+harrington ranch
+whitley brack park
+mount island church
+south baptist church
+stovelland park
+carrington branch
+big spring spring
+the shille park
+upper villace park
+vinton chtee school
+
+--ANNEALED (2.0 -> 0.3)--
+final energy: -199.9
+--------------------------------------------------------------------------------
+ruck creek park
+little bay per creek
+lake point spring
+millock post office
+north pont city hall
+black tock airport
+brookville lake
+fairview golf course
+woodsing golf course
+new river park
+willingart spring
+little panding creek
+lake creek lake
+township of fareny
+bandwood post office
+the field mountain
+lown baptist church
+little creek hollow
+the water lake
+lake rock lake dam
+east ridge creek
+raver baptist church
+nowland post office
+north pond lake
+west mountain branch
+spring county park
+north fock cily park
+kead lake oil field
+west point park
+indian middle school
+north high school
+littlewood park
+lewich mardon school
+north lake dam
+upper canyon spring
+upper hill school
+east lake creek
+mount and mountain
+east fork pock creek
+north field airport
+woodsing golf course
+little hill branch
+north lake spring
+saint viville school
+nowland post office
+white oin field
+south pond spring
+little ant lake
+village of courecl
+north lake park
+
+Model=usgeo__lrb_wc1E-05_l.pickle; iters=15000
+final energy: -74.4
+--------------------------------------------------------------------------------
+township of thelter
+township of thelter
+shigtlur crossing
+oryhron church
+wuse mells creek
+riremadd gardens
+township of gliyher
+township of calsina
+datt jock gulch
+shonom landing strip
+unanagn gulch
+township of pambund
+city of runleville
+tiylick gulch
+kibymay campground
+misfaon church
+koikad campground
+township of thenter
+town of hartoville
+molglatn campground
+township of thenter
+township of tcenter
+bliok gulch
+hidepaing church
+salurr church
+township of chmiter
+township of tamkinn
+wonsbing church
+bol caarerm college
+cunbiclonaal field
+town of hetreville
+township of tcenter
+township of bhelter
+township of thenter
+thackan campground
+detslian campground
+township of thelter
+township of zkecter
+town of luyerfield
+cemowtid oil field
+city of ritkaviele
+doasmind gardens
+township of collenf
+wax viek campground
+bey hoak campground
+ravey gulch
+town of valeeville
+hranc gulch
+wnomedwall gardens
+towe of flsirville
+--ANNEALED (1.0 -> 0.1)--
+final energy: -76.2
+--------------------------------------------------------------------------------
+little scamp river
+town of mille river
+city of plandville
+lonn creek mine
+townsof wilderness
+little creek river
+blakk campground
+township of thelter
+hillane gardens
+town of brich hills
+township of thelter
+village of thelter
+town of mille river
+townsof campground
+village of thelter
+village of thelter
+little creek river
+city of rialeville
+township of spring
+lake gulch
+blake playground
+little creek river
+lace lake ditch
+township of thelter
+town of pile river
+little blich river
+city of rick light
+town of brich viver
+township of thelter
+horling campground
+lake gulch
+township of dilding
+hillane gardens
+little brich river
+lake gulch
+townsof wilderness
+town of ru thelter
+lake gulch
+crep spring
+town of haresville
+villere gardens
+welten playground
+town of shiversity
+town of haresville
+little scamp river
+town of shiversity
+town of haresville
+village of thelter
+lake gulch
+townsof campground
+
+--ANNEALED (2.0 -> 0.1)--
+final energy: -82.6
+--------------------------------------------------------------------------------
+township of thelter
+billery college
+saran spring
+hites cam spring
+township of thelter
+bel cam spring
+lake church
+morling campground
+nores cam spring
+hillane gardens
+township of thelter
+mellane church
+viller cemetery
+little lake spring
+blakk campground
+ball cam spring
+saran spring
+mellane church
+lalanas spring
+township of thelter
+hates cam spring
+township of dalding
+township of thelter
+blakk campground
+township of gardens
+township of caviela
+wille spring
+little paner spring
+township of dilding
+melline church
+little camp spring
+lall cam spring
+township of thelter
+late spring
+lill cak spring
+township of thelter
+rad haak campground
+townsof campground
+blakk campground
+little paver spring
+saran spring
+city of ria spring
+township of gardens
+township of thenter
+blakk campground
+little paver spring
+matowine oil field
+saran spring
+hillane gardens
+little paver spring
+
+--ANNEALED (10.0 -> 0.1)--
+final energy: -82.1
+--------------------------------------------------------------------------------
+lill cam spring
+shille oil field
+melline church
+little paver spring
+township of thelter
+little paner spring
+township of thelter
+saran spring
+horling campground
+bill cam spring
+horling campground
+township of malding
+little parey spring
+merline church
+township of thelter
+last parke spring
+menlane church
+biller cemetery
+hillane gardens
+township of gardens
+blakk campground
+melline church
+bill cam spring
+black oil field
+balowane oil field
+township of thelter
+little pacan spring
+saran spring
+little paver spring
+merline church
+city of rilleville
+wendile church
+gors grove church
+blakk campground
+township of thelter
+township of thelter
+ball cak spring
+merline church
+hallan campground
+township of dilding
+ball cam spring
+ben cam spring
+welten playground
+hillane gardens
+little paver spring
+nouth cam spring
+iller cemetery
+township of thelter
+township of dilding
+bill cie spring
+
+--ANNEALED (2.0 -> 0.01)--
+final energy: -82.2
+--------------------------------------------------------------------------------
+township of thelter
+ball cam spring
+ballanan spring
+last parke spring
+melline church
+blakk campground
+ballanan spring
+township of gardens
+township of thelter
+townsof campground
+lewaler spring
+town of shiversity
+last parke spring
+township of dilding
+went raver spring
+browage oil field
+billery college
+townsof wilderness
+ballanan spring
+township of thelter
+ball cam spring
+lestane spring
+horling campground
+township of thelter
+browage oil field
+township of thelter
+saran spring
+ball cam spring
+township of thelter
+dallan campground
+township of thelter
+horling campground
+townsof wilderness
+horling campground
+hille oil field
+len cam spring
+last parke spring
+township of thelter
+township of thelter
+melline church
+town of haresville
+mellane church
+wendile church
+went raver spring
+township of thelter
+ballanan spring
+townsof campground
+township of thelter
+billery college
+township of thelter
+
+--ANNEALED (2.0 -> 0.3)--
+final energy: -80.7
+--------------------------------------------------------------------------------
+wille spring
+township of thelter
+bill cak spring
+town of pal spring
+city of ria spring
+caran spring
+moune spring
+ballanad spring
+res grove church
+town of ill spring
+ballanan spring
+township of gardens
+saran spring
+little marey spring
+little paber spring
+bellane church
+ball cam spring
+mallanan spring
+saraa spring
+township of thenter
+ballanas spring
+wold grove spring
+ball cam spring
+millanas spring
+little paner spring
+brinc oil field
+south ran spring
+manlane church
+town of weresville
+township of thenter
+madey spring
+saran spring
+saran spring
+blakk campground
+lals cam spring
+last laman spring
+township of thelter
+city of resteville
+lenbara spring
+township of thelter
+menlone church
+caran spring
+cenlane church
+des cam spring
+little paver spring
+ros grove church
+lame church
+lake campground
+township of thelter
+liller cemetery
+
